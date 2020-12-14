@@ -7,6 +7,8 @@ using namespace std;
 
 class ConditionsParser
 {
+    Expression* build(string source);
+
 public:
     ConditionsParser();
 

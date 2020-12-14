@@ -1,9 +1,16 @@
+#include <string>
+#include <algorithm>
+#include <iostream>
+
 #include "conditions_parser.h"
 #include "expressions/elementary_condition.h"
+#include "expressions/binary_operation.h"
+
+using namespace std;
 
 ConditionsParser::ConditionsParser() {}
 
-Expression* ConditionsParser::parse(string source)
+Expression* ConditionsParser::build(string source)
 {
     if (source.find("&") == string::npos && source.find("|") == string::npos) // elementary condition checking
     {
@@ -13,7 +20,7 @@ Expression* ConditionsParser::parse(string source)
     source = source.substr(1, source.length() - 2);
 
     int counter = 0;
-    size_t index;
+    size_t index = 0;
 
     for (char c: source)
     {
@@ -34,7 +41,20 @@ Expression* ConditionsParser::parse(string source)
         {
             break;
         }
+        index++;
     }
+    index++;
 
-    return new ElementaryCondition();
+    char operation = source[index];
+    string left = source.substr(0, index);
+    string right = source.substr(index + 1, source.length() - index - 1);
+
+    return new BinaryOperation(this->build(left), this->build(right), operation);
+}
+
+Expression* ConditionsParser::parse(string source)
+{
+    source.erase(remove(source.begin(), source.end(), ' '), source.end()); 
+
+    return this->build(source);
 }

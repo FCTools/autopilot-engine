@@ -9,7 +9,7 @@ class BinaryOperation: public Expression
     Expression* right;
 
 public:
-    BinaryOperation(Expression* l, Expression* r);
+    BinaryOperation(Expression* l, Expression* r, char operation);
 
     ~BinaryOperation();
 };
