@@ -17,7 +17,7 @@ class DatabaseClient
 
     DatabaseClient();
 
-    pqxx::connection get_bot_condition(size_t bot_id);
+    string get_bot_condition(size_t bot_id);
 
 public:
 

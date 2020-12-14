@@ -17,9 +17,9 @@ DatabaseClient::DatabaseClient()
     this->connection_string = "dbname=" + database_name + " host=" + database_host + " port=" + database_port + " user=" + database_user + " password=" + database_password;
 }
 
-pqxx::connection DatabaseClient::get_bot_condition(size_t bot_id)
+string DatabaseClient::get_bot_condition(size_t bot_id)
 {
-    pqxx::connection connection(this->connection_string);
-        
+    // pqxx::connection connection(this->connection_string);
+    return string();        
 }
 
