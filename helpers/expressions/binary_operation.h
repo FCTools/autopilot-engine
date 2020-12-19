@@ -11,5 +11,7 @@ class BinaryOperation: public Expression
 public:
     BinaryOperation(Expression* l, Expression* r, char operation);
 
+    virtual bool is_true();
+
     ~BinaryOperation();
 };

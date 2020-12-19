@@ -6,4 +6,6 @@ class Expression
 
 public:
     Expression();
+
+    virtual bool is_true() = 0;
 };

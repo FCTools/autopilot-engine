@@ -55,6 +55,5 @@ Expression* ConditionsParser::build(string source)
 Expression* ConditionsParser::parse(string source)
 {
     source.erase(remove(source.begin(), source.end(), ' '), source.end()); 
-
     return this->build(source);
 }

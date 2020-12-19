@@ -15,3 +15,8 @@ BinaryOperation::BinaryOperation(Expression* l, Expression* r, char operation): 
     }
     this->operation = operation;
 }
+
+bool BinaryOperation::is_true()
+{
+    
+}
