@@ -1,11 +1,16 @@
 #pragma once
 
-#include<iostream>
+#include <iostream>
+#include <unordered_map>
 
 using namespace std;
 
 class BaseController
 {
+protected:
+    unordered_map<string, string> config;
+
+    void read_config(string filename);
 
 public:
     BaseController();

@@ -16,7 +16,7 @@ BinaryOperation::BinaryOperation(Expression* l, Expression* r, char operation): 
     this->operation = operation;
 }
 
-bool BinaryOperation::is_true()
+bool BinaryOperation::is_true(string traffic_source, size_t campaign_id)
 {
-    
+    return false;
 }

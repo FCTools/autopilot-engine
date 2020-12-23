@@ -34,3 +34,6 @@
 *.out
 *.app
 bin/
+
+# Config file
+config.env

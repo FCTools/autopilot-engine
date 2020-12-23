@@ -18,5 +18,5 @@ public:
 
     double get_fact_value(string source, size_t campaign_id);
 
-    bool is_true(string traffic_source, size_t campaign_id);
+    virtual bool is_true(string traffic_source, size_t campaign_id);
 };
