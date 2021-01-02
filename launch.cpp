@@ -3,13 +3,17 @@
 #include "helpers/conditions_parser.h"
 #include "controllers/base_controller.h"
 #include "controllers/propeller_controller.h"
+#include "data_services/database_client.h"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
     // get bot condition from database here
-    string condition = "((revenue > 10) & (cost > 5))";
+    // test
+    auto database_client = new DatabaseClient();
+    string condition = database_client->get_bot_condition(33);
+    condition = "((revenue > 10) & (cost > 5))";
 
     ConditionsParser parser;
 
@@ -25,6 +29,7 @@ int main(int argc, char* argv[])
 
     delete parsed_condition;
     delete controller;
+    delete database_client;
 
     return EXIT_SUCCESS;
 }

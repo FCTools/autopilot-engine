@@ -15,10 +15,11 @@ class DatabaseClient
     string database_password;
     string connection_string;
 
-    DatabaseClient();
-
-    string get_bot_condition(size_t bot_id);
+    const string DEFAULT_PORT="5432";
 
 public:
 
+    DatabaseClient();
+
+    string get_bot_condition(size_t bot_id);
 };

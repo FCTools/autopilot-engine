@@ -10,5 +10,5 @@ add_subdirectory(helpers)
 
 add_executable(main launch.cpp)
 
-target_link_libraries(main controllers helpers expressions data_services curlpp curl)
+target_link_libraries(main controllers helpers expressions data_services curlpp curl pqxx)
 
