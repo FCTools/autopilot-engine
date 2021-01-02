@@ -19,7 +19,9 @@ int main(int argc, char* argv[])
     BaseController* controller;
     controller = new PropellerController();
 
-    controller->get_campaign_cost(3141415);
+    double cost = controller->get_campaign_cost(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
+    double profit = controller->get_campaign_profit(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
+    double clicks = controller->get_campaign_clicks(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
 
     delete parsed_condition;
     delete controller;
