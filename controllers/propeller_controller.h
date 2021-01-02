@@ -8,7 +8,7 @@ using namespace std;
 class PropellerController: public BaseController
 {
     string api_token;
-    const string requests_url = "https://ssp-api.propellerads.com/v5/adv/balance";
+    const string requests_url = "https://ssp-api.propellerads.com/v5/adv/statistics";
 
 public:
     PropellerController();

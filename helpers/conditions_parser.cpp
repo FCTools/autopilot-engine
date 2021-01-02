@@ -3,8 +3,8 @@
 #include <iostream>
 
 #include "conditions_parser.h"
-#include "expressions/elementary_condition.h"
-#include "expressions/binary_operation.h"
+#include "elementary_condition.h"
+#include "binary_operation.h"
 
 using namespace std;
 
