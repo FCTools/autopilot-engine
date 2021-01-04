@@ -15,7 +15,7 @@ class BinaryOperation: public Expression
 public:
     BinaryOperation(Expression* l, Expression* r, char operation);
 
-    virtual bool is_true(string traffic_source, size_t campaign_id);
+    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date);
 
-    ~BinaryOperation();
+    virtual ~BinaryOperation();
 };

@@ -6,6 +6,8 @@
 #include <string>
 #include <iostream>
 
+#include "base_controller.h"
+
 using namespace std;
 
 class Expression
@@ -15,5 +17,7 @@ class Expression
 public:
     Expression();
 
-    virtual bool is_true(string traffic_source, size_t campaign_id) = 0;
+    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date) = 0;
+
+    virtual ~Expression();
 };

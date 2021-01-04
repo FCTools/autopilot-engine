@@ -6,6 +6,7 @@
 #include <string>
 
 #include "expression.h"
+#include "base_controller.h"
 using namespace std;
 
 
@@ -20,7 +21,9 @@ public:
 
     ElementaryCondition(string source);
 
-    double get_fact_value(string source, size_t campaign_id);
+    double get_fact_value(BaseController* controller, size_t campaign_id, string start_date, string end_date);
 
-    virtual bool is_true(string traffic_source, size_t campaign_id);
+    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date);
+
+    virtual ~ElementaryCondition();
 };

@@ -5,10 +5,10 @@
 
 #include <iostream>
 
-#include "helpers/conditions_parser.h"
-#include "controllers/base_controller.h"
-#include "controllers/propeller_controller.h"
-#include "data_services/database_client.h"
+#include "conditions_parser.h"
+#include "base_controller.h"
+#include "propeller_controller.h"
+#include "database_client.h"
 
 using namespace std;
 
@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     // test
     auto database_client = new DatabaseClient();
     string condition = database_client->get_bot_condition(33);
-    condition = "((revenue > 10) & (cost > 5))";
+    // condition = "((revenue > 10) & (cost > 5))";
 
     ConditionsParser parser;
 
