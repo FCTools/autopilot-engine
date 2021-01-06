@@ -14,27 +14,34 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-    // get bot condition from database here
-    // test
+    //get bot id from args
+    size_t bot_id = 33;
+
+    // get bot condition and period from database
+
     auto database_client = new DatabaseClient();
-    string condition = database_client->get_bot_condition(33);
-    // condition = "((revenue > 10) & (cost > 5))";
+    string condition = database_client->get_bot_condition(bot_id);
+    size_t period = database_client->get_bot_period(bot_id);
 
-    ConditionsParser parser;
+    // get bot campaigns here
+    vector<size_t> campaigns_ids = database_client->get_bot_campaigns(bot_id);
 
-    Expression* parsed_condition = parser.parse(condition);
+    auto parser = new ConditionsParser();
+    Expression* parsed_condition = parser->parse(condition);
     
     // choose right client here
     BaseController* controller;
     controller = new PropellerController();
 
-    double cost = controller->get_campaign_cost(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
-    double profit = controller->get_campaign_profit(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
-    double clicks = controller->get_campaign_clicks(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
+    // test
+    // double cost = controller->get_campaign_cost(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
+    // double profit = controller->get_campaign_profit(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
+    // double clicks = controller->get_campaign_clicks(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
 
     delete parsed_condition;
     delete controller;
     delete database_client;
+    delete parser;
 
     return EXIT_SUCCESS;
 }

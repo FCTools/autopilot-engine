@@ -6,6 +6,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <vector>
 #include <pqxx/pqxx>
 
 using namespace std;
@@ -26,4 +27,9 @@ public:
     DatabaseClient();
 
     string get_bot_condition(size_t bot_id);
+
+    size_t get_bot_period(size_t bot_id);
+
+    vector<size_t> get_bot_campaigns(size_t bot_id);
+
 };

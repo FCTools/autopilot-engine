@@ -36,7 +36,7 @@ ElementaryCondition::ElementaryCondition(string source): Expression()
     
 }
 
-double ElementaryCondition::get_fact_value(BaseController* controller, size_t campaign_id, string start_date, string end_date))
+double ElementaryCondition::get_fact_value(BaseController* controller, size_t campaign_id, string start_date, string end_date)
 {
     if (this->param == "revenue")
     {
@@ -82,6 +82,8 @@ double ElementaryCondition::get_fact_value(BaseController* controller, size_t ca
     {
         
     }
+
+    throw;
 }
 
 bool ElementaryCondition::is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date)

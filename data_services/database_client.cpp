@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <vector>
 #include <pqxx/pqxx>
 
 #include "database_client.h"
@@ -44,3 +45,37 @@ string DatabaseClient::get_bot_condition(size_t bot_id)
     return result;
 }
 
+
+size_t DatabaseClient::get_bot_period(size_t bot_id)
+{
+    pqxx::connection connection(this->connection_string);
+    pqxx::work xact(connection, "Select" + to_string(bot_id));
+
+    string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
+    pqxx::result res = xact.exec(query);
+
+    string result = (res.begin().begin() + 9)->c_str();
+
+    return (size_t)stoi(result);
+}
+
+
+vector<size_t> DatabaseClient::get_bot_campaigns(size_t bot_id)
+{
+    pqxx::connection connection(this->connection_string);
+    pqxx::work xact(connection, "Select" + to_string(bot_id));
+
+    string query("SELECT * from bot_manager_bot_campaigns_list WHERE bot_id='" + to_string(bot_id) + "'");
+    pqxx::result res = xact.exec(query);
+
+    vector<size_t> result;
+
+    string campaign_id_str;
+    for (auto r = res.begin(); r != res.end(); r++)
+    {
+        campaign_id_str = (res.begin().begin() + 2)->c_str();
+        result.push_back((size_t)stoi(campaign_id_str));
+    }
+
+    return result;
+}
