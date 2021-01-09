@@ -13,10 +13,6 @@ using namespace std;
 
 class BaseController
 {
-protected:
-    unordered_map<string, string> config;
-
-    void read_config(string filename);
 
 public:
     BaseController();

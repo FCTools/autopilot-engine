@@ -4,10 +4,21 @@
 
 #pragma once
 
+#include <string>
+#include <iostream>
+
+#include "acl_cpp/lib_acl.hpp"
+
+using namespace std;
+
 class RedisClient
 {
-    RedisClient();
+    size_t port;
+    string host;
 
 public:
+    RedisClient();
+
+    void test(acl::redis_string& cmd, string key);
 
 };

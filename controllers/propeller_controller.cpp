@@ -13,13 +13,15 @@
 #include <curlpp/Options.hpp>
 
 #include "propeller_controller.h"
+#include "config_reader.h"
 
 using namespace std;
 
 
 PropellerController::PropellerController() : BaseController()
 {
-    this->api_token = this->config["PROPELLER_API_KEY"];
+    auto config = read_config("config.env");
+    this->api_token = config["PROPELLER_API_KEY"];
 }
 
 string PropellerController::get_campaign_info(size_t campaign_id, string start_date, string end_date)

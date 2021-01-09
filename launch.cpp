@@ -4,18 +4,24 @@
 
 
 #include <iostream>
+#include <string>
 
 #include "conditions_parser.h"
 #include "base_controller.h"
 #include "propeller_controller.h"
 #include "database_client.h"
+#include "redis_client.h"
 
 using namespace std;
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
     //get bot id from args
-    size_t bot_id = 33;
+    if (argc != 2)
+    {
+        throw invalid_argument("Invalid arguments number given.");
+    }
+    size_t bot_id = (size_t)stoi(argv[1]);
 
     // get bot condition and period from database
 
@@ -38,10 +44,13 @@ int main(int argc, char* argv[])
     // double profit = controller->get_campaign_profit(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
     // double clicks = controller->get_campaign_clicks(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
 
+    auto redis = new RedisClient();
+
     delete parsed_condition;
     delete controller;
     delete database_client;
     delete parser;
+    delete redis;
 
     return EXIT_SUCCESS;
 }

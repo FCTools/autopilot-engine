@@ -9,6 +9,7 @@
 
 # VS Code debug
 .vscode/
+.idea/
 
 # Precompiled Headers
 *.gch

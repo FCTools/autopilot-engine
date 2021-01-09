@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 2.8.12)
 project(helpers)
 
-add_library(helpers STATIC conditions_parser.cpp)
+add_library(helpers STATIC conditions_parser.cpp config_reader.cpp)
