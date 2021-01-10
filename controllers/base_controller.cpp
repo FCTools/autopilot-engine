@@ -32,3 +32,5 @@ string BaseController::make_request(list<string> headers, string body, string ur
     request.perform();
     return response.str();
 }
+
+BaseController::~BaseController() {}

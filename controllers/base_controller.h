@@ -40,4 +40,6 @@ public:
     virtual double get_campaign_leads(size_t campaign_id, string start_date, string end_date) = 0;
 
     string make_request(list<string> headers, string body, string url);
+
+    virtual ~BaseController();
 };

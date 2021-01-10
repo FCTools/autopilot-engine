@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 
-#include "acl_cpp/lib_acl.hpp"
+#include <cpp_redis/cpp_redis>
 
 using namespace std;
 
@@ -16,9 +16,9 @@ class RedisClient
     size_t port;
     string host;
 
+    cpp_redis::client client;
+
 public:
     RedisClient();
-
-    void test(acl::redis_string& cmd, string key);
 
 };

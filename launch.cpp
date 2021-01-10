@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 
     auto database_client = new DatabaseClient();
     string condition = database_client->get_bot_condition(bot_id);
-    size_t period = database_client->get_bot_period(bot_id);
+    //size_t period = database_client->get_bot_period(bot_id);
 
     // get bot campaigns here
     vector<size_t> campaigns_ids = database_client->get_bot_campaigns(bot_id);

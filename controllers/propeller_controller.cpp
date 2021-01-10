@@ -109,3 +109,5 @@ double PropellerController::get_campaign_leads(size_t campaign_id, string start_
 {
     return 0;
 }
+
+PropellerController::~PropellerController() {}
