@@ -16,9 +16,10 @@ class RedisClient
     size_t port;
     string host;
 
-    cpp_redis::client client;
-
 public:
     RedisClient();
 
+    void put(string key, string value);
+
+    ~RedisClient();
 };

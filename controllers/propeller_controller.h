@@ -41,5 +41,9 @@ public:
 
     virtual double get_campaign_leads(size_t campaign_id, string start_date, string end_date);
 
+    virtual string get_now();
+
+    virtual string get_past_time(size_t seconds);
+
     virtual ~PropellerController();
 };

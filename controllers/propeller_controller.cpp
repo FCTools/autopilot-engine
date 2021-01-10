@@ -7,6 +7,7 @@
 #include <sstream>
 #include <list>
 #include <iostream>
+#include <ctime>
 
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Easy.hpp>
@@ -108,6 +109,42 @@ double PropellerController::get_campaign_epc(size_t campaign_id, string start_da
 double PropellerController::get_campaign_leads(size_t campaign_id, string start_date, string end_date)
 {
     return 0;
+}
+
+string PropellerController::get_now()
+{
+    time_t rawtime;
+    tm* timeinfo;
+    char buffer[256];
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    time_t epoch = mktime(timeinfo);
+    epoch -= 7 * 60 * 60;  // make time utc
+
+    timeinfo = localtime(&epoch);
+
+    strftime(buffer, 256, "%Y-%m-%d %T", timeinfo);
+
+    return string(buffer);
+}
+
+string PropellerController::get_past_time(size_t seconds)
+{
+    time_t rawtime;
+    tm* timeinfo;
+    char buffer[256];
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    time_t epoch = mktime(timeinfo);
+    epoch -= (7 * 60 * 60 + (long)seconds);  // make time utc and substract seconds value
+
+    timeinfo = localtime(&epoch);
+
+    strftime(buffer, 256, "%Y-%m-%d %T", timeinfo);
+
+    return string(buffer);
 }
 
 PropellerController::~PropellerController() {}

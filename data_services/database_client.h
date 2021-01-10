@@ -30,6 +30,8 @@ public:
 
     size_t get_bot_period(size_t bot_id);
 
+    size_t get_bot_action(size_t bot_id);
+
     vector<size_t> get_bot_campaigns(size_t bot_id);
 
 };

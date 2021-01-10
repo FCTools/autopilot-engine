@@ -5,6 +5,9 @@
 
 #include <iostream>
 #include <string>
+#include <chrono>
+#include <ctime>
+#include <locale>
 
 #include "conditions_parser.h"
 #include "base_controller.h"
@@ -27,7 +30,7 @@ int main(int argc, char** argv)
 
     auto database_client = new DatabaseClient();
     string condition = database_client->get_bot_condition(bot_id);
-    //size_t period = database_client->get_bot_period(bot_id);
+    size_t period = database_client->get_bot_period(bot_id);
 
     // get bot campaigns here
     vector<size_t> campaigns_ids = database_client->get_bot_campaigns(bot_id);
@@ -45,6 +48,23 @@ int main(int argc, char** argv)
     // double clicks = controller->get_campaign_clicks(3141415, "2020-01-01 00:00:00", "2020-03-01 23:59:59");
 
     auto redis = new RedisClient();
+
+    size_t action = database_client->get_bot_action(bot_id);
+    cout << action << endl;
+
+    string now_dt = controller->get_now();
+    string from_dt = controller->get_past_time(period);
+    cout << now_dt << endl;
+    cout << from_dt << endl;
+
+    string campaigns_status = "{";
+
+    // for (auto campaign: campaigns_ids)
+    // {
+        // if (parsed_condition->is_true(campaign))
+    // }
+
+    redis->put("test_key", "test_value");
 
     delete parsed_condition;
     delete controller;
