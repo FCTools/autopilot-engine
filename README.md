@@ -6,6 +6,7 @@
 </p>
 
 ## Autopilot engine (C++-based conditions checking module)
+Project name for copyright: autopilot.autopilot-engine
 
 Supported functions:
 * Play/stop campaign
