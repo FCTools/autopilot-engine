@@ -15,6 +15,7 @@ Supported traffic sources:
 * Propeller Ads ([api documentation](https://ssp-api.propellerads.com/v5/docs/#/))
 
 Stack:
+* [PostgreSQL](https://www.postgresql.org/) as main database
 * [pqxx](http://pqxx.org/development/libpqxx/) library for PostgreSQL
 * [cpp_redis](https://github.com/cpp-redis/cpp_redis) library for Redis
 * [curlpp](http://www.curlpp.org/) library and [curl](https://curl.se/) for http-requests
