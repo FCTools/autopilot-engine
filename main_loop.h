@@ -6,3 +6,5 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
+
+void launch(std::size_t workers_num);
