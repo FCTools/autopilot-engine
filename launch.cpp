@@ -69,6 +69,7 @@ int main(int argc, char** argv)
     // }
 
     redis->put("test_key", "test_value");
+    redis->get_updates();
 
     delete parsed_condition;
     delete controller;

@@ -10,6 +10,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 #include <cpp_redis/cpp_redis>
 
@@ -17,13 +18,20 @@ using namespace std;
 
 class RedisClient
 {
-    size_t port;
-    string host;
+    size_t storage_port;
+    string storage_host;
+
+    size_t actions_port;
+    string actions_host;
+
+    vector<string> _get_keys();
 
 public:
     RedisClient();
 
     void put(string key, string value);
+
+    vector<string> get_updates();
 
     ~RedisClient();
 };
