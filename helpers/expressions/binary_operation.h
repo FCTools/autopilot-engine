@@ -3,6 +3,7 @@
 // Author: German Yakimov
 
 #pragma once
+#include <unordered_map>
 
 #include "expression.h"
 
@@ -15,7 +16,7 @@ class BinaryOperation: public Expression
 public:
     BinaryOperation(Expression* l, Expression* r, char operation);
 
-    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual bool is_true(unordered_map<string, double>& campaign_info);
 
     virtual ~BinaryOperation();
 };

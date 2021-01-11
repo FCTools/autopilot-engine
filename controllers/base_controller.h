@@ -21,27 +21,8 @@ class BaseController
 public:
     BaseController();
 
-    virtual double get_campaign_cost(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_profit(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_revenue(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_cr(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_roi(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_cpa(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_cpc(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_cpm(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_clicks(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_epc(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
-
-    virtual double get_campaign_leads(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const = 0;
+    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_id, const string start_date, 
+                                                            const string end_date, const string api_key) const = 0;
 
     virtual string get_now() const = 0;
 

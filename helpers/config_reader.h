@@ -6,9 +6,11 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
+#pragma once
+
 #include <string>
 #include <unordered_map>
 
 using namespace std;
 
-unordered_map<string, string> read_config(std::string filename);
+unordered_map<string, string> read_config(string filename);

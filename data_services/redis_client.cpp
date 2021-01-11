@@ -8,9 +8,10 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
-#include "redis_client.h"
 #include "config_reader.h"
+#include "redis_client.h"
 
 using namespace std;
 

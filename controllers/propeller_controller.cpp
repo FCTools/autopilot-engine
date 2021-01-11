@@ -12,6 +12,7 @@
 #include <list>
 #include <iostream>
 #include <ctime>
+#include <unordered_map>
 
 #include <curlpp/cURLpp.hpp>
 #include <curlpp/Easy.hpp>
@@ -23,119 +24,53 @@
 using namespace std;
 
 
-PropellerController::PropellerController() : BaseController()
-{
-    auto config = read_config("config.env");
-}
+PropellerController::PropellerController() : BaseController() {}
 
-string PropellerController::get_campaign_info(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
+// where is leads?
+unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
+    unordered_map<string, double> result;
+    unordered_map<string, string> params_aliases = {{"cost", "spent"}, {"profit", "profit"}, {"CR", "cr"}, {"clicks", "clicks"}, 
+                                                    {"ROI", "roi"}, {"CPC", "cpc"}, {"CPA", "cpa"}, {"CPM", "cpm"}};
+
     string campaign_id_str = to_string(campaign_id);
-    string post_fields = "{\"group_by\": \"campaign_id\","
+    string post_fields = "{\"group_by\": \"campaign_id\"," 
                          "\"day_from\": \"" + start_date + "\","
                          "\"day_to\": \"" + end_date + "\"," 
                          "\"campaign_id\": [" + campaign_id_str + "],\"geo\": [],\"dept\": []}";
     list<string> headers = {"Content-Type: application/json", "Authorization: Bearer " + api_key,
                              "Accept: application/json"};
 
-    return this->make_request(headers, post_fields, this->requests_url);
+    string data = this->make_request(headers, post_fields, this->requests_url);
+
+    for (auto param: params_aliases)
+    {
+        result.insert({param.first, this->get_field_value(param.second, data)});
+    }
+
+    result.insert({"revenue", result["cost"] + result["profit"]});
+
+    if (result["clicks"] != 0)
+    {
+        result.insert({"EPC", result["revenue"] / result["clicks"]});
+    }
+    else
+    {
+        result.insert({"EPC", 0});
+    }
+    
+
+    return result;
 }
 
-double PropellerController::get_campaign_cost(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
+double PropellerController::get_field_value(const string field_name, const string data) const
 {
-    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
+    string pattern = "\"" + field_name + "\":";
+    size_t start_pos = data.find(pattern) + pattern.length();
+    size_t end_pos = data.find("\"", start_pos);
+    string str = data.substr(start_pos, end_pos - start_pos - 1);
 
-    size_t cost_start_pos = response.find("\"spent\":") + strlen("\"spent\":");
-    size_t cost_end_pos = response.find("\"", cost_start_pos);
-    string cost_str = response.substr(cost_start_pos, cost_end_pos - cost_start_pos - 1);
-
-    return stod(cost_str);
-}
-
-double PropellerController::get_campaign_profit(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
-
-    size_t profit_start_pos = response.find("\"profit\":") + strlen("\"profit\":");
-    size_t profit_end_pos = response.find("\"", profit_start_pos);
-    string profit_str = response.substr(profit_start_pos, profit_end_pos - profit_start_pos - 1);
-
-    return stod(profit_str);
-}
-
-double PropellerController::get_campaign_revenue(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    return 0;
-}
-
-double PropellerController::get_campaign_cr(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
-
-    size_t cr_start_pos = response.find("\"cr\":") + strlen("\"cr\":");
-    size_t cr_end_pos = response.find("\"", cr_start_pos);
-    string cr_str = response.substr(cr_start_pos, cr_end_pos - cr_start_pos - 1);
-
-    return stod(cr_str);
-}
-
-double PropellerController::get_campaign_roi(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
-
-    size_t roi_start_pos = response.find("\"roi\":") + strlen("\"roi\":");
-    size_t roi_end_pos = response.find("\"", roi_start_pos);
-    string roi_str = response.substr(roi_start_pos, roi_end_pos - roi_start_pos - 1);
-
-    return stod(roi_str);
-}
-
-double PropellerController::get_campaign_cpa(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
-
-    size_t cpa_start_pos = response.find("\"cpa\":") + strlen("\"cpa\":");
-    size_t cpa_end_pos = response.find("\"", cpa_start_pos);
-    string cpa_str = response.substr(cpa_start_pos, cpa_end_pos - cpa_start_pos - 1);
-
-    return stod(cpa_str);
-}
-
-double PropellerController::get_campaign_cpc(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
-
-    size_t cpc_start_pos = response.find("\"cpc\":") + strlen("\"cpc\":");
-    size_t cpc_end_pos = response.find("\"", cpc_start_pos);
-    string cpc_str = response.substr(cpc_start_pos, cpc_end_pos - cpc_start_pos - 1);
-
-    return stod(cpc_str);
-}
-
-double PropellerController::get_campaign_cpm(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    return 0;
-}
-
-double PropellerController::get_campaign_clicks(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
-
-    size_t clicks_start_pos = response.find("\"clicks\":") + strlen("\"clicks\":");
-    size_t clicks_end_pos = response.find("\"", clicks_start_pos);
-    string clicks_str = response.substr(clicks_start_pos, clicks_end_pos - clicks_start_pos - 1);
-
-    return stod(clicks_str);
-}
-
-double PropellerController::get_campaign_epc(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    return 0;
-}
-
-double PropellerController::get_campaign_leads(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
-{
-    return 0;
+    return stod(str);
 }
 
 string PropellerController::get_now() const

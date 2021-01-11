@@ -14,6 +14,7 @@
 #include <chrono>
 #include <random>
 #include <sstream>
+#include <unordered_map>
 
 #include "redis_client.h"
 #include "database_client.h"
@@ -130,7 +131,9 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
 
     for (size_t campaign_id: campaigns_ids)
     {
-        if (parsed_condition->is_true(controller, campaign_id, from_dt, now_dt, api_key))
+        unordered_map<string, double> campaign_info = controller->get_campaign_info(campaign_id, from_dt, now_dt, api_key);
+
+        if (parsed_condition->is_true(campaign_info))
         {
             string data = "{\"campaign_id\": " + to_string(campaign_id) + ", \"action\": "
              + to_string(action) + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";

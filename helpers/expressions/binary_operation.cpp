@@ -20,16 +20,16 @@ BinaryOperation::BinaryOperation(Expression* l, Expression* r, char operation): 
     this->operation = operation;
 }
 
-bool BinaryOperation::is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key)
+bool BinaryOperation::is_true(unordered_map<string, double>& campaign_info)
 {
     if (this->operation == '|')
     {
-        return this->left->is_true(controller, campaign_id, start_date, end_date, api_key) || 
-        this->right->is_true(controller, campaign_id, start_date, end_date, api_key);
+        return this->left->is_true(campaign_info) || 
+        this->right->is_true(campaign_info);
     }
 
-    return this->left->is_true(controller, campaign_id, start_date, end_date, api_key) && 
-    this->right->is_true(controller, campaign_id, start_date, end_date, api_key);
+    return this->left->is_true(campaign_info) && 
+    this->right->is_true(campaign_info);
 }
 
 BinaryOperation::~BinaryOperation()

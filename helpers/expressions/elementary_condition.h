@@ -4,9 +4,10 @@
 
 #pragma once
 #include <string>
+#include <unordered_map>
 
 #include "expression.h"
-#include "base_controller.h"
+
 using namespace std;
 
 
@@ -21,9 +22,7 @@ public:
 
     ElementaryCondition(string source);
 
-    double get_fact_value(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key);
-
-    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual bool is_true(unordered_map<string, double>& campaign_info);
 
     virtual ~ElementaryCondition();
 };

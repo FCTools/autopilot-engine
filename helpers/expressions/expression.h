@@ -3,10 +3,10 @@
 // Author: German Yakimov
 
 #pragma once
+
 #include <string>
 #include <iostream>
-
-#include "base_controller.h"
+#include <unordered_map>
 
 using namespace std;
 
@@ -17,7 +17,7 @@ class Expression
 public:
     Expression();
 
-    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key) = 0;
+    virtual bool is_true(unordered_map<string, double>& campaign_info) = 0;
 
     virtual ~Expression();
 };

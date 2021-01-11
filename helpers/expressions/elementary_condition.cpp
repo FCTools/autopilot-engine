@@ -3,10 +3,9 @@
 // Author: German Yakimov
 
 #include <string>
+#include <unordered_map>
 
 #include "elementary_condition.h"
-#include "base_controller.h"
-#include "propeller_controller.h"
 
 ElementaryCondition::ElementaryCondition(): Expression() {}
 
@@ -36,59 +35,10 @@ ElementaryCondition::ElementaryCondition(string source): Expression()
     
 }
 
-double ElementaryCondition::get_fact_value(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key)
-{
-    if (this->param == "revenue")
-    {
-        return controller->get_campaign_revenue(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "cost")
-    {
-        return controller->get_campaign_cost(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "profit")
-    {
-        return controller->get_campaign_profit(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "clicks")
-    {
-        return controller->get_campaign_clicks(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "CPC")
-    {
-        return controller->get_campaign_cpc(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "ROI")
-    {
-        return controller->get_campaign_roi(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "CR")
-    {
-        return controller->get_campaign_cr(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "EPC")
-    {
-        return controller->get_campaign_epc(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "leads")
-    {
-        return controller->get_campaign_leads(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "cpa")
-    {
-        return controller->get_campaign_cpa(campaign_id, start_date, end_date, api_key);
-    }
-    else if (this->param == "approve_%")
-    {
-        
-    }
 
-    throw;
-}
-
-bool ElementaryCondition::is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key)
+bool ElementaryCondition::is_true(unordered_map<string, double>& campaign_info)
 {
-    double fact_value = this->get_fact_value(controller, campaign_id, start_date, end_date, api_key);
+    double fact_value = campaign_info[this->param];
 
     if (this->operation == "<")
     {
