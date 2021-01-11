@@ -7,13 +7,8 @@
 // Author: German Yakimov <german13yakimov@gmail.com>
 
 #include <iostream>
-#include <string>
-#include <chrono>
-#include <ctime>
-#include <locale>
 
 #include "main_loop.h"
-#include "propeller_controller.h"
 
 using namespace std;
 
