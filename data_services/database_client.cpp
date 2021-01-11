@@ -105,3 +105,33 @@ size_t DatabaseClient::get_bot_action(size_t bot_id)
 
     return (size_t)stoi(result);
 }
+
+string DatabaseClient::get_bot_traffic_source(size_t bot_id)
+{
+    const size_t ts_index = 11;
+
+    pqxx::connection connection(this->connection_string);
+    pqxx::work xact(connection, "Select" + to_string(bot_id));
+
+    string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
+    pqxx::result res = xact.exec(query);
+
+    string result = (res.begin().begin() + ts_index)->c_str();
+
+    return result;
+}
+
+string DatabaseClient::get_bot_api_key(size_t bot_id)
+{
+    const size_t api_key_index = 12;
+
+    pqxx::connection connection(this->connection_string);
+    pqxx::work xact(connection, "Select" + to_string(bot_id));
+
+    string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
+    pqxx::result res = xact.exec(query);
+
+    string result = (res.begin().begin() + api_key_index)->c_str();
+
+    return result;
+}

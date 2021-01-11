@@ -68,8 +68,11 @@ int main(int argc, char** argv)
         // if (parsed_condition->is_true(campaign))
     // }
 
-    redis->put("test_key", "test_value");
+    redis->put_action("test_key", "test_value");
     redis->get_updates();
+
+    string ts_api_key = database_client->get_bot_api_key(bot_id);
+    cout << ts_api_key << endl;
 
     delete parsed_condition;
     delete controller;

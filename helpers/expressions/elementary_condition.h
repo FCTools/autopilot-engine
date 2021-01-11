@@ -21,9 +21,9 @@ public:
 
     ElementaryCondition(string source);
 
-    double get_fact_value(BaseController* controller, size_t campaign_id, string start_date, string end_date);
+    double get_fact_value(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key);
 
-    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date);
+    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key);
 
     virtual ~ElementaryCondition();
 };

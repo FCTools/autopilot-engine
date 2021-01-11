@@ -17,7 +17,7 @@ class Expression
 public:
     Expression();
 
-    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date) = 0;
+    virtual bool is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
     virtual ~Expression();
 };

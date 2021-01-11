@@ -36,47 +36,47 @@ ElementaryCondition::ElementaryCondition(string source): Expression()
     
 }
 
-double ElementaryCondition::get_fact_value(BaseController* controller, size_t campaign_id, string start_date, string end_date)
+double ElementaryCondition::get_fact_value(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key)
 {
     if (this->param == "revenue")
     {
-        return controller->get_campaign_revenue(campaign_id, start_date, end_date);
+        return controller->get_campaign_revenue(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "cost")
     {
-        return controller->get_campaign_cost(campaign_id, start_date, end_date);
+        return controller->get_campaign_cost(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "profit")
     {
-        return controller->get_campaign_profit(campaign_id, start_date, end_date);
+        return controller->get_campaign_profit(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "clicks")
     {
-        return controller->get_campaign_clicks(campaign_id, start_date, end_date);
+        return controller->get_campaign_clicks(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "CPC")
     {
-        return controller->get_campaign_cpc(campaign_id, start_date, end_date);
+        return controller->get_campaign_cpc(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "ROI")
     {
-        return controller->get_campaign_roi(campaign_id, start_date, end_date);
+        return controller->get_campaign_roi(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "CR")
     {
-        return controller->get_campaign_cr(campaign_id, start_date, end_date);
+        return controller->get_campaign_cr(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "EPC")
     {
-        return controller->get_campaign_epc(campaign_id, start_date, end_date);
+        return controller->get_campaign_epc(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "leads")
     {
-        return controller->get_campaign_leads(campaign_id, start_date, end_date);
+        return controller->get_campaign_leads(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "cpa")
     {
-        return controller->get_campaign_cpa(campaign_id, start_date, end_date);
+        return controller->get_campaign_cpa(campaign_id, start_date, end_date, api_key);
     }
     else if (this->param == "approve_%")
     {
@@ -86,9 +86,9 @@ double ElementaryCondition::get_fact_value(BaseController* controller, size_t ca
     throw;
 }
 
-bool ElementaryCondition::is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date)
+bool ElementaryCondition::is_true(BaseController* controller, size_t campaign_id, string start_date, string end_date, string api_key)
 {
-    double fact_value = this->get_fact_value(controller, campaign_id, start_date, end_date);
+    double fact_value = this->get_fact_value(controller, campaign_id, start_date, end_date, api_key);
 
     if (this->operation == "<")
     {

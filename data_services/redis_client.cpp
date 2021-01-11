@@ -25,7 +25,7 @@ RedisClient::RedisClient()
     this->actions_port = (size_t)stoi(config["REDIS_ACTIONS_PORT"]);
 }
 
-void RedisClient::put(string key, string value)
+void RedisClient::put_action(string key, string value)
 {
     cpp_redis::client client;
 
@@ -39,7 +39,7 @@ void RedisClient::put(string key, string value)
 	client.sync_commit();
 }
 
-vector<string> RedisClient::_get_keys()
+vector<string> RedisClient::get_updates()
 {
     vector<string> result;
     string tmp = "";
@@ -65,31 +65,6 @@ vector<string> RedisClient::_get_keys()
 	}   
     });
     
-    client.sync_commit();
-
-    return result;
-}
-
-vector<string> RedisClient::get_updates()
-{
-    cpp_redis::client client;
-
-	client.connect(this->actions_host, this->actions_port, [](const string& host, size_t port, cpp_redis::client::connect_state status) {
-    if (status == cpp_redis::client::connect_state::dropped) {
-        cout << "client disconnected from " << host << ":" << port << endl;
-    }
-  	});
-
-    auto keys_list = this->_get_keys();
-    vector<string> result;
-
-    for (string& key: keys_list)
-    {
-        client.get(key, [&result](cpp_redis::reply& reply) {
-            result.push_back(reply.as_string());
-        });
-    }
-
     client.sync_commit();
 
     return result;

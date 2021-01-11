@@ -21,27 +21,27 @@ class BaseController
 public:
     BaseController();
 
-    virtual double get_campaign_cost(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_cost(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_profit(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_profit(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_revenue(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_revenue(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_cr(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_cr(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_roi(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_roi(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_cpa(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_cpa(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_cpc(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_cpc(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_cpm(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_cpm(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_clicks(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_clicks(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_epc(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_epc(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
-    virtual double get_campaign_leads(size_t campaign_id, string start_date, string end_date) = 0;
+    virtual double get_campaign_leads(size_t campaign_id, string start_date, string end_date, string api_key) = 0;
 
     virtual string get_now() = 0;
 

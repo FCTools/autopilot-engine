@@ -38,4 +38,8 @@ public:
 
     vector<size_t> get_bot_campaigns(size_t bot_id);
 
+    string get_bot_traffic_source(size_t bot_id);
+
+    string get_bot_api_key(size_t bot_id);
+
 };

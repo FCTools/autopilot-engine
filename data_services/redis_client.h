@@ -24,12 +24,10 @@ class RedisClient
     size_t actions_port;
     string actions_host;
 
-    vector<string> _get_keys();
-
 public:
     RedisClient();
 
-    void put(string key, string value);
+    void put_action(string key, string value);
 
     vector<string> get_updates();
 
