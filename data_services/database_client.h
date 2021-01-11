@@ -24,22 +24,31 @@ class DatabaseClient
     string database_password;
     string connection_string;
 
-    const string DEFAULT_PORT="5432";
+    const string DEFAULT_PORT = "5432";
+
+    const size_t condition_index = 3;
+    const size_t period_index = 9;
+    const size_t campaign_index = 2;
+    const size_t action_index = 4;
+    const size_t ts_index = 11;
+    const size_t api_key_index = 12;
 
 public:
 
     DatabaseClient();
 
-    string get_bot_condition(size_t bot_id);
+    string get_bot_field(const size_t bot_id, const size_t index) const;
 
-    size_t get_bot_period(size_t bot_id);
+    string get_bot_condition(const size_t bot_id) const;
 
-    size_t get_bot_action(size_t bot_id);
+    size_t get_bot_period(const size_t bot_id) const;
 
-    vector<size_t> get_bot_campaigns(size_t bot_id);
+    size_t get_bot_action(const size_t bot_id) const;
 
-    string get_bot_traffic_source(size_t bot_id);
+    vector<size_t> get_bot_campaigns(const size_t bot_id) const;
 
-    string get_bot_api_key(size_t bot_id);
+    string get_bot_traffic_source(const size_t bot_id) const;
+
+    string get_bot_api_key(const size_t bot_id) const;
 
 };

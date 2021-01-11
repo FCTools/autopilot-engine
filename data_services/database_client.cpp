@@ -36,42 +36,34 @@ DatabaseClient::DatabaseClient()
                               " password=" + this->database_password;
 }
 
-string DatabaseClient::get_bot_condition(size_t bot_id)
+string DatabaseClient::get_bot_field(const size_t bot_id, const size_t index) const
 {
-    const size_t condition_index = 3;
-
     pqxx::connection connection(this->connection_string);
     pqxx::work xact(connection, "Select" + to_string(bot_id));
 
     string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
     pqxx::result res = xact.exec(query);
 
-    string result = (res.begin().begin() + condition_index)->c_str();
+    string result = (res.begin().begin() + index)->c_str();
 
     return result;
 }
 
-
-size_t DatabaseClient::get_bot_period(size_t bot_id)
+string DatabaseClient::get_bot_condition(const size_t bot_id) const
 {
-    const size_t period_index = 9;
+    return this->get_bot_field(bot_id, this->condition_index);
+}
 
-    pqxx::connection connection(this->connection_string);
-    pqxx::work xact(connection, "Select" + to_string(bot_id));
 
-    string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
-    pqxx::result res = xact.exec(query);
-
-    string result = (res.begin().begin() + period_index)->c_str();
-
+size_t DatabaseClient::get_bot_period(const size_t bot_id) const
+{
+    string result = this->get_bot_field(bot_id, this->period_index);
     return (size_t)stoi(result);
 }
 
 
-vector<size_t> DatabaseClient::get_bot_campaigns(size_t bot_id)
+vector<size_t> DatabaseClient::get_bot_campaigns(const size_t bot_id) const
 {
-const size_t campaign_index = 2;
-
     pqxx::connection connection(this->connection_string);
     pqxx::work xact(connection, "Select" + to_string(bot_id));
 
@@ -81,6 +73,7 @@ const size_t campaign_index = 2;
     vector<size_t> result;
 
     string campaign_id_str;
+
     for (auto r = res.begin(); r != res.end(); r++)
     {
         campaign_id_str = (res.begin().begin() + campaign_index)->c_str();
@@ -91,47 +84,18 @@ const size_t campaign_index = 2;
 }
 
 
-size_t DatabaseClient::get_bot_action(size_t bot_id)
+size_t DatabaseClient::get_bot_action(const size_t bot_id) const
 {
-    const size_t action_index = 4;
-
-    pqxx::connection connection(this->connection_string);
-    pqxx::work xact(connection, "Select" + to_string(bot_id));
-
-    string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
-    pqxx::result res = xact.exec(query);
-
-    string result = (res.begin().begin() + action_index)->c_str();
-
+    string result = this->get_bot_field(bot_id, this->action_index);
     return (size_t)stoi(result);
 }
 
-string DatabaseClient::get_bot_traffic_source(size_t bot_id)
+string DatabaseClient::get_bot_traffic_source(const size_t bot_id) const
 {
-    const size_t ts_index = 11;
-
-    pqxx::connection connection(this->connection_string);
-    pqxx::work xact(connection, "Select" + to_string(bot_id));
-
-    string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
-    pqxx::result res = xact.exec(query);
-
-    string result = (res.begin().begin() + ts_index)->c_str();
-
-    return result;
+    return this->get_bot_field(bot_id, this->ts_index);
 }
 
-string DatabaseClient::get_bot_api_key(size_t bot_id)
+string DatabaseClient::get_bot_api_key(const size_t bot_id) const
 {
-    const size_t api_key_index = 12;
-
-    pqxx::connection connection(this->connection_string);
-    pqxx::work xact(connection, "Select" + to_string(bot_id));
-
-    string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
-    pqxx::result res = xact.exec(query);
-
-    string result = (res.begin().begin() + api_key_index)->c_str();
-
-    return result;
+    return this->get_bot_field(bot_id, this->api_key_index);
 }

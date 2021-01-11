@@ -17,36 +17,36 @@ class PropellerController: public BaseController
 {
     const string requests_url = "https://ssp-api.propellerads.com/v5/adv/statistics";
 
-    string get_campaign_info(size_t campaign_id, string start_date, string end_date, string api_key);
+    string get_campaign_info(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const ;
 
 public:
     PropellerController();
 
-    virtual double get_campaign_cost(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_cost(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_profit(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_profit(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_revenue(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_revenue(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_cr(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_cr(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_roi(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_roi(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_cpa(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_cpa(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_cpc(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_cpc(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_cpm(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_cpm(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_clicks(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_clicks(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_epc(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_epc(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual double get_campaign_leads(size_t campaign_id, string start_date, string end_date, string api_key);
+    virtual double get_campaign_leads(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const;
 
-    virtual string get_now();
+    virtual string get_now() const;
 
-    virtual string get_past_time(size_t seconds);
+    virtual string get_past_time(const size_t seconds) const;
 
     virtual ~PropellerController();
 };

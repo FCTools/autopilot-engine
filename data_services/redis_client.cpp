@@ -46,7 +46,7 @@ vector<string> RedisClient::get_updates()
 
     cpp_redis::client client;
 
-	client.connect(this->actions_host, this->actions_port, [](const string& host, size_t port, cpp_redis::client::connect_state status) {
+	client.connect(this->storage_host, this->storage_port, [](const string& host, size_t port, cpp_redis::client::connect_state status) {
     if (status == cpp_redis::client::connect_state::dropped) {
         cout << "client disconnected from " << host << ":" << port << endl;
     }
@@ -65,6 +65,10 @@ vector<string> RedisClient::get_updates()
 	}   
     });
     
+    client.sync_commit();
+
+    client.del(result);
+
     client.sync_commit();
 
     return result;

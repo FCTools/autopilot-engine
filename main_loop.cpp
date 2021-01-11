@@ -12,6 +12,8 @@
 #include <vector>
 #include <string>
 #include <chrono>
+#include <random>
+#include <sstream>
 
 #include "redis_client.h"
 #include "database_client.h"
@@ -21,6 +23,41 @@
 #include "propeller_controller.h"
 
 using namespace std;
+
+// uuid generating logic
+namespace uuid {
+    static random_device rd;
+    static mt19937 gen(rd());
+    static uniform_int_distribution<> dis(0, 15);
+    static uniform_int_distribution<> dis2(8, 11);
+
+    string generate_uuid_v4() {
+        stringstream ss;
+        int i;
+        ss << std::hex;
+        for (i = 0; i < 8; i++) {
+            ss << dis(gen);
+        }
+        ss << "-";
+        for (i = 0; i < 4; i++) {
+            ss << dis(gen);
+        }
+        ss << "-4";
+        for (i = 0; i < 3; i++) {
+            ss << dis(gen);
+        }
+        ss << "-";
+        ss << dis2(gen);
+        for (i = 0; i < 3; i++) {
+            ss << dis(gen);
+        }
+        ss << "-";
+        for (i = 0; i < 12; i++) {
+            ss << dis(gen);
+        };
+        return ss.str();
+    }
+}
 
 
 void _extend_storage(mutex& storage_mutex, vector<string>& storage, vector<string>& new_tasks)
@@ -51,7 +88,7 @@ void _start_queue_updating_process(mutex& storage_mutex, vector<string>& tasks, 
 
 void _put_action(RedisClient& redis, string data, mutex& actions_mutex)
 {
-    string task_id = "random uuid";
+    string task_id = uuid::generate_uuid_v4();
 
     lock_guard<mutex> lock_(actions_mutex);
     redis.put_action(task_id, data);
@@ -96,7 +133,7 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
         if (parsed_condition->is_true(controller, campaign_id, from_dt, now_dt, api_key))
         {
             string data = "{\"campaign_id\": " + to_string(campaign_id) + ", \"action\": "
-             + to_string(action) + ", \"ts\": " + ts + ", \"api_key\": " + api_key + "}";
+             + to_string(action) + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
 
             _put_action(redis, data, actions_mutex);
         }
@@ -109,6 +146,12 @@ void _worker_main_function(vector<string>& storage, mutex& storage_mutex, mutex&
     {
         unique_lock<mutex> unique_storage_mutex(storage_mutex);
 		cond_var.wait(unique_storage_mutex, [&storage]{return !storage.empty(); });
+
+        // if (storage.empty())
+        // {
+        //     unique_storage_mutex.unlock();
+        //     continue;
+        // }
 
         string bot_id = *storage.begin();
         storage.erase(storage.begin());

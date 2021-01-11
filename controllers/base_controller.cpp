@@ -21,7 +21,7 @@ using namespace std;
 
 BaseController::BaseController() {}
 
-string BaseController::make_request(list<string> headers, string body, string url)
+string BaseController::make_request(const list<string> headers, const string body, const string url) const
 {
     cURLpp::Easy request;
     ostringstream response;

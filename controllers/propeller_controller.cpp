@@ -28,7 +28,7 @@ PropellerController::PropellerController() : BaseController()
     auto config = read_config("config.env");
 }
 
-string PropellerController::get_campaign_info(size_t campaign_id, string start_date, string end_date, string api_key)
+string PropellerController::get_campaign_info(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     string campaign_id_str = to_string(campaign_id);
     string post_fields = "{\"group_by\": \"campaign_id\","
@@ -41,7 +41,7 @@ string PropellerController::get_campaign_info(size_t campaign_id, string start_d
     return this->make_request(headers, post_fields, this->requests_url);
 }
 
-double PropellerController::get_campaign_cost(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_cost(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
 
@@ -52,7 +52,7 @@ double PropellerController::get_campaign_cost(size_t campaign_id, string start_d
     return stod(cost_str);
 }
 
-double PropellerController::get_campaign_profit(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_profit(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
 
@@ -63,37 +63,37 @@ double PropellerController::get_campaign_profit(size_t campaign_id, string start
     return stod(profit_str);
 }
 
-double PropellerController::get_campaign_revenue(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_revenue(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     return 0;
 }
 
-double PropellerController::get_campaign_cr(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_cr(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     return 0;
 }
 
-double PropellerController::get_campaign_roi(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_roi(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     return 0;
 }
 
-double PropellerController::get_campaign_cpa(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_cpa(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     return 0;
 }
 
-double PropellerController::get_campaign_cpc(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_cpc(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     return 0;
 }
 
-double PropellerController::get_campaign_cpm(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_cpm(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     return 0;
 }
 
-double PropellerController::get_campaign_clicks(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_clicks(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
 
@@ -104,17 +104,17 @@ double PropellerController::get_campaign_clicks(size_t campaign_id, string start
     return stod(clicks_str);
 }
 
-double PropellerController::get_campaign_epc(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_epc(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     return 0;
 }
 
-double PropellerController::get_campaign_leads(size_t campaign_id, string start_date, string end_date, string api_key)
+double PropellerController::get_campaign_leads(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
     return 0;
 }
 
-string PropellerController::get_now()
+string PropellerController::get_now() const
 {
     time_t rawtime;
     tm* timeinfo;
@@ -132,7 +132,7 @@ string PropellerController::get_now()
     return string(buffer);
 }
 
-string PropellerController::get_past_time(size_t seconds)
+string PropellerController::get_past_time(const size_t seconds) const
 {
     time_t rawtime;
     tm* timeinfo;

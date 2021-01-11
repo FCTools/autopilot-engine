@@ -19,7 +19,7 @@ using namespace std;
 
 int main()
 {
-    const size_t workers_num = 10;
+    const size_t workers_num = 3;
 
     launch(workers_num);
 
