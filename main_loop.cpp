@@ -146,13 +146,7 @@ void _worker_main_function(vector<string>& storage, mutex& storage_mutex, mutex&
     {
         unique_lock<mutex> unique_storage_mutex(storage_mutex);
 		cond_var.wait(unique_storage_mutex, [&storage]{return !storage.empty(); });
-
-        // if (storage.empty())
-        // {
-        //     unique_storage_mutex.unlock();
-        //     continue;
-        // }
-
+        
         string bot_id = *storage.begin();
         storage.erase(storage.begin());
         unique_storage_mutex.unlock();

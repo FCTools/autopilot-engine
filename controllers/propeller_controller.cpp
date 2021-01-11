@@ -70,22 +70,46 @@ double PropellerController::get_campaign_revenue(const size_t campaign_id, const
 
 double PropellerController::get_campaign_cr(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
-    return 0;
+    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
+
+    size_t cr_start_pos = response.find("\"cr\":") + strlen("\"cr\":");
+    size_t cr_end_pos = response.find("\"", cr_start_pos);
+    string cr_str = response.substr(cr_start_pos, cr_end_pos - cr_start_pos - 1);
+
+    return stod(cr_str);
 }
 
 double PropellerController::get_campaign_roi(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
-    return 0;
+    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
+
+    size_t roi_start_pos = response.find("\"roi\":") + strlen("\"roi\":");
+    size_t roi_end_pos = response.find("\"", roi_start_pos);
+    string roi_str = response.substr(roi_start_pos, roi_end_pos - roi_start_pos - 1);
+
+    return stod(roi_str);
 }
 
 double PropellerController::get_campaign_cpa(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
-    return 0;
+    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
+
+    size_t cpa_start_pos = response.find("\"cpa\":") + strlen("\"cpa\":");
+    size_t cpa_end_pos = response.find("\"", cpa_start_pos);
+    string cpa_str = response.substr(cpa_start_pos, cpa_end_pos - cpa_start_pos - 1);
+
+    return stod(cpa_str);
 }
 
 double PropellerController::get_campaign_cpc(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
 {
-    return 0;
+    string response = this->get_campaign_info(campaign_id, start_date, end_date, api_key);
+
+    size_t cpc_start_pos = response.find("\"cpc\":") + strlen("\"cpc\":");
+    size_t cpc_end_pos = response.find("\"", cpc_start_pos);
+    string cpc_str = response.substr(cpc_start_pos, cpc_end_pos - cpc_start_pos - 1);
+
+    return stod(cpc_str);
 }
 
 double PropellerController::get_campaign_cpm(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const

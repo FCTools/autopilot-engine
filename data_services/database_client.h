@@ -30,8 +30,8 @@ class DatabaseClient
     const size_t period_index = 9;
     const size_t campaign_index = 2;
     const size_t action_index = 4;
-    const size_t ts_index = 11;
-    const size_t api_key_index = 12;
+    const size_t ts_index = 10;
+    const size_t api_key_index = 11;
 
 public:
 
