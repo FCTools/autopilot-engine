@@ -31,7 +31,7 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
 {
     unordered_map<string, double> result;
     unordered_map<string, string> params_aliases = {{"cost", "spent"}, {"profit", "profit"}, {"CR", "cr"}, {"clicks", "clicks"}, 
-                                                    {"ROI", "roi"}, {"CPC", "cpc"}, {"CPA", "cpa"}, {"CPM", "cpm"}};
+                                                    {"ROI", "roi"}, {"CPC", "cpc"}, {"CPA", "cpa"}, {"CPM", "cpm"}, {"leads", "conversions"}};
 
     string campaign_id_str = to_string(campaign_id);
     string post_fields = "{\"group_by\": \"campaign_id\"," 
