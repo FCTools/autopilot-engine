@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION VERSION 2.8.12)
+cmake_minimum_required(VERSION VERSION 3.16.3)
 project(controllers)
 
 add_library(controllers STATIC base_controller.cpp propeller_controller.cpp)
