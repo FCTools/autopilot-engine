@@ -31,6 +31,9 @@ sudo apt update
 sudo apt install snapd
 sudo snap install cmake --classic
 
+# uwsgi python3 module
+sudo apt install uwsgi-plugin-python
+
 # clone repos
 git clone ssh://git@github.com/FCTools/autopilot-backend.git
 git clone ssh://git@github.com/FCTools/autopilot-ts.git
