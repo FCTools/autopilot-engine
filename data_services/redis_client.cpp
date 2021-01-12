@@ -13,7 +13,6 @@
 #include <fstream>
 
 #include <cpp_redis/cpp_redis>
-#include <cpp_redis/core/client.hpp>
 
 #include "redis_client.h"
 #include "config_reader.h"
@@ -36,8 +35,8 @@ void RedisClient::put_action(string key, string value)
 {
     cpp_redis::client client;
 
-	client.connect(this->actions_host, this->actions_port, [](const string& host, size_t port, cpp_redis::client::connect_state status) {
-    if (status == cpp_redis::client::connect_state::dropped) {
+	client.connect(this->actions_host, this->actions_port, [](const string& host, size_t port, cpp_redis::connect_state status) {
+    if (status == cpp_redis::connect_state::dropped) {
         cout << "client disconnected from " << host << ":" << port << endl;
     }
   	});
@@ -53,8 +52,8 @@ vector<string> RedisClient::get_updates()
 
     cpp_redis::client client;
 
-	client.connect(this->storage_host, this->storage_port, [](const string& host, size_t port, cpp_redis::client::connect_state status) {
-    if (status == cpp_redis::client::connect_state::dropped) {
+	client.connect(this->storage_host, this->storage_port, [](const string& host, size_t port, cpp_redis::connect_state status) {
+    if (status == cpp_redis::connect_state::dropped) {
         cout << "client disconnected from " << host << ":" << port << endl;
     }
   	});
