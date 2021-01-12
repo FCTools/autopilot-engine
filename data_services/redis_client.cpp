@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <fstream>
 
+#include <cpp_redis/cpp_redis>
+
 #include "redis_client.h"
 #include "config_reader.h"
 
