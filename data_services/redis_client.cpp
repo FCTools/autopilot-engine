@@ -13,6 +13,7 @@
 #include <fstream>
 
 #include <cpp_redis/cpp_redis>
+#include <cpp_redis/core/client.hpp>
 
 #include "redis_client.h"
 #include "config_reader.h"

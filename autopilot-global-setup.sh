@@ -32,17 +32,40 @@ sudo apt install snapd
 sudo snap install cmake --classic
 
 # uwsgi python3 module
-sudo apt install uwsgi-plugin-python
+sudo apt install uwsgi-plugin-python3
+
+# redis
+sudo apt install redis-server
+
+# PostgreSQL
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+sudo -u postgres psql
+\q
+# create user
+sudo -u postgres createuser --interactive
+
+# set password for user
+sudo -u postgres psql
+ALTER USER user_name WITH PASSWORD 'new_password';
+\q
+
+#create db
+sudo -u postgres psql
+CREATE DATABASE test_db WITH TEMPLATE=template0 ENCODING='UTF8' LC_CTYPE='en_US.UTF-8' LC_COLLATE='en_US.UTF-8';
+GRANT ALL privileges ON DATABASE test_db TO user_name;
 
 # clone repos
 git clone ssh://git@github.com/FCTools/autopilot-backend.git
 git clone ssh://git@github.com/FCTools/autopilot-ts.git
+git clone ssh://git@github.com/FCTools/autopilot-engine.git
 
 # set up backend
 cd autopilot/autopilot-backend
 git checkout develop
 python3.8 -m venv venv
 . venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
 deactivate
 cd ..
@@ -52,6 +75,7 @@ cd autopilot-ts
 git checkout develop
 python3.8 -m venv venv
 . venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
 deactivate
 
