@@ -9,7 +9,7 @@ add_subdirectory(controllers)
 add_subdirectory(helpers)
 add_subdirectory(helpers/expressions)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -g")
 SET (CMAKE_CXX_STANDARD 11)
 
 add_executable(main launch.cpp main_loop.cpp)

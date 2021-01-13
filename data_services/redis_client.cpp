@@ -15,20 +15,17 @@
 #include <cpp_redis/cpp_redis>
 
 #include "redis_client.h"
-#include "config_reader.h"
 
 using namespace std;
 
 
 RedisClient::RedisClient()
 {
-    auto config = read_config("config.env");
-    
-    this->storage_host = config["REDIS_STORAGE_HOST"];
-    this->storage_port = (size_t)stoi(config["REDIS_STORAGE_PORT"]);
+    this->storage_host = string(getenv("REDIS_STORAGE_HOST"));
+    this->storage_port = (size_t)stoi(string(getenv("REDIS_STORAGE_PORT")));
 
-    this->actions_host = config["REDIS_ACTIONS_HOST"];
-    this->actions_port = (size_t)stoi(config["REDIS_ACTIONS_PORT"]);
+    this->actions_host = string(getenv("REDIS_ACTIONS_HOST"));
+    this->actions_port = (size_t)stoi(string(getenv("REDIS_ACTIONS_PORT")));
 }
 
 void RedisClient::put_action(string key, string value)

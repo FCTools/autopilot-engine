@@ -19,7 +19,6 @@
 #include <curlpp/Options.hpp>
 
 #include "propeller_controller.h"
-#include "config_reader.h"
 
 using namespace std;
 
