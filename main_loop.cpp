@@ -16,6 +16,8 @@
 #include <sstream>
 #include <unordered_map>
 
+#include "spdlog/spdlog.h"
+
 #include "redis_client.h"
 #include "database_client.h"
 #include "expression.h"
@@ -143,8 +145,10 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
     }
 }
 
-void _worker_main_function(vector<string>& storage, mutex& storage_mutex, mutex& actions_mutex, condition_variable& cond_var, size_t id)
+void _worker_main_function(vector<string>& storage, mutex& storage_mutex, mutex& actions_mutex, condition_variable& cond_var)
 {
+    spdlog::info("Initialize worker.");
+
     while (true)
     {
         unique_lock<mutex> unique_storage_mutex(storage_mutex);
@@ -153,8 +157,10 @@ void _worker_main_function(vector<string>& storage, mutex& storage_mutex, mutex&
         string bot_id = *storage.begin();
         storage.erase(storage.begin());
         unique_storage_mutex.unlock();
+        spdlog::info("Get new task. Bot id: " + bot_id);
         
         _process_task(bot_id, actions_mutex);
+        spdlog::info("Finish task. Bot id: " + bot_id);
     }
 }
 
@@ -164,14 +170,20 @@ void launch(size_t workers_num)
     mutex actions_mutex;
     vector<string> tasks;
     condition_variable cond_var;
-
     vector<thread> workers_pool;
+
+    // auto logger = spdlog::get("file_logger");
+    // spdlog::get("file_logger")->info("test");
+
+    spdlog::info("Create all resources (mutexes, containers). Start to creating workers.");
 
     for (size_t worker_id = 0; worker_id < workers_num; worker_id++)
     {
-        workers_pool.emplace_back(_worker_main_function, ref(tasks), ref(storage_mutex), ref(actions_mutex), ref(cond_var), worker_id);
+        workers_pool.emplace_back(_worker_main_function, ref(tasks), ref(storage_mutex), ref(actions_mutex), ref(cond_var));
         (*(workers_pool.end() - 1)).detach();
     }
+
+    spdlog::info("Create and detach workers. Start queue storage updating.");
 
     _start_queue_updating_process(ref(storage_mutex), ref(tasks), ref(cond_var));
 

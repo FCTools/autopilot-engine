@@ -19,6 +19,7 @@ Stack:
 * [pqxx](http://pqxx.org/development/libpqxx/) library for PostgreSQL
 * [cpp_redis](https://github.com/cpp-redis/cpp_redis) library for Redis
 * [curlpp](http://www.curlpp.org/) library and [curl](https://curl.se/) for http-requests
+* [spdlog](https://github.com/gabime/spdlog) library for thread-safe logging
 * [CMake](https://cmake.org/) for building
 
 <br>

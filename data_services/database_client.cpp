@@ -12,6 +12,9 @@
 #include <vector>
 #include <pqxx/pqxx>
 
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/rotating_file_sink.h"
+
 #include "database_client.h"
 
 using namespace std;
@@ -42,6 +45,9 @@ string DatabaseClient::get_bot_field(const size_t bot_id, const size_t index) co
     pqxx::work xact(connection, "Select" + to_string(bot_id));
 
     string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
+
+    spdlog::info("Create database query: " + query);
+
     pqxx::result res = xact.exec(query);
 
     string result = (res.begin().begin() + index)->c_str();
