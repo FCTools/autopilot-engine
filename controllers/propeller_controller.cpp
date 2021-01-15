@@ -41,6 +41,9 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
                              "Accept: application/json"};
 
     string data = this->make_request(headers, post_fields, this->requests_url);
+    cout << data << endl;
+
+    cout << post_fields << endl;
 
     for (auto param: params_aliases)
     {
