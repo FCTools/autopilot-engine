@@ -139,8 +139,18 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
         auto ids = database.get_campaign_ids(campaign_id);
         size_t tracker_id = ids.first;
         string source_id = ids.second;
+        unordered_map<string, double> campaign_info;
 
-        unordered_map<string, double> campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
+        try
+        {
+            campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
+        }
+        catch (IncorrectResponse& exc)
+        {
+            spdlog::error(exc.what());
+            spdlog::error("Skip campaign: " + to_string(campaign_id));
+            continue;
+        }
 
         if(campaign_info.size() == 0)
         {

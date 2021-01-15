@@ -15,6 +15,14 @@
 
 using namespace std;
 
+struct IncorrectResponse : public std::exception
+{
+	const char * what () const throw ()
+    {
+    	return "Can't find required parameter in http-response.";
+    }
+}
+
 class BaseController
 {
 

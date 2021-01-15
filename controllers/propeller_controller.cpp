@@ -44,7 +44,7 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     {
         spdlog::error("Can't find info in tracker response about campaign " + to_string(campaign_tracker_id));
         spdlog::error("Tracker response: " + campaign_info);
-        return result;
+        throw IncorrectResponse();
     }
 
     size_t last_bracket = campaign_info.find("},", start_pos);
@@ -81,6 +81,11 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
 string PropellerController::get_field_value(const string field_name, const string data) const
 {
     string pattern = "\"" + field_name + "\":\"";
+    if (data.find(pattern) == string::npos)
+    {
+        throw IncorrectResponse();
+    }
+
     size_t start_pos = data.find(pattern) + pattern.length();
     size_t end_pos = data.find("\"", start_pos);
     string str = data.substr(start_pos, end_pos - start_pos);
