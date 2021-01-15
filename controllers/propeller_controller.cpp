@@ -31,10 +31,11 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
                                                                      const size_t period, const string api_key) const
 {
     unordered_map<string, double> result = {{"ROI", 0}, {"CR", 0}, {"EPC", 0}, {"CPC", 0}};
-
     list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
-
     string url = this->tracker_requests_url + to_string(period);
+    float cost, revenue, clicks;
+    int leads;
+
     spdlog::info("Start request: " + url);
 
     string campaign_info = this->make_request(headers, string(), url, "GET");
@@ -56,16 +57,23 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     campaign_info = campaign_info.substr(start_pos, last_bracket - start_pos);
     cout << campaign_info << endl;
 
-    float cost = stof(this->get_field_value("cost", campaign_info));
-    float revenue = stof(this->get_field_value("revenue", campaign_info));
-    float clicks = stof(this->get_field_value("clicks", campaign_info));
-    int leads = stoi(this->get_field_value("leads", campaign_info));
+    try
+    {
+        cost = stof(this->get_field_value("cost", campaign_info));
+        revenue = stof(this->get_field_value("revenue", campaign_info));
+        clicks = stof(this->get_field_value("clicks", campaign_info));
+        leads = stoi(this->get_field_value("leads", campaign_info));
+    }
+    catch (const invalid_argument& exc)
+    {
+        spdlog::error(exc.what());
+        throw IncorrectResponse();
+    }
 
     result["cost"] = cost;
     result["revenue"] = revenue;
     result["clicks"] = clicks;
     result["leads"] = leads;
-
     result["profit"] = revenue - cost;
 
     if (cost > 0)

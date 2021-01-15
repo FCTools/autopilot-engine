@@ -103,6 +103,7 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
 {
     DatabaseClient database;
     RedisClient redis;
+
     size_t bot_id = (size_t)stoi(bot_id_str);
 
     auto bot_info = database.get_bot_info(bot_id);
@@ -151,14 +152,14 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
             spdlog::error("Skip campaign: " + to_string(campaign_id));
             continue;
         }
-        catch(const RequestError& exc)
+        catch (const RequestError& exc)
         {
             spdlog::error(exc.what());
             spdlog::error("Skip campaign: " + to_string(campaign_id));
             continue;
         }
 
-        if(campaign_info.size() == 0)
+        if (campaign_info.size() == 0)
         {
             spdlog::error("Skip campaign: " + to_string(campaign_id));
             continue;
@@ -205,9 +206,6 @@ void launch(size_t workers_num)
     vector<string> tasks;
     condition_variable cond_var;
     vector<thread> workers_pool;
-
-    // auto logger = spdlog::get("file_logger");
-    // spdlog::get("file_logger")->info("test");
 
     spdlog::info("Create all resources (mutexes, containers). Start to creating workers.");
 
