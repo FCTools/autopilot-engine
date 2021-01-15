@@ -21,8 +21,8 @@ class BaseController
 public:
     BaseController();
 
-    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_id, const string start_date, 
-                                                            const string end_date, const string api_key) const = 0;
+    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
+                                                            const string api_key) const = 0;
 
     virtual string get_now() const = 0;
 

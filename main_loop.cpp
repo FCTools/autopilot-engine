@@ -115,25 +115,34 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
     Expression* parsed_condition = parser.parse(condition);
 
     BaseController* controller = nullptr;
-    string ts;
+    string ts = database.get_bot_traffic_source(bot_id);
 
-    if (database.get_bot_traffic_source(bot_id) == "Propeller Ads")
+    if (ts == "Propeller Ads")
     {
-        ts = "Propeller Ads";
         controller = new PropellerController();
     }
 
     if (!controller)
     {
+        spdlog::error("Can't choose controller for traffic source " + ts);
         throw;  // throw something
     }
 
-    string now_dt = controller->get_now();
-    string from_dt = controller->get_past_time(period);
+    // string now_dt = controller->get_now();
+    // string from_dt = controller->get_past_time(period);
 
     for (size_t campaign_id: campaigns_ids)
     {
-        unordered_map<string, double> campaign_info = controller->get_campaign_info(campaign_id, from_dt, now_dt, api_key);
+        auto ids = database.get_campaign_ids(campaign_id);
+        size_t tracker_id = ids.first;
+        string source_id = ids.second;
+
+        unordered_map<string, double> campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
+
+        if(campaign_info.size() == 0)
+        {
+            spdlog::error("Skip campaign: " + to_string(campaign_id));
+        }
 
         if (parsed_condition->is_true(campaign_info))
         {

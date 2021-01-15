@@ -18,6 +18,8 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 
+#include "spdlog/spdlog.h"
+
 #include "propeller_controller.h"
 
 using namespace std;
@@ -26,40 +28,57 @@ using namespace std;
 PropellerController::PropellerController() : BaseController() {}
 
 // where is leads?
-unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_id, const string start_date, const string end_date, const string api_key) const
+unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
+                                                                     const size_t period, const string api_key) const
 {
     unordered_map<string, double> result;
-    unordered_map<string, string> params_aliases = {{"cost", "spent"}, {"profit", "profit"}, {"CR", "cr"}, {"clicks", "clicks"}, 
-                                                    {"ROI", "roi"}, {"CPC", "cpc"}, {"CPA", "cpa"}, {"CPM", "cpm"}, {"leads", "conversions"}};
+    // unordered_map<string, string> params_aliases = {{"cost", "spent"}, {"profit", "profit"}, {"CR", "cr"}, {"clicks", "clicks"}, 
+    //                                                 {"ROI", "roi"}, {"CPC", "cpc"}, {"CPA", "cpa"}, {"CPM", "cpm"}, {"leads", "conversions"}};
 
-    string campaign_id_str = to_string(campaign_id);
-    string post_fields = "{\"group_by\": \"campaign_id\"," 
-                         "\"day_from\": \"" + start_date + "\","
-                         "\"day_to\": \"" + end_date + "\"," 
-                         "\"campaign_id\": [" + campaign_id_str + "],\"geo\": [],\"dept\": []}";
-    list<string> headers = {"Content-Type: application/json", "Authorization: Bearer " + api_key,
-                             "Accept: application/json"};
+    string post_fields = "{}";
+    list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
 
-    string data = this->make_request(headers, post_fields, this->requests_url);
-    cout << data << endl;
+    string url = this->tracker_requests_url + to_string(period);
+    spdlog::info("Start request: " + url);
+    string data = this->make_request(headers, post_fields, url);
 
-    cout << post_fields << endl;
+    size_t start_pos = data.find(to_string(campaign_tracker_id));
 
-    for (auto param: params_aliases)
+    if (start_pos ==  string::npos)
     {
-        result.insert({param.first, this->get_field_value(param.second, data)});
+        spdlog::error("Can't find info in tracker response about campaign " + to_string(campaign_tracker_id));
+        spdlog::error("Tracker response: " + data);
+        return result;
     }
 
-    result.insert({"revenue", result["cost"] + result["profit"]});
+    // string campaign_id_str = to_string(campaign_id);
+    // string post_fields = "{\"group_by\": \"campaign_id\"," 
+    //                      "\"day_from\": \"" + start_date + "\","
+    //                      "\"day_to\": \"" + end_date + "\"," 
+    //                      "\"campaign_id\": [" + campaign_id_str + "],\"geo\": [],\"dept\": []}";
+    // list<string> headers = {"Content-Type: application/json", "Authorization: Bearer " + api_key,
+    //                          "Accept: application/json"};
 
-    if (result["clicks"] != 0)
-    {
-        result.insert({"EPC", result["revenue"] / result["clicks"]});
-    }
-    else
-    {
-        result.insert({"EPC", 0});
-    }
+    // string data = this->make_request(headers, post_fields, this->tracker_requests_url);
+    // cout << data << endl;
+
+    // cout << post_fields << endl;
+
+    // for (auto param: params_aliases)
+    // {
+    //     result.insert({param.first, this->get_field_value(param.second, data)});
+    // }
+
+    // result.insert({"revenue", result["cost"] + result["profit"]});
+
+    // if (result["clicks"] != 0)
+    // {
+    //     result.insert({"EPC", result["revenue"] / result["clicks"]});
+    // }
+    // else
+    // {
+    //     result.insert({"EPC", 0});
+    // }
     
 
     return result;

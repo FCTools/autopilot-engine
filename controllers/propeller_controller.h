@@ -15,15 +15,17 @@ using namespace std;
 
 class PropellerController: public BaseController
 {
-    const string requests_url = "https://ssp-api.propellerads.com/v5/adv/statistics";
+    const string tracker_requests_url = "https://fcttrk.com/?page=Campaigns&api_key=" + string(getenv("TRACKER_API_KEY"))
+                                         + "&timezone=+3:00user_group=all&status=all&group=all&traffic_source=all&date=";
+    const string propeller_requests_url = "https://ssp-api.propellerads.com/v5/adv/statistics";
 
 public:
     PropellerController();
 
     double get_field_value(const string field_name, const string data) const;
 
-    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_id, const string start_date, 
-    const string end_date, const string api_key) const;
+    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
+                                                            const string api_key) const;
 
     virtual string get_now() const;
 

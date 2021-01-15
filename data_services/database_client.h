@@ -51,4 +51,6 @@ public:
 
     string get_bot_api_key(const size_t bot_id) const;
 
+    pair<size_t, string> get_campaign_ids(const size_t campaign_id);  // returns pair <tracker_id, source_id>
+
 };

@@ -12,6 +12,7 @@
 #include "spdlog/sinks/rotating_file_sink.h"
 
 #include "main_loop.h"
+#include "propeller_controller.h"
 
 
 using namespace std;
@@ -34,12 +35,15 @@ int main()
     //     return EXIT_FAILURE;
     // }
 
+    PropellerController controller;
+    
+
     spdlog::set_pattern("[%t] %+");
 
     spdlog::info("Engine launched.");
     spdlog::info("Workers number: " + to_string(workers_num));
     
-    launch(workers_num);
+    // launch(workers_num);
 
     return EXIT_SUCCESS;
 }

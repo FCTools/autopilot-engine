@@ -60,6 +60,27 @@ string DatabaseClient::get_bot_condition(const size_t bot_id) const
     return this->get_bot_field(bot_id, this->condition_index);
 }
 
+pair<size_t, string> DatabaseClient::get_campaign_ids(const size_t campaign_id)
+{
+    pqxx::connection connection(this->connection_string);
+    pqxx::work xact(connection, "Select" + to_string(campaign_id));
+
+    string query("SELECT * from bot_manager_campaign WHERE ID='" + to_string(campaign_id) + "'");
+
+    spdlog::info("Create database query: " + query);
+
+    pqxx::result res = xact.exec(query);
+
+    const size_t tracker_id_index = 0;  // set true value
+    const size_t source_id_index = 1;  // set true value
+
+    string tracker_id_str = (res.begin().begin() + tracker_id_index)->c_str();
+    string source_id = (res.begin().begin() + source_id_index)->c_str();
+
+    size_t tracker_id = (size_t)stoi(tracker_id_str);
+
+    return {tracker_id, source_id};
+}
 
 size_t DatabaseClient::get_bot_period(const size_t bot_id) const
 {
