@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <unordered_map>
+
 #include <cstdlib>
 #include <string>
 #include <vector>
@@ -37,19 +39,11 @@ public:
 
     DatabaseClient();
 
-    string get_bot_field(const size_t bot_id, const size_t index) const;
+    pqxx::row::const_iterator _get_bot_info(const size_t bot_id) const;
 
-    string get_bot_condition(const size_t bot_id) const;
-
-    size_t get_bot_period(const size_t bot_id) const;
-
-    size_t get_bot_action(const size_t bot_id) const;
+    unordered_map<string, string> get_bot_info(const size_t bot_id) const;
 
     vector<size_t> get_bot_campaigns(const size_t bot_id) const;
-
-    string get_bot_traffic_source(const size_t bot_id) const;
-
-    string get_bot_api_key(const size_t bot_id) const;
 
     pair<size_t, string> get_campaign_ids(const size_t campaign_id);  // returns pair <tracker_id, source_id>
 

@@ -63,6 +63,7 @@ namespace uuid {
 }
 
 
+// check for new tasks in storage redis
 void _extend_storage(mutex& storage_mutex, vector<string>& storage, vector<string>& new_tasks)
 {
     lock_guard<mutex> lock_(storage_mutex);
@@ -89,6 +90,7 @@ void _start_queue_updating_process(mutex& storage_mutex, vector<string>& tasks, 
 
 }
 
+// put action to action redis
 void _put_action(RedisClient& redis, string data, mutex& actions_mutex)
 {
     string task_id = uuid::generate_uuid_v4();
@@ -103,34 +105,35 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
     RedisClient redis;
     size_t bot_id = (size_t)stoi(bot_id_str);
 
-    string condition = database.get_bot_condition(bot_id);
-    size_t period = database.get_bot_period(bot_id);
-    size_t action = database.get_bot_action(bot_id);
-    string api_key = database.get_bot_api_key(bot_id);
+    auto bot_info = database.get_bot_info(bot_id);
+
+    string condition = bot_info["condition"];
+    size_t period = (size_t)stoi(bot_info["period"]);
+    size_t action = (size_t)stoi(bot_info["action"]);
+    string api_key = bot_info["api_key"];
+    string ts = bot_info["ts"];
 
     // get bot campaigns here
     vector<size_t> campaigns_ids = database.get_bot_campaigns(bot_id);
 
     ConditionsParser parser;
+
+    spdlog::info("Start parsing for this condition: " + condition);
     Expression* parsed_condition = parser.parse(condition);
+    spdlog::info("Condition " + condition + " was successfully parsed");
 
     BaseController* controller = nullptr;
-    string ts = database.get_bot_traffic_source(bot_id);
 
     if (ts == "Propeller Ads")
     {
         controller = new PropellerController();
     }
-
-    if (!controller)
+    else
     {
         spdlog::error("Can't choose controller for traffic source " + ts);
-        throw;  // throw something
+        throw;
     }
-
-    // string now_dt = controller->get_now();
-    // string from_dt = controller->get_past_time(period);
-
+    
     for (size_t campaign_id: campaigns_ids)
     {
         auto ids = database.get_campaign_ids(campaign_id);
@@ -142,6 +145,7 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
         if(campaign_info.size() == 0)
         {
             spdlog::error("Skip campaign: " + to_string(campaign_id));
+            continue;
         }
 
         if (parsed_condition->is_true(campaign_info))
@@ -151,6 +155,11 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
 
             _put_action(redis, data, actions_mutex);
         }
+    }
+
+    if (controller)
+    {
+        delete controller;
     }
 }
 

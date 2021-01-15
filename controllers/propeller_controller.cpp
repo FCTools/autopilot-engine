@@ -51,23 +51,9 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     campaign_info = campaign_info.substr(start_pos, last_bracket - start_pos);
     cout << campaign_info << endl;
 
-    // string campaign_id_str = to_string(campaign_id);
-    // string post_fields = "{\"group_by\": \"campaign_id\"," 
-    //                      "\"day_from\": \"" + start_date + "\","
-    //                      "\"day_to\": \"" + end_date + "\"," 
-    //                      "\"campaign_id\": [" + campaign_id_str + "],\"geo\": [],\"dept\": []}";
-    // list<string> headers = {"Content-Type: application/json", "Authorization: Bearer " + api_key,
-    //                          "Accept: application/json"};
-
-    // string data = this->make_request(headers, post_fields, this->tracker_requests_url);
-    // cout << data << endl;
-
-    // cout << post_fields << endl;
-
-    double cost = stod(this->get_field_value("cost", campaign_info));
-    double revenue = stod(this->get_field_value("revenue", campaign_info));
-    double clicks = stod(this->get_field_value("clicks", campaign_info));
-    cout << "leads: " << this->get_field_value("leads", campaign_info) << endl;
+    float cost = stof(this->get_field_value("cost", campaign_info));
+    float revenue = stof(this->get_field_value("revenue", campaign_info));
+    float clicks = stof(this->get_field_value("clicks", campaign_info));
     int leads = stoi(this->get_field_value("leads", campaign_info));
 
     result["cost"] = cost;
@@ -98,8 +84,6 @@ string PropellerController::get_field_value(const string field_name, const strin
     size_t start_pos = data.find(pattern) + pattern.length();
     size_t end_pos = data.find("\"", start_pos);
     string str = data.substr(start_pos, end_pos - start_pos);
-
-    cout << str << endl;
 
     return str;
 }

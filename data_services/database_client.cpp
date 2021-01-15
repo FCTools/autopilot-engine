@@ -39,7 +39,7 @@ DatabaseClient::DatabaseClient()
                               " password=" + this->database_password;
 }
 
-string DatabaseClient::get_bot_field(const size_t bot_id, const size_t index) const
+pqxx::row::const_iterator DatabaseClient::_get_bot_info(const size_t bot_id) const
 {
     pqxx::connection connection(this->connection_string);
     pqxx::work xact(connection, "Select" + to_string(bot_id));
@@ -49,15 +49,22 @@ string DatabaseClient::get_bot_field(const size_t bot_id, const size_t index) co
     spdlog::info("Create database query: " + query);
 
     pqxx::result res = xact.exec(query);
-
-    string result = (res.begin().begin() + index)->c_str();
-
-    return result;
+    return res.begin().begin();
 }
 
-string DatabaseClient::get_bot_condition(const size_t bot_id) const
+unordered_map<string, string> DatabaseClient::get_bot_info(const size_t bot_id) const
 {
-    return this->get_bot_field(bot_id, this->condition_index);
+    auto bot_info = this->_get_bot_info(bot_id);
+    unordered_map<string, string> result;
+
+    result["condition"] = (bot_info + this->condition_index)->c_str();
+    result["period"] = (bot_info + this->period_index)->c_str();
+    result["campaign_id"] = (bot_info + this->campaign_index)->c_str();
+    result["action"] = (bot_info + this->action_index)->c_str();
+    result["ts"] = (bot_info + this->ts_index)->c_str();
+    result["api_key"] = (bot_info + this->api_key_index)->c_str();
+
+    return result;
 }
 
 pair<size_t, string> DatabaseClient::get_campaign_ids(const size_t campaign_id)
@@ -82,13 +89,6 @@ pair<size_t, string> DatabaseClient::get_campaign_ids(const size_t campaign_id)
     return {tracker_id, source_id};
 }
 
-size_t DatabaseClient::get_bot_period(const size_t bot_id) const
-{
-    string result = this->get_bot_field(bot_id, this->period_index);
-    return (size_t)stoi(result);
-}
-
-
 vector<size_t> DatabaseClient::get_bot_campaigns(const size_t bot_id) const
 {
     pqxx::connection connection(this->connection_string);
@@ -108,21 +108,4 @@ vector<size_t> DatabaseClient::get_bot_campaigns(const size_t bot_id) const
     }
 
     return result;
-}
-
-
-size_t DatabaseClient::get_bot_action(const size_t bot_id) const
-{
-    string result = this->get_bot_field(bot_id, this->action_index);
-    return (size_t)stoi(result);
-}
-
-string DatabaseClient::get_bot_traffic_source(const size_t bot_id) const
-{
-    return this->get_bot_field(bot_id, this->ts_index);
-}
-
-string DatabaseClient::get_bot_api_key(const size_t bot_id) const
-{
-    return this->get_bot_field(bot_id, this->api_key_index);
 }

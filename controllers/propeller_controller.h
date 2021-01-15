@@ -17,6 +17,7 @@ class PropellerController: public BaseController
 {
     const string tracker_requests_url = "https://fcttrk.com/?page=Campaigns&api_key=" + string(getenv("TRACKER_API_KEY"))
                                          + "&timezone=+3:00&user_group=all&status=all&group=all&traffic_source=all&date=";
+                                         
     const string propeller_requests_url = "https://ssp-api.propellerads.com/v5/adv/statistics";
 
 public:
