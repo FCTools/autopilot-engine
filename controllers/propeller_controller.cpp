@@ -27,29 +27,29 @@ using namespace std;
 
 PropellerController::PropellerController() : BaseController() {}
 
-// where is leads?
 unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
                                                                      const size_t period, const string api_key) const
 {
-    unordered_map<string, double> result;
-    // unordered_map<string, string> params_aliases = {{"cost", "spent"}, {"profit", "profit"}, {"CR", "cr"}, {"clicks", "clicks"}, 
-    //                                                 {"ROI", "roi"}, {"CPC", "cpc"}, {"CPA", "cpa"}, {"CPM", "cpm"}, {"leads", "conversions"}};
+    unordered_map<string, double> result = {{"ROI", 0}, {"CR", 0}, {"EPC", 0}, {"CPC", 0}};
 
-    string post_fields = "{}";
     list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
 
     string url = this->tracker_requests_url + to_string(period);
     spdlog::info("Start request: " + url);
-    string data = this->make_request(headers, post_fields, url);
+    string campaign_info = this->make_request(headers, string(), url, "GET");
+    cout << campaign_info.length() << endl;
 
-    size_t start_pos = data.find(to_string(campaign_tracker_id));
-
+    size_t start_pos = campaign_info.find("{\"id\":\"" + to_string(campaign_tracker_id) + "\"");
     if (start_pos ==  string::npos)
     {
         spdlog::error("Can't find info in tracker response about campaign " + to_string(campaign_tracker_id));
-        spdlog::error("Tracker response: " + data);
+        spdlog::error("Tracker response: " + campaign_info);
         return result;
     }
+
+    size_t last_bracket = campaign_info.find("},", start_pos);
+    campaign_info = campaign_info.substr(start_pos, last_bracket - start_pos);
+    cout << campaign_info << endl;
 
     // string campaign_id_str = to_string(campaign_id);
     // string post_fields = "{\"group_by\": \"campaign_id\"," 
@@ -64,34 +64,44 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
 
     // cout << post_fields << endl;
 
-    // for (auto param: params_aliases)
-    // {
-    //     result.insert({param.first, this->get_field_value(param.second, data)});
-    // }
+    double cost = stod(this->get_field_value("cost", campaign_info));
+    double revenue = stod(this->get_field_value("revenue", campaign_info));
+    double clicks = stod(this->get_field_value("clicks", campaign_info));
+    cout << "leads: " << this->get_field_value("leads", campaign_info) << endl;
+    int leads = stoi(this->get_field_value("leads", campaign_info));
 
-    // result.insert({"revenue", result["cost"] + result["profit"]});
+    result["cost"] = cost;
+    result["revenue"] = revenue;
+    result["clicks"] = clicks;
+    result["leads"] = leads;
 
-    // if (result["clicks"] != 0)
-    // {
-    //     result.insert({"EPC", result["revenue"] / result["clicks"]});
-    // }
-    // else
-    // {
-    //     result.insert({"EPC", 0});
-    // }
+    result["profit"] = revenue - cost;
+
+    if (cost > 0)
+    {
+        result["ROI"] = (revenue / cost - 1) * 100;
+    }
     
-
+    if (clicks > 0)
+    {
+        result["CR"] = 100 * leads / clicks;
+        result["EPC"] = revenue / clicks;
+        result["CPC"] = cost / clicks;
+    }
+    
     return result;
 }
 
-double PropellerController::get_field_value(const string field_name, const string data) const
+string PropellerController::get_field_value(const string field_name, const string data) const
 {
-    string pattern = "\"" + field_name + "\":";
+    string pattern = "\"" + field_name + "\":\"";
     size_t start_pos = data.find(pattern) + pattern.length();
     size_t end_pos = data.find("\"", start_pos);
-    string str = data.substr(start_pos, end_pos - start_pos - 1);
+    string str = data.substr(start_pos, end_pos - start_pos);
 
-    return stod(str);
+    cout << str << endl;
+
+    return str;
 }
 
 string PropellerController::get_now() const

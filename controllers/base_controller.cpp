@@ -21,7 +21,8 @@ using namespace std;
 
 BaseController::BaseController() {}
 
-string BaseController::make_request(const list<string> headers, const string body, const string url) const
+string BaseController::make_request(const list<string> headers, const string body, const string url, 
+                                    const string type) const
 {
     cURLpp::Easy request;
     ostringstream response;
@@ -32,6 +33,11 @@ string BaseController::make_request(const list<string> headers, const string bod
     request.setOpt<cURLpp::options::PostFieldSize>(body.length());
     request.setOpt<cURLpp::options::WriteStream>(&response);
     request.setOpt<cURLpp::Options::Verbose>(true);
+
+    if (type != "POST")
+    {
+        request.setOpt<cURLpp::options::CustomRequest>(type);
+    }
 
     request.perform();
     return response.str();

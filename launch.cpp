@@ -17,7 +17,7 @@
 
 using namespace std;
 
-int main()
+int main(int argc, char** argv)
 {
     const size_t workers_num = 3;
 
@@ -42,6 +42,8 @@ int main()
 
     spdlog::info("Engine launched.");
     spdlog::info("Workers number: " + to_string(workers_num));
+
+    auto info = controller.get_campaign_info(2797, "32456", 1, "werh");
     
     // launch(workers_num);
 
