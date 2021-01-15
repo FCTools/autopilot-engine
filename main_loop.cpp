@@ -145,7 +145,13 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
         {
             campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
         }
-        catch (IncorrectResponse& exc)
+        catch (const IncorrectResponse& exc)
+        {
+            spdlog::error(exc.what());
+            spdlog::error("Skip campaign: " + to_string(campaign_id));
+            continue;
+        }
+        catch(const RequestError& exc)
         {
             spdlog::error(exc.what());
             spdlog::error("Skip campaign: " + to_string(campaign_id));

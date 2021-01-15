@@ -36,8 +36,13 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
 
     string url = this->tracker_requests_url + to_string(period);
     spdlog::info("Start request: " + url);
+
     string campaign_info = this->make_request(headers, string(), url, "GET");
-    cout << campaign_info.length() << endl;
+
+    if (campaign_info.size() == 0)
+    {
+        spdlog::error("Error while trying to make request (or empty result)");
+    }
 
     size_t start_pos = campaign_info.find("{\"id\":\"" + to_string(campaign_tracker_id) + "\"");
     if (start_pos ==  string::npos)

@@ -21,7 +21,15 @@ struct IncorrectResponse : public std::exception
     {
     	return "Can't find required parameter in http-response.";
     }
-}
+};
+
+struct RequestError : public std::exception
+{
+	const char * what () const throw ()
+    {
+    	return "Error while trying to make request";
+    }
+};
 
 class BaseController
 {

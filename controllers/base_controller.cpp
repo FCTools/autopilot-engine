@@ -24,6 +24,8 @@ BaseController::BaseController() {}
 string BaseController::make_request(const list<string> headers, const string body, const string url, 
                                     const string type) const
 {
+    cURLpp::Cleanup cleanup;
+
     cURLpp::Easy request;
     ostringstream response;
 
@@ -39,7 +41,15 @@ string BaseController::make_request(const list<string> headers, const string bod
         request.setOpt<cURLpp::options::CustomRequest>(type);
     }
 
-    request.perform();
+    try
+    {
+        request.perform();
+    }
+    catch(...)
+    {
+        throw RequestError();
+    }
+
     return response.str();
 }
 
