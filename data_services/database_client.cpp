@@ -39,7 +39,7 @@ DatabaseClient::DatabaseClient()
                               " password=" + this->database_password;
 }
 
-pqxx::row::const_iterator DatabaseClient::_get_bot_info(const size_t bot_id) const
+unordered_map<string, string> DatabaseClient::get_bot_info(const size_t bot_id) const
 {
     pqxx::connection connection(this->connection_string);
     pqxx::work xact(connection, "Select" + to_string(bot_id));
@@ -49,12 +49,7 @@ pqxx::row::const_iterator DatabaseClient::_get_bot_info(const size_t bot_id) con
     spdlog::info("Create database query: " + query);
 
     pqxx::result res = xact.exec(query);
-    return res.begin().begin();
-}
-
-unordered_map<string, string> DatabaseClient::get_bot_info(const size_t bot_id) const
-{
-    auto bot_info = this->_get_bot_info(bot_id);
+    auto bot_info = res.begin().begin();
     unordered_map<string, string> result;
 
     result["condition"] = (bot_info + this->condition_index)->c_str();
@@ -63,7 +58,7 @@ unordered_map<string, string> DatabaseClient::get_bot_info(const size_t bot_id) 
     result["action"] = (bot_info + this->action_index)->c_str();
     result["ts"] = (bot_info + this->ts_index)->c_str();
     result["api_key"] = (bot_info + this->api_key_index)->c_str();
-
+    
     return result;
 }
 

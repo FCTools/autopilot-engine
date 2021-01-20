@@ -44,8 +44,6 @@ public:
 
     DatabaseClient();
 
-    pqxx::row::const_iterator _get_bot_info(const size_t bot_id) const;
-
     unordered_map<string, string> get_bot_info(const size_t bot_id) const;
 
     vector<size_t> get_bot_campaigns(const size_t bot_id) const;
