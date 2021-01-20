@@ -163,7 +163,7 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
 
         if (campaign_info.size() == 0)
         {
-            spdlog::error("Skip campaign: " + to_string(campaign_id));
+            spdlog::error("Can't get info. Skip campaign: " + to_string(campaign_id));
             continue;
         }
 
@@ -217,7 +217,7 @@ void launch(const size_t workers_num)
         (*(workers_pool.end() - 1)).detach();
     }
 
-    spdlog::info("Create and detach workers. Start queue storage updating.");
+    spdlog::info("Create and detach workers. Start storage updating.");
 
     _start_queue_updating_process(ref(storage_mutex), ref(tasks), ref(cond_var));
 

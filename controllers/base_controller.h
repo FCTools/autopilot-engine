@@ -33,6 +33,9 @@ struct RequestError : public std::exception
 
 class BaseController
 {
+protected:
+    string make_request(const list<string> headers, const string body, const string url, 
+                        const string type = "POST") const;
 
 public:
     BaseController();
@@ -43,9 +46,6 @@ public:
     virtual string get_now() const = 0;
 
     virtual string get_past_time(const size_t seconds) const = 0;
-
-    string make_request(const list<string> headers, const string body, const string url, 
-                        const string type = "POST") const;
 
     virtual ~BaseController();
 };

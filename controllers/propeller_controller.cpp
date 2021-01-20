@@ -25,6 +25,12 @@
 using namespace std;
 
 
+string _build_tracker_url(const string base_url, const string period, const string campaign_id)
+{
+    return base_url + period + "&camp_id=" + campaign_id;
+}
+
+
 PropellerController::PropellerController() : BaseController() {}
 
 unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
@@ -32,7 +38,7 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
 {
     unordered_map<string, double> result = {{"ROI", 0}, {"CR", 0}, {"EPC", 0}, {"CPC", 0}};
     list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
-    string url = this->tracker_requests_url + to_string(period);
+    const string url = _build_tracker_url(this->tracker_requests_url, to_string(period), to_string(campaign_tracker_id));
     float cost, revenue, clicks;
     int leads;
 
@@ -44,18 +50,6 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     {
         spdlog::error("Error while trying to make request (or empty result)");
     }
-
-    size_t start_pos = campaign_info.find("{\"id\":\"" + to_string(campaign_tracker_id) + "\"");
-    if (start_pos ==  string::npos)
-    {
-        spdlog::error("Can't find info in tracker response about campaign " + to_string(campaign_tracker_id));
-        spdlog::error("Tracker response: " + campaign_info);
-        throw IncorrectResponse();
-    }
-
-    size_t last_bracket = campaign_info.find("},", start_pos);
-    campaign_info = campaign_info.substr(start_pos, last_bracket - start_pos);
-    cout << campaign_info << endl;
 
     try
     {

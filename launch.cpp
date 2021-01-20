@@ -12,22 +12,20 @@
 #include "spdlog/sinks/rotating_file_sink.h"
 
 #include "main_loop.h"
-#include "database_client.h"
-#include "propeller_controller.h"
 
 
 using namespace std;
 
 int main(int argc, char** argv)
 {
-    const size_t workers_num = (size_t)stoi(getenv("POOL_SIZE"));
+    const size_t workers_number = (size_t)stoi(getenv("POOL_SIZE"));
 
     spdlog::set_pattern("[%t] %+");
 
     spdlog::info("Engine launched.");
-    spdlog::info("Workers number: " + to_string(workers_num));
+    spdlog::info("Workers number: " + to_string(workers_number));
 
-    launch(workers_num);
+    launch(workers_number);
 
     return EXIT_SUCCESS;
 }
