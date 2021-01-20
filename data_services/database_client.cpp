@@ -78,12 +78,9 @@ pair<size_t, string> DatabaseClient::get_campaign_ids(const size_t campaign_id)
 
     pqxx::result res = xact.exec(query);
 
-    const size_t tracker_id_index = 0;  // set true value
-    const size_t source_id_index = 1;  // set true value
+    string tracker_id_str = (res.begin().begin() + this->tracker_id_index)->c_str();
 
-    string tracker_id_str = (res.begin().begin() + tracker_id_index)->c_str();
-    string source_id = (res.begin().begin() + source_id_index)->c_str();
-
+    string source_id = (res.begin().begin() + this->source_id_index)->c_str();
     size_t tracker_id = (size_t)stoi(tracker_id_str);
 
     return {tracker_id, source_id};

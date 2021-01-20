@@ -28,12 +28,17 @@ class DatabaseClient
 
     const string DEFAULT_PORT = "5432";
 
+    // bot row indecies
     const size_t condition_index = 3;
     const size_t period_index = 9;
     const size_t campaign_index = 2;
     const size_t action_index = 4;
     const size_t ts_index = 10;
     const size_t api_key_index = 11;
+    
+    // campaign row indecies
+    const size_t tracker_id_index = 3;
+    const size_t source_id_index = 4;
 
 public:
 

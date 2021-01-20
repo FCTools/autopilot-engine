@@ -27,6 +27,8 @@
 
 using namespace std;
 
+const double checking_timeout = stod(string(getenv("CHECKING_TIMEOUT")));
+
 // uuid generating logic
 namespace uuid {
     static random_device rd;
@@ -85,13 +87,13 @@ void _start_queue_updating_process(mutex& storage_mutex, vector<string>& tasks, 
             cond_var.notify_all();
         }
 
-        this_thread::sleep_for(chrono::seconds(10));
+        this_thread::sleep_for(chrono::seconds(5));
     }
 
 }
 
 // put action to action redis
-void _put_action(RedisClient& redis, string data, mutex& actions_mutex)
+void _put_action(RedisClient& redis, const string data, mutex& actions_mutex)
 {
     string task_id = uuid::generate_uuid_v4();
 
@@ -99,7 +101,7 @@ void _put_action(RedisClient& redis, string data, mutex& actions_mutex)
     redis.put_action(task_id, data);
 }
 
-void _process_task(string bot_id_str, mutex& actions_mutex)
+void _process_task(const string bot_id_str, mutex& actions_mutex)
 {
     DatabaseClient database;
     RedisClient redis;
@@ -167,7 +169,7 @@ void _process_task(string bot_id_str, mutex& actions_mutex)
 
         if (parsed_condition->is_true(campaign_info))
         {
-            string data = "{\"campaign_id\": " + to_string(campaign_id) + ", \"action\": "
+            string data = "{\"campaign_id\": " + source_id + ", \"action\": "
              + to_string(action) + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
 
             _put_action(redis, data, actions_mutex);
@@ -199,7 +201,7 @@ void _worker_main_function(vector<string>& storage, mutex& storage_mutex, mutex&
     }
 }
 
-void launch(size_t workers_num)
+void launch(const size_t workers_num)
 {
     mutex storage_mutex;
     mutex actions_mutex;
@@ -209,7 +211,7 @@ void launch(size_t workers_num)
 
     spdlog::info("Create all resources (mutexes, containers). Start to creating workers.");
 
-    for (size_t worker_id = 0; worker_id < workers_num; worker_id++)
+    for (size_t _ = 0; _ < workers_num; _++)
     {
         workers_pool.emplace_back(_worker_main_function, ref(tasks), ref(storage_mutex), ref(actions_mutex), ref(cond_var));
         (*(workers_pool.end() - 1)).detach();
