@@ -201,7 +201,7 @@ void _worker_main_function(vector<string>& storage, mutex& storage_mutex, mutex&
     }
 }
 
-void launch(const size_t workers_num)
+void start(const size_t workers_num)
 {
     mutex storage_mutex;
     mutex actions_mutex;

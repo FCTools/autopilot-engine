@@ -27,6 +27,8 @@ class RedisClient
 public:
     RedisClient();
 
+    bool connectable();
+
     void put_action(string key, string value);
 
     vector<string> get_updates();

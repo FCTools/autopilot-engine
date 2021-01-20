@@ -7,4 +7,4 @@
 // Author: German Yakimov <german13yakimov@gmail.com>
 
 
-void launch(const std::size_t workers_num);
+void start(const std::size_t workers_num);

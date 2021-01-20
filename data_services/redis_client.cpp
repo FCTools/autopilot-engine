@@ -13,6 +13,7 @@
 #include <fstream>
 
 #include <cpp_redis/cpp_redis>
+#include "spdlog/spdlog.h"
 
 #include "redis_client.h"
 
@@ -26,6 +27,41 @@ RedisClient::RedisClient()
 
     this->actions_host = string(getenv("REDIS_ACTIONS_HOST"));
     this->actions_port = (size_t)stoi(string(getenv("REDIS_ACTIONS_PORT")));
+}
+
+bool RedisClient::connectable()
+{
+    try
+    {
+        cpp_redis::client client;
+        client.connect(this->actions_host, this->actions_port, [](const string& host, size_t port, cpp_redis::connect_state status) {
+            if (status == cpp_redis::connect_state::dropped) {
+                cout << "client disconnected from " << host << ":" << port << endl;
+            }
+        });
+    }
+    catch(cpp_redis::redis_error)
+    {
+        spdlog::critical("Can't connect to redis on port " + to_string(this->actions_port));
+        return false;
+    }
+    
+    try
+    {
+        cpp_redis::client client;
+        client.connect(this->storage_host, this->storage_port, [](const string& host, size_t port, cpp_redis::connect_state status) {
+            if (status == cpp_redis::connect_state::dropped) {
+                cout << "client disconnected from " << host << ":" << port << endl;
+            }
+        });
+    }
+    catch(cpp_redis::redis_error)
+    {
+        spdlog::critical("Can't connect to redis on port " + to_string(this->storage_port));
+        return false;
+    }
+
+    return true;
 }
 
 void RedisClient::put_action(string key, string value)
