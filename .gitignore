@@ -7,6 +7,9 @@
 *.o
 *.obj
 
+# logs
+logs/
+
 # VS Code debug
 .vscode/
 .idea/

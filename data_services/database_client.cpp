@@ -46,7 +46,7 @@ unordered_map<string, string> DatabaseClient::get_bot_info(const size_t bot_id) 
 
     string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
 
-    spdlog::info("Create database query: " + query);
+    spdlog::get("file_logger")->info("Create database query: " + query);
 
     pqxx::result res = xact.exec(query);
     auto bot_info = res.begin().begin();
@@ -69,7 +69,7 @@ pair<size_t, string> DatabaseClient::get_campaign_ids(const size_t campaign_id)
 
     string query("SELECT * from bot_manager_campaign WHERE ID='" + to_string(campaign_id) + "'");
 
-    spdlog::info("Create database query: " + query);
+    spdlog::get("file_logger")->info("Create database query: " + query);
 
     pqxx::result res = xact.exec(query);
 

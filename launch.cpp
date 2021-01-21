@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/rotating_file_sink.h"
 
 #include "main_loop.h"
 #include "redis_client.h"
@@ -52,16 +53,23 @@ int main(int argc, char** argv)
 {
     spdlog::set_pattern("[%t] %+");
 
+    auto max_size = 1048576 * 5;
+    auto max_files = 10;
+    auto logger = spdlog::rotating_logger_mt("file_logger", "logs/info_log.log", max_size, max_files);
+
+    logger->info("---------------------");
+    logger->info("Start new kernel session.");
+
     if (!env_is_correct())
     {
-        spdlog::critical("Quit.");
+        logger->critical("Quit.");
         return EXIT_FAILURE;
     }
 
     const size_t workers_number = (size_t)stoi(getenv("POOL_SIZE"));
 
-    spdlog::info("Engine launched.");
-    spdlog::info("Workers number: " + to_string(workers_number));
+    logger->info("Engine launched.");
+    logger->info("Workers number: " + to_string(workers_number));
 
     start(workers_number);
 

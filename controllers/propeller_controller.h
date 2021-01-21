@@ -8,6 +8,7 @@
 
 #pragma once
 #include <string>
+#include <vector>
 
 #include "base_controller.h"
 
@@ -24,14 +25,10 @@ public:
 
     PropellerController();
 
-    string get_field_value(const string field_name, const string data) const;
+    vector<string> get_field_values(const string field_name, const string data) const;
 
     virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
                                                             const string api_key) const;
-
-    virtual string get_now() const;
-
-    virtual string get_past_time(const size_t seconds) const;
 
     virtual ~PropellerController();
 };
