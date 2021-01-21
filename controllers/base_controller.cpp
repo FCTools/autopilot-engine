@@ -21,36 +21,4 @@ using namespace std;
 
 BaseController::BaseController() {}
 
-string BaseController::make_request(const list<string> headers, const string body, const string url, 
-                                    const string type) const
-{
-    cURLpp::Cleanup cleanup;
-
-    cURLpp::Easy request;
-    ostringstream response;
-
-    request.setOpt<cURLpp::options::HttpHeader>(headers);
-    request.setOpt<cURLpp::options::Url>(url);
-    request.setOpt<cURLpp::options::PostFields>(body);
-    request.setOpt<cURLpp::options::PostFieldSize>(body.length());
-    request.setOpt<cURLpp::options::WriteStream>(&response);
-    request.setOpt<cURLpp::Options::Verbose>(true);
-
-    if (type != "POST")
-    {
-        request.setOpt<cURLpp::options::CustomRequest>(type);
-    }
-
-    try
-    {
-        request.perform();
-    }
-    catch(...)
-    {
-        throw RequestError();
-    }
-
-    return response.str();
-}
-
 BaseController::~BaseController() {}

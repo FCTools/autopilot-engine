@@ -24,6 +24,7 @@
 #include "conditions_parser.h"
 #include "base_controller.h"
 #include "propeller_controller.h"
+#include "http.h"
 
 using namespace std;
 
@@ -36,30 +37,40 @@ namespace uuid {
     static uniform_int_distribution<> dis(0, 15);
     static uniform_int_distribution<> dis2(8, 11);
 
-    string generate_uuid_v4() {
+    string generate_uuid_v4() 
+    {
         stringstream ss;
-        int i;
-        ss << std::hex;
-        for (i = 0; i < 8; i++) {
+        ss << hex;
+
+        for (size_t _ = 0; _ < 8; _++)
+        {
             ss << dis(gen);
         }
         ss << "-";
-        for (i = 0; i < 4; i++) {
+
+        for (size_t _ = 0; _ < 4; _++) 
+        {
             ss << dis(gen);
         }
         ss << "-4";
-        for (i = 0; i < 3; i++) {
+
+        for (size_t _ = 0; _ < 3; _++) 
+        {
+            ss << dis(gen);
+        }
+        ss << "-" << dis2(gen);
+
+        for (size_t _ = 0; _ < 3; _++) 
+        {
             ss << dis(gen);
         }
         ss << "-";
-        ss << dis2(gen);
-        for (i = 0; i < 3; i++) {
+
+        for (size_t _ = 0; _ < 12; _++)
+        {
             ss << dis(gen);
         }
-        ss << "-";
-        for (i = 0; i < 12; i++) {
-            ss << dis(gen);
-        };
+
         return ss.str();
     }
 }
@@ -106,8 +117,8 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
     DatabaseClient database;
     RedisClient redis;
 
-    size_t bot_id = (size_t)stoi(bot_id_str);
-
+    // get bot info from database
+    const size_t bot_id = (size_t)stoi(bot_id_str);
     auto bot_info = database.get_bot_info(bot_id);
 
     string condition = bot_info["condition"];
@@ -116,7 +127,7 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
     string api_key = bot_info["api_key"];
     string ts = bot_info["ts"];
 
-    // get bot campaigns here
+    // get bot campaigns from database
     vector<size_t> campaigns_ids = database.get_bot_campaigns(bot_id);
 
     ConditionsParser parser;
@@ -136,6 +147,7 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
         spdlog::error("Can't choose controller for traffic source " + ts);
         throw;
     }
+    spdlog::info("Select controller for " + ts);
     
     for (size_t campaign_id: campaigns_ids)
     {
@@ -148,13 +160,13 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
         {
             campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
         }
-        catch (const IncorrectResponse& exc)
+        catch (const http::IncorrectResponse& exc)
         {
             spdlog::error(exc.what());
             spdlog::error("Skip campaign: " + to_string(campaign_id));
             continue;
         }
-        catch (const RequestError& exc)
+        catch (const http::RequestError& exc)
         {
             spdlog::error(exc.what());
             spdlog::error("Skip campaign: " + to_string(campaign_id));
@@ -172,6 +184,7 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
             string data = "{\"campaign_id\": " + source_id + ", \"action\": "
              + to_string(action) + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
 
+            spdlog::info("Condition is true. Bot id: " + bot_id_str);
             _put_action(redis, data, actions_mutex);
         }
     }

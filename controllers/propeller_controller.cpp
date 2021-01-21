@@ -14,13 +14,10 @@
 #include <ctime>
 #include <unordered_map>
 
-#include <curlpp/cURLpp.hpp>
-#include <curlpp/Easy.hpp>
-#include <curlpp/Options.hpp>
-
 #include "spdlog/spdlog.h"
 
 #include "propeller_controller.h"
+#include "http.h"
 
 using namespace std;
 
@@ -44,11 +41,12 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
 
     spdlog::info("Start request: " + url);
 
-    string campaign_info = this->make_request(headers, string(), url, "GET");
+    string campaign_info = http::make_request(headers, string(), url, "GET");
 
     if (campaign_info.size() == 0)
     {
         spdlog::error("Error while trying to make request (or empty result)");
+        throw http::IncorrectResponse();
     }
 
     try
@@ -61,7 +59,7 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     catch (const invalid_argument& exc)
     {
         spdlog::error(exc.what());
-        throw IncorrectResponse();
+        throw http::IncorrectResponse();
     }
 
     result["cost"] = cost;
@@ -90,7 +88,7 @@ string PropellerController::get_field_value(const string field_name, const strin
     string pattern = "\"" + field_name + "\":\"";
     if (data.find(pattern) == string::npos)
     {
-        throw IncorrectResponse();
+        throw http::IncorrectResponse();
     }
 
     size_t start_pos = data.find(pattern) + pattern.length();

@@ -15,27 +15,8 @@
 
 using namespace std;
 
-struct IncorrectResponse : public std::exception
-{
-	const char * what () const throw ()
-    {
-    	return "Can't find required parameter in http-response.";
-    }
-};
-
-struct RequestError : public std::exception
-{
-	const char * what () const throw ()
-    {
-    	return "Error while trying to make request";
-    }
-};
-
 class BaseController
 {
-protected:
-    string make_request(const list<string> headers, const string body, const string url, 
-                        const string type = "POST") const;
 
 public:
     BaseController();
