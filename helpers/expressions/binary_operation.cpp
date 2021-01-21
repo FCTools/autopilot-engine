@@ -6,6 +6,7 @@
 
 #include "binary_operation.h"
 #include "base_controller.h"
+
 using namespace std;
 
 BinaryOperation::BinaryOperation(Expression* l, Expression* r, char operation): Expression()
