@@ -8,12 +8,12 @@
 
 #include <iostream>
 
-#include "binary_operation.h"
+#include "complex_condition.h"
 #include "base_controller.h"
 
 using namespace std;
 
-BinaryOperation::BinaryOperation(Expression* l, Expression* r, char operation): Expression()
+ComplexCondition::ComplexCondition(Expression* l, Expression* r, char operation): Expression()
 {
     this->left = l;
     this->right = r;
@@ -25,7 +25,7 @@ BinaryOperation::BinaryOperation(Expression* l, Expression* r, char operation): 
     this->operation = operation;
 }
 
-bool BinaryOperation::is_true(unordered_map<string, double>& campaign_info)
+bool ComplexCondition::is_true(unordered_map<string, double>& campaign_info)
 {
     if (this->operation == '|')
     {
@@ -37,7 +37,7 @@ bool BinaryOperation::is_true(unordered_map<string, double>& campaign_info)
     this->right->is_true(campaign_info);
 }
 
-BinaryOperation::~BinaryOperation()
+ComplexCondition::~ComplexCondition()
 {
     delete this->left;
     delete this->right;

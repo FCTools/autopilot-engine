@@ -27,6 +27,9 @@ RedisClient::RedisClient()
 
     this->actions_host = string(getenv("REDIS_ACTIONS_HOST"));
     this->actions_port = (size_t)stoi(string(getenv("REDIS_ACTIONS_PORT")));
+
+    this->actions_addr = this->actions_host + ":" + to_string(this->actions_port);
+    this->storage_addr = this->storage_host + ":" + to_string(this->storage_port);
 }
 
 bool RedisClient::connectable()
@@ -34,30 +37,38 @@ bool RedisClient::connectable()
     try
     {
         cpp_redis::client client;
-        client.connect(this->actions_host, this->actions_port, [](const string& host, size_t port, cpp_redis::connect_state status) {
-            if (status == cpp_redis::connect_state::dropped) {
-                cout << "client disconnected from " << host << ":" << port << endl;
-            }
-        });
+        client.connect(this->actions_host, this->actions_port, [](const string& host, size_t port, cpp_redis::connect_state status) 
+            {
+                if (status == cpp_redis::connect_state::dropped || 
+                    status == cpp_redis::connect_state::stopped ||
+                    status == cpp_redis::connect_state::failed) 
+                {
+                    spdlog::error("Client disconnected from redis on " + host + ":" + to_string(port));
+                }
+            });
     }
     catch(cpp_redis::redis_error)
     {
-        spdlog::critical("Can't connect to redis on port " + to_string(this->actions_port));
+        spdlog::critical("Can't connect to redis on " + this->actions_addr);
         return false;
     }
     
     try
     {
         cpp_redis::client client;
-        client.connect(this->storage_host, this->storage_port, [](const string& host, size_t port, cpp_redis::connect_state status) {
-            if (status == cpp_redis::connect_state::dropped) {
-                cout << "client disconnected from " << host << ":" << port << endl;
-            }
-        });
+        client.connect(this->storage_host, this->storage_port, [](const string& host, size_t port, cpp_redis::connect_state status) 
+            {
+                if (status == cpp_redis::connect_state::dropped || 
+                    status == cpp_redis::connect_state::stopped ||
+                    status == cpp_redis::connect_state::failed) 
+                {
+                    spdlog::error("Client disconnected from redis on " + host + ":" + to_string(port));
+                }
+            });
     }
     catch(cpp_redis::redis_error)
     {
-        spdlog::critical("Can't connect to redis on port " + to_string(this->storage_port));
+        spdlog::critical("Can't connect to redis on " + this->storage_addr);
         return false;
     }
 
@@ -68,54 +79,72 @@ void RedisClient::put_action(string key, string value)
 {
     cpp_redis::client client;
 
-	client.connect(this->actions_host, this->actions_port, [](const string& host, size_t port, cpp_redis::connect_state status) {
-    if (status == cpp_redis::connect_state::dropped) {
-        cout << "client disconnected from " << host << ":" << port << endl;
-    }
-  	});
+    try
+    {
+        client.connect(this->actions_host, this->actions_port, [](const string& host, size_t port, 
+                                                                  cpp_redis::connect_state status)
+            {
+                if (status == cpp_redis::connect_state::dropped || 
+                    status == cpp_redis::connect_state::stopped ||
+                    status == cpp_redis::connect_state::failed) 
+                {
+                    spdlog::error("Client disconnected from redis on " + host + ":" + to_string(port));
+                }
+            });
 
-	client.set(key, value);
-	client.sync_commit();
+        client.set(key, value);
+        client.sync_commit();
+    }
+    catch(cpp_redis::redis_error)
+    {
+        spdlog::error("Can't connect to redis on " + this->actions_addr);
+    }
+
+    spdlog::info("Put object to redis on " + this->actions_addr);
 }
 
 vector<string> RedisClient::get_updates()
 {
     vector<string> result;
-    string tmp = "";
 
-    cpp_redis::client client;
+    try
+    {
+        cpp_redis::client client;
 
-	client.connect(this->storage_host, this->storage_port, [](const string& host, size_t port, cpp_redis::connect_state status) {
-    if (status == cpp_redis::connect_state::dropped) {
-        cout << "client disconnected from " << host << ":" << port << endl;
-    }
-  	});
-
-    cpp_redis::client::reply_callback_t reply;
-
-    client.keys("*", [&result](cpp_redis::reply &reply) {
-	    if(reply.is_array()) 
-        {
-		    for(auto& key : reply.as_array()) 
+        client.connect(this->storage_host, this->storage_port, [](const string& host, size_t port, 
+                                                                  cpp_redis::connect_state status) 
             {
-                auto x = key.as_string();
-                result.push_back(x);
-		    }
-	}   
-    });
-    
-    client.sync_commit();
+                if (status == cpp_redis::connect_state::dropped || 
+                    status == cpp_redis::connect_state::stopped ||
+                    status == cpp_redis::connect_state::failed) 
+                {
+                    spdlog::error("Client disconnected from redis on " + host + ":" + to_string(port));
+                }
+            });
 
-    client.del(result);
+        cpp_redis::client::reply_callback_t reply;
 
-    client.sync_commit();
+        client.keys("*", [&result](cpp_redis::reply &reply) {
+            if(reply.is_array()) 
+            {
+                for(auto& key : reply.as_array()) 
+                {
+                    auto x = key.as_string();
+                    result.push_back(x);
+                }
+            }   
+        });
+        
+        client.sync_commit();
+        client.del(result);
+        client.sync_commit();
+    }
+    catch(cpp_redis::redis_error)
+    {
+        spdlog::error("Can't connect to redis on " + this->storage_addr);
+    }
 
     return result;
 }
 
-RedisClient::~RedisClient()
-{
-	// this->client.client_kill(this->host, this->port, [](cpp_redis::reply& reply) {
-    //   std::cout << reply << std::endl; //! OK
-    // });
-}
+RedisClient::~RedisClient() {}

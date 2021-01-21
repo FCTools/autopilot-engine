@@ -12,7 +12,7 @@
 
 #include "conditions_parser.h"
 #include "elementary_condition.h"
-#include "binary_operation.h"
+#include "complex_condition.h"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ ConditionsParser::ConditionsParser() {}
 
 Expression* ConditionsParser::build(string source)
 {
-    if (source.find("&") == string::npos && source.find("|") == string::npos) // elementary condition checking
+    if (source.find("&") == string::npos && source.find("|") == string::npos) // elementary condition building
     {
         return new ElementaryCondition(source);
     }
@@ -45,7 +45,7 @@ Expression* ConditionsParser::build(string source)
         {
             throw;
         }
-        if (counter == 0)
+        else if (counter == 0)
         {
             break;
         }
@@ -54,10 +54,10 @@ Expression* ConditionsParser::build(string source)
     index++;
 
     char operation = source[index];
-    string left = source.substr(0, index);
-    string right = source.substr(index + 1, source.length() - index - 1);
+    string left = source.substr(0, index);  // left subcondition
+    string right = source.substr(index + 1, source.length() - index - 1);  // right subcondition
 
-    return new BinaryOperation(this->build(left), this->build(right), operation);
+    return new ComplexCondition(this->build(left), this->build(right), operation);
 }
 
 Expression* ConditionsParser::parse(string source)

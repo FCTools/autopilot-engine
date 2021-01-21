@@ -11,16 +11,16 @@
 
 #include "expression.h"
 
-class BinaryOperation: public Expression
+class ComplexCondition: public Expression
 {
-    char operation; // & or |
+    char operation; // & means AND, | means OR
     Expression* left;
     Expression* right;
 
 public:
-    BinaryOperation(Expression* l, Expression* r, char operation);
+    ComplexCondition(Expression* l, Expression* r, char operation);
 
     virtual bool is_true(unordered_map<string, double>& campaign_info);
 
-    virtual ~BinaryOperation();
+    virtual ~ComplexCondition();
 };

@@ -18,11 +18,8 @@ using namespace std;
 
 class RedisClient
 {
-    size_t storage_port;
-    string storage_host;
-
-    size_t actions_port;
-    string actions_host;
+    size_t storage_port, actions_port;
+    string storage_host, actions_host, storage_addr, actions_addr;
 
 public:
     RedisClient();
