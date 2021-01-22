@@ -13,7 +13,7 @@
 
 using namespace std;
 
-ComplexCondition::ComplexCondition(Expression* l, Expression* r, char operation): Expression()
+ComplexCondition::ComplexCondition(BaseCondition* l, BaseCondition* r, char operation): BaseCondition()
 {
     this->left = l;
     this->right = r;

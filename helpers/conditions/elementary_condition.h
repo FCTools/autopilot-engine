@@ -7,21 +7,26 @@
 // Author: German Yakimov <german13yakimov@gmail.com>
 
 #pragma once
-
 #include <string>
-#include <iostream>
 #include <unordered_map>
+
+#include "base_condition.h"
 
 using namespace std;
 
-class Expression
+
+class ElementaryCondition: public BaseCondition
 {
-    bool is_binary;
+    string param;
+    double value;
+    string operation;
 
 public:
-    Expression();
+    ElementaryCondition();
 
-    virtual bool is_true(unordered_map<string, double>& campaign_info) = 0;
+    ElementaryCondition(string source);
 
-    virtual ~Expression();
+    virtual bool is_true(unordered_map<string, double>& campaign_info);
+
+    virtual ~ElementaryCondition();
 };

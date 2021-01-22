@@ -11,9 +11,9 @@
 
 #include "elementary_condition.h"
 
-ElementaryCondition::ElementaryCondition(): Expression() {}
+ElementaryCondition::ElementaryCondition(): BaseCondition() {}
 
-ElementaryCondition::ElementaryCondition(string source): Expression()
+ElementaryCondition::ElementaryCondition(string source): BaseCondition()
 {
     source = source.substr(1, source.length() - 2);
     
@@ -38,10 +38,6 @@ ElementaryCondition::ElementaryCondition(string source): Expression()
         this->param = source.substr(0, relation_index);
         this->value = stod(source.substr(relation_index + 1, source.length() - relation_index - 1));
     }
-
-    cout << this->operation << endl;
-    cout << this->param << endl;
-    cout << this->value << endl;
 }
 
 

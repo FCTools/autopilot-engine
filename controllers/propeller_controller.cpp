@@ -12,7 +12,6 @@
 #include <list>
 #include <vector>
 #include <iostream>
-#include <ctime>
 #include <unordered_map>
 
 #include "spdlog/spdlog.h"
@@ -22,7 +21,7 @@
 
 using namespace std;
 
-// insert period and campaign_id as query parameters
+// insert period and campaign_id into tracker url as query parameters
 string _build_request_url(const string base_url, const string period, const string campaign_id)
 {
     return base_url + period + "&camp_id=" + campaign_id;
@@ -53,9 +52,9 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     try
     {
         vector<string> costs_by_paths = this->get_field_values("cost", campaign_info);
-        vector<string> revenues_by_paths = this->get_field_values("cost", campaign_info);
-        vector<string> clicks_by_paths = this->get_field_values("cost", campaign_info);
-        vector<string> leads_by_paths = this->get_field_values("cost", campaign_info);
+        vector<string> revenues_by_paths = this->get_field_values("revenue", campaign_info);
+        vector<string> clicks_by_paths = this->get_field_values("clicks", campaign_info);
+        vector<string> leads_by_paths = this->get_field_values("leads", campaign_info);
 
         for (string cost_path: costs_by_paths)
         {

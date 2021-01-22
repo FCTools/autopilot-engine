@@ -20,7 +20,7 @@
 
 #include "redis_client.h"
 #include "database_client.h"
-#include "expression.h"
+#include "conditions.h"
 #include "conditions_parser.h"
 #include "base_controller.h"
 #include "propeller_controller.h"
@@ -132,7 +132,7 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
     ConditionsParser parser;
 
     spdlog::get("file_logger")->info("Start parsing for this condition: " + condition);
-    Expression* parsed_condition = parser.parse(condition);
+    BaseCondition* parsed_condition = parser.parse(condition);
     spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
 
     BaseController* controller = nullptr;

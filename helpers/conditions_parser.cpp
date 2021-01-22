@@ -11,14 +11,13 @@
 #include <iostream>
 
 #include "conditions_parser.h"
-#include "elementary_condition.h"
-#include "complex_condition.h"
+#include "conditions.h"
 
 using namespace std;
 
 ConditionsParser::ConditionsParser() {}
 
-Expression* ConditionsParser::build(string source)
+BaseCondition* ConditionsParser::build(string source)
 {
     if (source.find("&") == string::npos && source.find("|") == string::npos) // elementary condition building
     {
@@ -60,7 +59,7 @@ Expression* ConditionsParser::build(string source)
     return new ComplexCondition(this->build(left), this->build(right), operation);
 }
 
-Expression* ConditionsParser::parse(string source)
+BaseCondition* ConditionsParser::parse(string source)
 {
     source.erase(remove(source.begin(), source.end(), ' '), source.end()); 
     return this->build(source);

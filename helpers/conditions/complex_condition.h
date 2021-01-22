@@ -9,16 +9,16 @@
 #pragma once
 #include <unordered_map>
 
-#include "expression.h"
+#include "base_condition.h"
 
-class ComplexCondition: public Expression
+class ComplexCondition: public BaseCondition
 {
     char operation; // & means AND, | means OR
-    Expression* left;
-    Expression* right;
+    BaseCondition* left;
+    BaseCondition* right;
 
 public:
-    ComplexCondition(Expression* l, Expression* r, char operation);
+    ComplexCondition(BaseCondition* l, BaseCondition* r, char operation);
 
     virtual bool is_true(unordered_map<string, double>& campaign_info);
 

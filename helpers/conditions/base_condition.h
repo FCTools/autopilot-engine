@@ -7,26 +7,19 @@
 // Author: German Yakimov <german13yakimov@gmail.com>
 
 #pragma once
-#include <string>
-#include <unordered_map>
 
-#include "expression.h"
+#include <string>
+#include <iostream>
+#include <unordered_map>
 
 using namespace std;
 
-
-class ElementaryCondition: public Expression
+class BaseCondition
 {
-    string param;
-    double value;
-    string operation;
-
 public:
-    ElementaryCondition();
+    BaseCondition();
 
-    ElementaryCondition(string source);
+    virtual bool is_true(unordered_map<string, double>& campaign_info) = 0;
 
-    virtual bool is_true(unordered_map<string, double>& campaign_info);
-
-    virtual ~ElementaryCondition();
+    virtual ~BaseCondition();
 };

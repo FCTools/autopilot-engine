@@ -29,7 +29,8 @@ bool env_is_correct()
     {
         if (!getenv(var.c_str()))
         {
-            spdlog::critical("Can't find required environment variable: " + var);
+            spdlog::get("file_logger")->critical("Can't find required environment variable: " + var);
+            settings_file.close();
             return false;
         }
     }
@@ -60,11 +61,13 @@ int main(int argc, char** argv)
     logger->info("---------------------");
     logger->info("Start new kernel session.");
 
+    logger->info("Start environment checking...");
     if (!env_is_correct())
     {
         logger->critical("Quit.");
         return EXIT_FAILURE;
     }
+    logger->info("Environment is correct.");
 
     const size_t workers_number = (size_t)stoi(getenv("POOL_SIZE"));
 

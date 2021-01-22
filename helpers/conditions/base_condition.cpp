@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include "expression.h"
+#include "base_condition.h"
 
-Expression::Expression() {}
+BaseCondition::BaseCondition() {}
 
-Expression::~Expression() {}
+BaseCondition::~BaseCondition() {}
