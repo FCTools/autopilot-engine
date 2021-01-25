@@ -25,6 +25,7 @@
 #include "base_controller.h"
 #include "propeller_controller.h"
 #include "http.h"
+#include "main_loop.h"
 
 using namespace std;
 
@@ -188,11 +189,45 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
         if (parsed_condition->is_true(campaign_info))
         {
             string data = "{\"campaign_id\": " + source_id + ", \"action\": "
-            + to_string(1) + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
+            + to_string(CHECK_CAMPAIGN) + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
 
             spdlog::get("file_logger")->info("Condition is true. Bot id: " +to_string(bot_id));
             _put_action(redis, data);
         }
+    }
+
+    delete controller;
+}
+
+void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
+{
+    DatabaseClient database;
+    RedisClient redis;
+
+    string condition = bot_info["condition"];
+    size_t period = (size_t)stoi(bot_info["period"]);
+    string api_key = bot_info["api_key"];
+    string ts = bot_info["ts"];
+
+    // get bot campaigns from database
+    vector<size_t> campaigns_ids = database.get_bot_campaigns(bot_id);
+
+    ConditionsParser parser;
+
+    spdlog::get("file_logger")->info("Start parsing for this condition: " + condition);
+    BaseCondition* parsed_condition = parser.parse(condition);
+    spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
+
+    BaseController* controller = _get_controller(ts);
+    if (!controller)
+    {
+        return;
+    }
+    spdlog::get("file_logger")->info("Select controller for " + ts);
+
+    for (size_t campaign_id: campaigns_ids)
+    {
+
     }
 
     delete controller;
@@ -209,11 +244,15 @@ void _process_task(const string bot_id_str)
 
     switch (action)
     {
-        case 1:
+        case CHECK_CAMPAIGN:
             _check_campaign(bot_id, ref(bot_info));
+            break;
+        case CHECK_ZONES:
+            _check_zones(bot_id, ref(bot_info));
             break;
         default:
             spdlog::get("file_logger")->error("Unknown action: " + to_string(action));
+            break;
     }
 }
 
