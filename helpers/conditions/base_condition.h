@@ -14,6 +14,7 @@
 
 using namespace std;
 
+// base abstract class for all conditions hierarchy
 class BaseCondition
 {
 public:

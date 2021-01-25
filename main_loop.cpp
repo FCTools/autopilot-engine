@@ -29,9 +29,13 @@
 using namespace std;
 
 const size_t checking_timeout = (size_t)stoi(string(getenv("CHECKING_TIMEOUT")));
+mutex storage_mutex, actions_mutex;
+condition_variable cond_var;
+
 
 // uuid generating logic
-namespace uuid {
+namespace uuid 
+{
     static random_device rd;
     static mt19937 gen(rd());
     static uniform_int_distribution<> dis(0, 15);
@@ -75,7 +79,7 @@ namespace uuid {
     }
 }
 
-void _extend_storage(mutex& storage_mutex, vector<string>& storage, vector<string>& new_tasks)
+void _extend_storage(vector<string>& storage, vector<string>& new_tasks)
 {
     lock_guard<mutex> lock_(storage_mutex);
     storage.reserve(storage.size() + distance(new_tasks.begin(), new_tasks.end()));
@@ -83,7 +87,7 @@ void _extend_storage(mutex& storage_mutex, vector<string>& storage, vector<strin
 }
 
 // check for new tasks in storage redis
-void _start_queue_updating_process(mutex& storage_mutex, vector<string>& tasks, condition_variable& cond_var)
+void _start_queue_updating_process(vector<string>& tasks)
 {
     RedisClient redis;
 
@@ -93,7 +97,7 @@ void _start_queue_updating_process(mutex& storage_mutex, vector<string>& tasks, 
 
         if (!updates.empty())
         {
-            _extend_storage(storage_mutex, tasks, updates);
+            _extend_storage(tasks, updates);
             cond_var.notify_all();
         }
 
@@ -102,7 +106,7 @@ void _start_queue_updating_process(mutex& storage_mutex, vector<string>& tasks, 
 
 }
 
-void _put_action(RedisClient& redis, const string data, mutex& actions_mutex)
+void _put_action(RedisClient& redis, const string data)
 {
     string task_id = uuid::generate_uuid_v4();
 
@@ -110,19 +114,26 @@ void _put_action(RedisClient& redis, const string data, mutex& actions_mutex)
     redis.put_action(task_id, data);
 }
 
-// processing bot
-void _process_task(const string bot_id_str, mutex& actions_mutex)
+BaseController* _get_controller(string ts)
+{
+    if (ts == "Propeller Ads")
+    {
+        return new PropellerController();
+    }
+    else
+    {
+        spdlog::get("file_logger")->error("Can't choose controller for traffic source " + ts);
+        return nullptr;
+    }
+}
+
+void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_info)
 {
     DatabaseClient database;
     RedisClient redis;
 
-    // get bot info from database
-    const size_t bot_id = (size_t)stoi(bot_id_str);
-    auto bot_info = database.get_bot_info(bot_id);
-
     string condition = bot_info["condition"];
     size_t period = (size_t)stoi(bot_info["period"]);
-    size_t action = (size_t)stoi(bot_info["action"]);
     string api_key = bot_info["api_key"];
     string ts = bot_info["ts"];
 
@@ -135,16 +146,10 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
     BaseCondition* parsed_condition = parser.parse(condition);
     spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
 
-    BaseController* controller = nullptr;
-
-    if (ts == "Propeller Ads")
+    BaseController* controller = _get_controller(ts);
+    if (!controller)
     {
-        controller = new PropellerController();
-    }
-    else
-    {
-        spdlog::get("file_logger")->error("Can't choose controller for traffic source " + ts);
-        throw;
+        return;
     }
     spdlog::get("file_logger")->info("Select controller for " + ts);
     
@@ -154,6 +159,7 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
         auto ids = database.get_campaign_ids(campaign_id);
         size_t tracker_id = ids.first;
         string source_id = ids.second;
+
         unordered_map<string, double> campaign_info;
 
         try
@@ -182,20 +188,36 @@ void _process_task(const string bot_id_str, mutex& actions_mutex)
         if (parsed_condition->is_true(campaign_info))
         {
             string data = "{\"campaign_id\": " + source_id + ", \"action\": "
-             + to_string(action) + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
+            + to_string(1) + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
 
-            spdlog::get("file_logger")->info("Condition is true. Bot id: " + bot_id_str);
-            _put_action(redis, data, actions_mutex);
+            spdlog::get("file_logger")->info("Condition is true. Bot id: " +to_string(bot_id));
+            _put_action(redis, data);
         }
     }
 
-    if (controller)
+    delete controller;
+}
+
+// processing bot
+void _process_task(const string bot_id_str)
+{
+    DatabaseClient database;
+
+    const size_t bot_id = (size_t)stoi(bot_id_str);
+    auto bot_info = database.get_bot_info(bot_id);
+    size_t action = (size_t)stoi(bot_info["action"]);
+
+    switch (action)
     {
-        delete controller;
+        case 1:
+            _check_campaign(bot_id, ref(bot_info));
+            break;
+        default:
+            spdlog::get("file_logger")->error("Unknown action: " + to_string(action));
     }
 }
 
-void _worker_main_function(vector<string>& storage, mutex& storage_mutex, mutex& actions_mutex, condition_variable& cond_var)
+void _worker_main_function(vector<string>& storage)
 {
     spdlog::get("file_logger")->info("Initialize worker.");
 
@@ -209,29 +231,25 @@ void _worker_main_function(vector<string>& storage, mutex& storage_mutex, mutex&
         unique_storage_mutex.unlock();
         spdlog::get("file_logger")->info("Get new task. Bot id: " + bot_id);
         
-        _process_task(bot_id, actions_mutex);
+        _process_task(bot_id);
         spdlog::get("file_logger")->info("Finish task. Bot id: " + bot_id);
     }
 }
 
 void start(const size_t workers_num)
 {
-    mutex storage_mutex;
-    mutex actions_mutex;
     vector<string> tasks;
-    condition_variable cond_var;
     vector<thread> workers_pool;
 
     spdlog::get("file_logger")->info("Create all resources (mutexes, containers). Start to creating workers.");
 
     for (size_t _ = 0; _ < workers_num; _++)
     {
-        workers_pool.emplace_back(_worker_main_function, ref(tasks), ref(storage_mutex), ref(actions_mutex), ref(cond_var));
+        workers_pool.emplace_back(_worker_main_function, ref(tasks));
         (*(workers_pool.end() - 1)).detach();
     }
 
     spdlog::get("file_logger")->info("Create and detach workers. Start storage updating.");
 
-    _start_queue_updating_process(ref(storage_mutex), ref(tasks), ref(cond_var));
-
+    _start_queue_updating_process(ref(tasks));
 }

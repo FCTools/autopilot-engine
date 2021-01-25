@@ -14,7 +14,7 @@
 
 using namespace std;
 
-
+// elementary condition means conditions like: (clicks > 1000); (revenue < 100) and etc.
 class ElementaryCondition: public BaseCondition
 {
     string param;
