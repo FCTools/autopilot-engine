@@ -223,9 +223,26 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
     }
     spdlog::get("file_logger")->info("Select controller for " + ts);
 
+    vector<string> zones_to_act;
+
     for (size_t campaign_id: campaigns_ids)
     {
+        auto ids = database::get_campaign_ids(campaign_id);
+        size_t tracker_id = ids.first;
+        string source_id = ids.second;
 
+        string zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key);
+        vector<string> zones_list = controller->get_zones(zones_info);
+
+        for (string zone: zones_list)
+        {
+            auto zone_info = controller->get_zone_info(zone, zones_info);
+            
+            if (parsed_condition->is_true(zone_info))
+            {
+                zones_to_act.push_back(zone);
+            }
+        }
     }
 
     delete controller;

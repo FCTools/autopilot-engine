@@ -11,6 +11,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <list>
+#include <vector>
 #include <string>
 
 using namespace std;
@@ -24,6 +25,13 @@ public:
 
     virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
                                                             const string api_key) const = 0;
+
+    virtual string get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
+                                  const string api_key) const = 0;
+
+    virtual vector<string> get_zones(string zones_info) const = 0;
+
+    virtual unordered_map<string, double> get_zone_info(string zone, string zones_info) const = 0;
 
     virtual ~BaseController();
 };
