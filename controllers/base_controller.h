@@ -14,10 +14,18 @@
 #include <vector>
 #include <string>
 
+#define PROFIT(revenue, cost) (revenue - cost)
+#define ROI(revenue, cost) ((revenue / cost - 1) * 100)
+#define CR(leads, clicks) (100 * leads / clicks)
+#define EPC(revenue, clicks) (revenue / clicks)
+#define CPC(cost, clicks) (cost / clicks)
+
 using namespace std;
 
 class BaseController
 {
+protected:
+    unordered_map<string, double> calculate_statistics(double cost, double revenue, int clicks, int leads) const;
 
 public:
 

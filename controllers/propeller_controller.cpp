@@ -88,25 +88,7 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
         throw http::IncorrectResponse();
     }
 
-    result["cost"] = cost;
-    result["revenue"] = revenue;
-    result["clicks"] = clicks;
-    result["leads"] = leads;
-    result["profit"] = PROFIT(revenue, cost);
-
-    if (cost > 0)
-    {
-        result["ROI"] = ROI(revenue, cost);
-    }
-    
-    if (clicks > 0)
-    {
-        result["CR"] = CR(leads, clicks);
-        result["EPC"] = EPC(revenue, clicks);
-        result["CPC"] = CPC(cost, clicks);
-    }
-    
-    return result;
+    return this->calculate_statistics(cost, revenue, clicks, leads);
 }
 
 string PropellerController::get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
@@ -146,25 +128,7 @@ unordered_map<string, double> PropellerController::get_zone_info(string zone, st
     double clicks = stod((*(this->get_field_values("clicks", zone_info).begin())));
     int leads = stoi((*(this->get_field_values("leads", zone_info).begin())));
 
-    result["cost"] = cost;
-    result["revenue"] = revenue;
-    result["clicks"] = clicks;
-    result["leads"] = leads;
-    result["profit"] = PROFIT(revenue, cost);
-
-    if (cost > 0)
-    {
-        result["ROI"] = ROI(revenue, cost);
-    }
-    
-    if (clicks > 0)
-    {
-        result["CR"] = CR(leads, clicks);
-        result["EPC"] = EPC(revenue, clicks);
-        result["CPC"] = CPC(cost, clicks);
-    }
-
-    return result;
+    return this->calculate_statistics(cost, revenue, clicks, leads);
 }
 
 vector<string> PropellerController::get_field_values(const string field_name, const string data) const

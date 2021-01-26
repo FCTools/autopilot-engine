@@ -10,14 +10,6 @@
 #include <string>
 #include <vector>
 
-
-#define PROFIT(revenue, cost) (revenue - cost)
-#define ROI(revenue, cost) ((revenue / cost - 1) * 100)
-#define CR(leads, clicks) (100 * leads / clicks)
-#define EPC(revenue, clicks) (revenue / clicks)
-#define CPC(cost, clicks) (cost / clicks)
-
-
 #include "base_controller.h"
 
 using namespace std;

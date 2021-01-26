@@ -21,4 +21,30 @@ using namespace std;
 
 BaseController::BaseController() {}
 
+unordered_map<string, double> BaseController::calculate_statistics(double cost, double revenue, 
+                                                                   int clicks, int leads) const
+{
+    unordered_map<string, double> result = {{"ROI", 0.}, {"CR", 0.}, {"EPC", 0.}, {"CPC", 0.}};
+    
+    result["cost"] = cost;
+    result["revenue"] = revenue;
+    result["clicks"] = clicks;
+    result["leads"] = leads;
+    result["profit"] = PROFIT(revenue, cost);
+
+    if (cost > 0)
+    {
+        result["ROI"] = ROI(revenue, cost);
+    }
+    
+    if (clicks > 0)
+    {
+        result["CR"] = CR(leads, clicks);
+        result["EPC"] = EPC(revenue, clicks);
+        result["CPC"] = CPC(cost, clicks);
+    }
+    
+    return result;
+}
+
 BaseController::~BaseController() {}
