@@ -143,7 +143,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
     ConditionsParser parser;
 
     spdlog::get("file_logger")->info("Start parsing for this condition: " + condition);
-    BaseCondition* parsed_condition = parser.parse(condition);
+    BaseCondition* parsed_condition = parser.parse_condition(condition);
     spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
 
     BaseController* controller = _get_controller(ts);
@@ -213,7 +213,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
     ConditionsParser parser;
 
     spdlog::get("file_logger")->info("Start parsing for this condition: " + condition);
-    BaseCondition* parsed_condition = parser.parse(condition);
+    BaseCondition* parsed_condition = parser.parse_condition(condition);
     spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
 
     BaseController* controller = _get_controller(ts);

@@ -27,7 +27,7 @@ using namespace std;
 string _build_request_url(const string base_url, const string period, const string campaign_id,
                           const string group_1 = "2")
 {
-    return base_url + period + "&camp_id=" + campaign_id + "$group1" + group_1;
+    return base_url + period + "&camp_id=" + campaign_id + "&group1=" + group_1;
 }
 
 
@@ -92,18 +92,18 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     result["revenue"] = revenue;
     result["clicks"] = clicks;
     result["leads"] = leads;
-    result["profit"] = revenue - cost;
+    result["profit"] = PROFIT(revenue, cost);
 
     if (cost > 0)
     {
-        result["ROI"] = (revenue / cost - 1) * 100;
+        result["ROI"] = ROI(revenue, cost);
     }
     
     if (clicks > 0)
     {
-        result["CR"] = 100 * leads / clicks;
-        result["EPC"] = revenue / clicks;
-        result["CPC"] = cost / clicks;
+        result["CR"] = CR(leads, clicks);
+        result["EPC"] = EPC(revenue, clicks);
+        result["CPC"] = CPC(cost, clicks);
     }
     
     return result;
@@ -113,19 +113,58 @@ string PropellerController::get_zones_info(const size_t campaign_tracker_id, con
                               const string api_key) const
 {
     list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
-    const string url = _build_request_url(this->tracker_requests_url, to_string(period), to_string(campaign_tracker_id));
+    const string url = _build_request_url(this->tracker_requests_url, to_string(period), to_string(campaign_tracker_id),
+                                          this->zones_param_number);
 
-    return string();
+    string zones_info = http::make_request(headers, string(), url, "GET");
+
+    if (zones_info.size() == 0)
+    {
+        spdlog::get("file_logger")->error("Error while trying to make request (or empty result)");
+        throw http::IncorrectResponse();
+    }
+
+    return zones_info;
 }
 
 vector<string> PropellerController::get_zones(string zones_info) const
 {
-    return {};
+    vector<string> result = this->get_field_values("name", zones_info);
+    return result;
 }
 
 unordered_map<string, double> PropellerController::get_zone_info(string zone, string zones_info) const
 {
-    return {};
+    size_t start = zones_info.find(zone);
+    size_t end = zones_info.find("}");
+    unordered_map<string, double> result;
+
+    string zone_info = zones_info.substr(start, end - start);
+
+    double cost = stod((*(this->get_field_values("cost", zone_info).begin())));
+    double revenue = stod((*(this->get_field_values("revenue", zone_info).begin())));
+    double clicks = stod((*(this->get_field_values("clicks", zone_info).begin())));
+    int leads = stoi((*(this->get_field_values("leads", zone_info).begin())));
+
+    result["cost"] = cost;
+    result["revenue"] = revenue;
+    result["clicks"] = clicks;
+    result["leads"] = leads;
+    result["profit"] = PROFIT(revenue, cost);
+
+    if (cost > 0)
+    {
+        result["ROI"] = ROI(revenue, cost);
+    }
+    
+    if (clicks > 0)
+    {
+        result["CR"] = CR(leads, clicks);
+        result["EPC"] = EPC(revenue, clicks);
+        result["CPC"] = CPC(cost, clicks);
+    }
+
+    return result;
 }
 
 vector<string> PropellerController::get_field_values(const string field_name, const string data) const

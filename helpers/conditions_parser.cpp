@@ -59,7 +59,7 @@ BaseCondition* ConditionsParser::build(string source)
     return new ComplexCondition(this->build(left), this->build(right), operation);
 }
 
-BaseCondition* ConditionsParser::parse(string source)
+BaseCondition* ConditionsParser::parse_condition(string source)
 {
     source.erase(remove(source.begin(), source.end(), ' '), source.end()); 
     return this->build(source);

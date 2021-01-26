@@ -17,21 +17,6 @@
 
 #define DEFAULT_PORT "5432"
 
-// bot row indexes
-#define CONDITION_INDEX 3
-#define PERIOD_INDEX 9
-#define CAMPAIGN_INDEX 2
-#define ACTION_INDEX 4
-#define TS_INDEX 10
-#define API_KEY_INDEX 11
-
-// campaign row indexes
-#define TRACKER_ID_INDEX 3
-#define SOURCE_ID_INDEX 4
-
-// traffic source row indexes
-#define ZONE_PARAM_INDEX 2
-
 using namespace std;
 
 namespace database

@@ -21,6 +21,30 @@ using namespace std;
 
 namespace database
 {
+    namespace
+    {
+        enum bot_indexes
+        {
+            CONDITION_INDEX = 3,
+            PERIOD_INDEX = 9,
+            CAMPAIGN_INDEX = 2,
+            ACTION_INDEX = 4,
+            TS_INDEX = 10,
+            API_KEY_INDEX = 11
+        };
+
+        enum campaign_indexes
+        {
+            TRACKER_ID_INDEX = 3,
+            SOURCE_ID_INDEX = 4
+        };
+
+        enum ts_indexes
+        {
+            ZONE_PARAM_INDEX = 2
+        };
+    }
+
     string _build_connection_string()
     {
         const string database_name = string(getenv("DATABASE_NAME"));
@@ -52,7 +76,7 @@ namespace database
 
         string query("SELECT * from bot_manager_trafficsource WHERE name='" + ts + "'");
         pqxx::result res = xact.exec(query);
-        return string((res.begin().begin() + ZONE_PARAM_INDEX)->c_str());
+        return string((res.begin().begin() + ts_indexes::ZONE_PARAM_INDEX)->c_str());
     }
 
     unordered_map<string, string> get_bot_info(const size_t bot_id)
@@ -68,12 +92,11 @@ namespace database
         auto bot_info = res.begin().begin();
         unordered_map<string, string> result;
 
-        result["condition"] = (bot_info + CONDITION_INDEX)->c_str();
-        result["period"] = (bot_info + PERIOD_INDEX)->c_str();
-        result["campaign_id"] = (bot_info + CAMPAIGN_INDEX)->c_str();
-        result["action"] = (bot_info + ACTION_INDEX)->c_str();
-        result["ts"] = (bot_info + TS_INDEX)->c_str();
-        result["api_key"] = (bot_info + API_KEY_INDEX)->c_str();
+        result["condition"] = (bot_info + bot_indexes::CONDITION_INDEX)->c_str();
+        result["period"] = (bot_info + bot_indexes::PERIOD_INDEX)->c_str();
+        result["action"] = (bot_info + bot_indexes::ACTION_INDEX)->c_str();
+        result["ts"] = (bot_info + bot_indexes::TS_INDEX)->c_str();
+        result["api_key"] = (bot_info + bot_indexes::API_KEY_INDEX)->c_str();
         
         return result;
     }
@@ -89,9 +112,9 @@ namespace database
 
         pqxx::result res = xact.exec(query);
 
-        string tracker_id_str = (res.begin().begin() + TRACKER_ID_INDEX)->c_str();
+        string tracker_id_str = (res.begin().begin() + campaign_indexes::TRACKER_ID_INDEX)->c_str();
 
-        string source_id = (res.begin().begin() + SOURCE_ID_INDEX)->c_str();
+        string source_id = (res.begin().begin() + campaign_indexes::SOURCE_ID_INDEX)->c_str();
         size_t tracker_id = (size_t)stoi(tracker_id_str);
 
         return {tracker_id, source_id};
@@ -111,7 +134,7 @@ namespace database
 
         for (auto r = res.begin(); r != res.end(); r++)
         {
-            campaign_id_str = (res.begin().begin() + CAMPAIGN_INDEX)->c_str();
+            campaign_id_str = (res.begin().begin() + bot_indexes::CAMPAIGN_INDEX)->c_str();
             result.push_back((size_t)stoi(campaign_id_str));
         }
 

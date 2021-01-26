@@ -20,7 +20,7 @@ class ConditionsParser
 public:
     ConditionsParser();
 
-    BaseCondition* parse(string source);
+    BaseCondition* parse_condition(string source);
 
 };
 
