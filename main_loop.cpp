@@ -233,16 +233,13 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         size_t tracker_id = ids.first;
         string source_id = ids.second;
 
-        string zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key);
-        vector<string> zones_list = controller->get_zones(zones_info);
+        auto zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key);
 
-        for (string zone: zones_list)
+        for (auto& zone: zones_info)
         {
-            auto zone_info = controller->get_zone_info(zone, zones_info);
-            
-            if (parsed_condition->is_true(zone_info))
+            if (parsed_condition->is_true(zone.second))
             {
-                zones_to_act.push_back(zone);
+                zones_to_act.push_back(zone.first);
             }
         }
 

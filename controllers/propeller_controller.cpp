@@ -17,6 +17,7 @@
 #include "spdlog/spdlog.h"
 
 #include "propeller_controller.h"
+#include "base_controller.h"
 #include "database_client.h"
 #include "http.h"
 
@@ -39,9 +40,9 @@ PropellerController::PropellerController() : BaseController()
 unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
                                                                      const size_t period, const string api_key) const
 {
-    unordered_map<string, double> result = {{"ROI", 0.}, {"CR", 0.}, {"EPC", 0.}, {"CPC", 0.}};
     list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
     const string url = _build_request_url(this->tracker_requests_url, to_string(period), to_string(campaign_tracker_id));
+
     float cost = 0., revenue = 0., clicks = 0.;
     int leads = 0;
 
@@ -91,8 +92,8 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     return this->calculate_statistics(cost, revenue, clicks, leads);
 }
 
-string PropellerController::get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
-                              const string api_key) const
+zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, 
+                                               const size_t period, const string api_key) const
 {
     list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
     const string url = _build_request_url(this->tracker_requests_url, to_string(period), to_string(campaign_tracker_id),
@@ -106,7 +107,15 @@ string PropellerController::get_zones_info(const size_t campaign_tracker_id, con
         throw http::IncorrectResponse();
     }
 
-    return zones_info;
+    vector<string> zones_names = this->get_zones(zones_info);
+    zones_data result;
+
+    for (auto zone: zones_names)
+    {
+        result.push_back({zone, this->get_zone_info(zone, zones_info)});
+    }
+
+    return result;
 }
 
 vector<string> PropellerController::get_zones(string zones_info) const

@@ -7,8 +7,10 @@
 // Author: German Yakimov <german13yakimov@gmail.com>
 
 #pragma once
+
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 #include "base_controller.h"
 
@@ -24,21 +26,21 @@ class PropellerController: public BaseController
     string zones_param_number;
     const string name = "Propeller Ads";
 
+    virtual vector<string> get_zones(string zones_info) const;
+
+    virtual unordered_map<string, double> get_zone_info(string zone, string zones_info) const;
+
+    vector<string> get_field_values(const string field_name, const string data) const;
+
 public:
 
     PropellerController();
 
-    vector<string> get_field_values(const string field_name, const string data) const;
+    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
+                                                            const size_t period, const string api_key) const;
 
-    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
-                                                            const string api_key) const;
-
-    virtual string get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
-                                  const string api_key) const;
-
-    virtual vector<string> get_zones(string zones_info) const;
-
-    virtual unordered_map<string, double> get_zone_info(string zone, string zones_info) const;
+    virtual zones_data get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
+                                      const string api_key) const;
 
     virtual ~PropellerController();
 };
