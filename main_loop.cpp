@@ -130,7 +130,6 @@ BaseController* _get_controller(string ts)
 
 void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_info)
 {
-    DatabaseClient database;
     RedisClient redis;
 
     string condition = bot_info["condition"];
@@ -139,7 +138,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
     string ts = bot_info["ts"];
 
     // get bot campaigns from database
-    vector<size_t> campaigns_ids = database.get_bot_campaigns(bot_id);
+    vector<size_t> campaigns_ids = database::get_bot_campaigns(bot_id);
 
     ConditionsParser parser;
 
@@ -157,7 +156,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
     // check bot campaigns
     for (size_t campaign_id: campaigns_ids)
     {
-        auto ids = database.get_campaign_ids(campaign_id);
+        auto ids = database::get_campaign_ids(campaign_id);
         size_t tracker_id = ids.first;
         string source_id = ids.second;
 
@@ -201,7 +200,6 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
 
 void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
 {
-    DatabaseClient database;
     RedisClient redis;
 
     string condition = bot_info["condition"];
@@ -210,7 +208,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
     string ts = bot_info["ts"];
 
     // get bot campaigns from database
-    vector<size_t> campaigns_ids = database.get_bot_campaigns(bot_id);
+    vector<size_t> campaigns_ids = database::get_bot_campaigns(bot_id);
 
     ConditionsParser parser;
 
@@ -236,10 +234,8 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
 // processing bot
 void _process_task(const string bot_id_str)
 {
-    DatabaseClient database;
-
     const size_t bot_id = (size_t)stoi(bot_id_str);
-    auto bot_info = database.get_bot_info(bot_id);
+    auto bot_info = database::get_bot_info(bot_id);
     size_t action = (size_t)stoi(bot_info["action"]);
 
     switch (action)

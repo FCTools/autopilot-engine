@@ -34,25 +34,15 @@
 
 using namespace std;
 
-class DatabaseClient
+namespace database
 {
-    string database_name;
-    string database_host;
-    string database_port;
-    string database_user;
-    string database_password;
-    string connection_string;
+    string _build_connection_string();
 
-public:
+    unordered_map<string, string> get_bot_info(const size_t bot_id);
 
-    DatabaseClient();
-
-    unordered_map<string, string> get_bot_info(const size_t bot_id) const;
-
-    vector<size_t> get_bot_campaigns(const size_t bot_id) const;
+    vector<size_t> get_bot_campaigns(const size_t bot_id);
 
     pair<size_t, string> get_campaign_ids(const size_t campaign_id);  // returns pair <tracker_id, source_id>
 
     string get_zones_param_number(string ts);
-
-};
+}

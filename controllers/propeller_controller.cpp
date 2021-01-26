@@ -33,8 +33,7 @@ string _build_request_url(const string base_url, const string period, const stri
 
 PropellerController::PropellerController() : BaseController()
 {
-    DatabaseClient database;
-    this->zones_param_number = database.get_zones_param_number(this->name);
+    this->zones_param_number = database::get_zones_param_number(this->name);
 }
 
 unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
