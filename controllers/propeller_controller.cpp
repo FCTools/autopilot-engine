@@ -17,18 +17,25 @@
 #include "spdlog/spdlog.h"
 
 #include "propeller_controller.h"
+#include "database_client.h"
 #include "http.h"
 
 using namespace std;
 
 // insert period and campaign_id into tracker url as query parameters
-string _build_request_url(const string base_url, const string period, const string campaign_id)
+// default value for group1 is 2 because in tracker 2 means filter by paths (default way)
+string _build_request_url(const string base_url, const string period, const string campaign_id,
+                          const string group_1 = "2")
 {
-    return base_url + period + "&camp_id=" + campaign_id;
+    return base_url + period + "&camp_id=" + campaign_id + "$group1" + group_1;
 }
 
 
-PropellerController::PropellerController() : BaseController() {}
+PropellerController::PropellerController() : BaseController()
+{
+    DatabaseClient database;
+    this->zones_param_number = database.get_zones_param_number(this->name);
+}
 
 unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
                                                                      const size_t period, const string api_key) const
@@ -101,6 +108,25 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     }
     
     return result;
+}
+
+string PropellerController::get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
+                              const string api_key) const
+{
+    list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
+    const string url = _build_request_url(this->tracker_requests_url, to_string(period), to_string(campaign_tracker_id));
+
+    return string();
+}
+
+vector<string> PropellerController::get_zones(string zones_info) const
+{
+    return {};
+}
+
+unordered_map<string, double> PropellerController::get_zone_info(string zone, string zones_info) const
+{
+    return {};
 }
 
 vector<string> PropellerController::get_field_values(const string field_name, const string data) const

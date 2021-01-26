@@ -29,7 +29,7 @@ DatabaseClient::DatabaseClient()
 
     if (this->database_port.empty())
     {
-        this->database_port = this->DEFAULT_PORT;
+        this->database_port = DEFAULT_PORT;
     }
 
     this->connection_string = "dbname=" + this->database_name + 
@@ -37,6 +37,16 @@ DatabaseClient::DatabaseClient()
                               " port=" + this->database_port + 
                               " user=" + this->database_user + 
                               " password=" + this->database_password;
+}
+
+string DatabaseClient::get_zones_param_number(string ts)
+{
+    pqxx::connection connection(this->connection_string);
+    pqxx::work xact(connection, "Select" + ts);
+
+    string query("SELECT * from bot_manager_trafficsource WHERE name='" + ts + "'");
+    pqxx::result res = xact.exec(query);
+    return string((res.begin().begin() + ZONE_PARAM_INDEX)->c_str());
 }
 
 unordered_map<string, string> DatabaseClient::get_bot_info(const size_t bot_id) const
@@ -52,12 +62,12 @@ unordered_map<string, string> DatabaseClient::get_bot_info(const size_t bot_id) 
     auto bot_info = res.begin().begin();
     unordered_map<string, string> result;
 
-    result["condition"] = (bot_info + this->condition_index)->c_str();
-    result["period"] = (bot_info + this->period_index)->c_str();
-    result["campaign_id"] = (bot_info + this->campaign_index)->c_str();
-    result["action"] = (bot_info + this->action_index)->c_str();
-    result["ts"] = (bot_info + this->ts_index)->c_str();
-    result["api_key"] = (bot_info + this->api_key_index)->c_str();
+    result["condition"] = (bot_info + CONDITION_INDEX)->c_str();
+    result["period"] = (bot_info + PERIOD_INDEX)->c_str();
+    result["campaign_id"] = (bot_info + CAMPAIGN_INDEX)->c_str();
+    result["action"] = (bot_info + ACTION_INDEX)->c_str();
+    result["ts"] = (bot_info + TS_INDEX)->c_str();
+    result["api_key"] = (bot_info + API_KEY_INDEX)->c_str();
     
     return result;
 }
@@ -73,9 +83,9 @@ pair<size_t, string> DatabaseClient::get_campaign_ids(const size_t campaign_id)
 
     pqxx::result res = xact.exec(query);
 
-    string tracker_id_str = (res.begin().begin() + this->tracker_id_index)->c_str();
+    string tracker_id_str = (res.begin().begin() + TRACKER_ID_INDEX)->c_str();
 
-    string source_id = (res.begin().begin() + this->source_id_index)->c_str();
+    string source_id = (res.begin().begin() + SOURCE_ID_INDEX)->c_str();
     size_t tracker_id = (size_t)stoi(tracker_id_str);
 
     return {tracker_id, source_id};
@@ -95,7 +105,7 @@ vector<size_t> DatabaseClient::get_bot_campaigns(const size_t bot_id) const
 
     for (auto r = res.begin(); r != res.end(); r++)
     {
-        campaign_id_str = (res.begin().begin() + campaign_index)->c_str();
+        campaign_id_str = (res.begin().begin() + CAMPAIGN_INDEX)->c_str();
         result.push_back((size_t)stoi(campaign_id_str));
     }
 

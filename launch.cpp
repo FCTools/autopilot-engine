@@ -15,6 +15,7 @@
 
 #include "main_loop.h"
 #include "redis_client.h"
+#include "propeller_controller.h"
 
 
 using namespace std;
@@ -62,19 +63,21 @@ int main(int argc, char** argv)
     logger->info("Start new kernel session.");
 
     logger->info("Start environment checking...");
-    if (!env_is_correct())
-    {
-        logger->critical("Quit.");
-        return EXIT_FAILURE;
-    }
+    // if (!env_is_correct())
+    // {
+        // logger->critical("Quit.");
+        // return EXIT_FAILURE;
+    // }
     logger->info("Environment is correct.");
 
     const size_t workers_number = (size_t)stoi(getenv("POOL_SIZE"));
 
-    logger->info("Engine launched.");
+    logger->info("Kernel launched.");
     logger->info("Workers number: " + to_string(workers_number));
 
-    start(workers_number);
+    PropellerController controller;
+
+    // start(workers_number);
 
     return EXIT_SUCCESS;
 }

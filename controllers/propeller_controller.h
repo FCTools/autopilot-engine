@@ -21,6 +21,9 @@ class PropellerController: public BaseController
                                          
     const string propeller_requests_url = string(getenv("PROPELLER_REQUESTS_URL"));
 
+    string zones_param_number;
+    const string name = "Propeller Ads";
+
 public:
 
     PropellerController();
@@ -29,6 +32,13 @@ public:
 
     virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
                                                             const string api_key) const;
+
+    virtual string get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
+                                  const string api_key) const;
+
+    virtual vector<string> get_zones(string zones_info) const;
+
+    virtual unordered_map<string, double> get_zone_info(string zone, string zones_info) const;
 
     virtual ~PropellerController();
 };
