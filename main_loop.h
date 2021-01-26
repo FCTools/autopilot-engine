@@ -6,7 +6,9 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#define CHECK_CAMPAIGN 1
-#define CHECK_ZONES 2
+#define STOP_CAMPAIGN 1
+#define START_CAMPAIGN 2
+#define EXCLUDE_ZONE 3
+#define INCLUDE_ZONE 4
 
 void start(const std::size_t workers_num);

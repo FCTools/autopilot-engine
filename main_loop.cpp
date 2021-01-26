@@ -136,6 +136,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
     size_t period = (size_t)stoi(bot_info["period"]);
     string api_key = bot_info["api_key"];
     string ts = bot_info["ts"];
+    string action = bot_info["action"];
 
     // get bot campaigns from database
     vector<size_t> campaigns_ids = database::get_bot_campaigns(bot_id);
@@ -188,7 +189,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
         if (parsed_condition->is_true(campaign_info))
         {
             string data = "{\"campaign_id\": " + source_id + ", \"action\": "
-            + to_string(CHECK_CAMPAIGN) + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
+            + action + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
 
             spdlog::get("file_logger")->info("Condition is true. Bot id: " +to_string(bot_id));
             _put_action(redis, data);
@@ -206,6 +207,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
     size_t period = (size_t)stoi(bot_info["period"]);
     string api_key = bot_info["api_key"];
     string ts = bot_info["ts"];
+    string action = bot_info["action"];
 
     // get bot campaigns from database
     vector<size_t> campaigns_ids = database::get_bot_campaigns(bot_id);
@@ -243,6 +245,22 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
                 zones_to_act.push_back(zone);
             }
         }
+
+        string zones_to_act_string = "[";
+        for (auto zone: zones_to_act)
+        {
+            zones_to_act_string += "\"" + zone + "\",";
+        }
+        zones_to_act_string = zones_to_act_string.substr(0, zones_to_act_string.length() - 1);
+        zones_to_act_string += "]";
+
+        string data = "{\"campaign_id\": " + source_id + ", \"action\": "
+                + action + ", \"ts\": \"" + ts + "\", \"zones\": " + 
+                zones_to_act_string +", \"api_key\": \"" + api_key + "\"}";
+
+        spdlog::get("file_logger")->info("Condition is true for " + to_string(zones_to_act.size()) + 
+                                         "zones. Bot id: " +to_string(bot_id));
+        _put_action(redis, data);
     }
 
     delete controller;
@@ -257,10 +275,12 @@ void _process_task(const string bot_id_str)
 
     switch (action)
     {
-        case CHECK_CAMPAIGN:
+        case START_CAMPAIGN:
+        case STOP_CAMPAIGN:
             _check_campaign(bot_id, ref(bot_info));
             break;
-        case CHECK_ZONES:
+        case INCLUDE_ZONE:
+        case EXCLUDE_ZONE:
             _check_zones(bot_id, ref(bot_info));
             break;
         default:
