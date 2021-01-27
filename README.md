@@ -10,17 +10,18 @@ Project name for copyright: autopilot.autopilot-engine
 
 Supported functions:
 * Play/stop campaign
+* Include/exclude zones
 
 Supported traffic sources:
 * Propeller Ads ([api documentation](https://ssp-api.propellerads.com/v5/docs/#/))
 
 Stack:
-* [PostgreSQL](https://www.postgresql.org/) as main database
-* [pqxx](http://pqxx.org/development/libpqxx/) library for PostgreSQL
-* [cpp_redis](https://github.com/cpp-redis/cpp_redis) library for Redis
-* [curlpp](http://www.curlpp.org/) library and [curl](https://curl.se/) for http-requests
-* [spdlog](https://github.com/gabime/spdlog) library for thread-safe logging
-* [CMake](https://cmake.org/) for building
+* [PostgreSQL](https://www.postgresql.org/) as main database (version: >= 12.5)
+* [pqxx](http://pqxx.org/development/libpqxx/) library for PostgreSQL (version: >= 6.4.5-2build1)
+* [cpp_redis](https://github.com/cpp-redis/cpp_redis) library for Redis (version: >= 4.3.1)
+* [curlpp](http://www.curlpp.org/) library (version: >= 0.8.1) and [curl](https://curl.se/) (version: >= 7.68.0-1ubuntu2.4) for http-requests
+* [spdlog](https://github.com/gabime/spdlog) library for thread-safe logging (version: >= 1.8.2)
+* [CMake](https://cmake.org/) for building (version: >= 3.16.3)
 
 <br>
 <br>
