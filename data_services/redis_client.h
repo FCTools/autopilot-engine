@@ -24,10 +24,13 @@ class RedisClient
 public:
     RedisClient();
 
+    // check that redis servers are alive and available
     bool connectable();
 
+    // put new entry into actions redis
     void put_action(string key, string value);
 
+    // get all new entries from storage redisa
     vector<string> get_updates();
 
     ~RedisClient();

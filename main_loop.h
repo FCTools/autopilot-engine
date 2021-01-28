@@ -6,6 +6,8 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
+#include <iostream>
+
 #define STOP_CAMPAIGN 1
 #define START_CAMPAIGN 2
 #define EXCLUDE_ZONE 3

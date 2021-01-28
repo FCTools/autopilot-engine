@@ -50,8 +50,10 @@ namespace database
         string _build_connection_string();
     }
 
+    // get bot info from database
     unordered_map<string, string> get_bot_info(const size_t bot_id);
 
+    // get campaigns linked with given bot
     vector<size_t> get_bot_campaigns(const size_t bot_id);
 
     // get internal campaign id

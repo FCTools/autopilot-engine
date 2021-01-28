@@ -31,20 +31,25 @@ class BaseController
 
 protected:
 
+    // calculate campaign (zone) statistics using base data: cost, revenue, clicks and leads
     unordered_map<string, double> calculate_statistics(const double cost, const double revenue, 
                                                        const int clicks, const int leads) const;
 
+    // extract zones names from string with all zones info
     virtual vector<string> get_zones_names(string zones_info) const = 0;
 
+    // extract info about given zone
     virtual unordered_map<string, double> extract_zone_info(string zone, string zones_info) const = 0;
 
 public:
 
     BaseController();
 
-    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
-                                                            const string api_key) const = 0;
+    // get campaign info from tracker
+    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
+                                                            const size_t period, const string api_key) const = 0;
 
+    // get zones info from tracker for given campaign
     virtual zones_data get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, 
                                       const size_t period, const string api_key) const = 0;
 
