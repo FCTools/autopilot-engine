@@ -129,8 +129,7 @@ vector<string> RedisClient::get_updates()
             {
                 for(auto& key : reply.as_array()) 
                 {
-                    auto x = key.as_string();
-                    result.push_back(x);
+                    result.emplace_back(key.as_string());
                 }
             }   
         });

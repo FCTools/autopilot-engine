@@ -102,7 +102,7 @@ namespace database
         for (auto r = res.begin(); r != res.end(); r++)
         {
             string campaign_id_str = (r.begin() + bot_indexes::CAMPAIGN_INDEX)->c_str();
-            result.push_back((size_t)stoi(campaign_id_str));
+            result.emplace_back((size_t)stoi(campaign_id_str));
         }
 
         return result;

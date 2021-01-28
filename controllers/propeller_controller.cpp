@@ -25,7 +25,7 @@ using namespace std;
 
 // insert period and campaign_id into tracker url as query parameters
 // default value for group1 is 2 because in tracker 2 means filter by paths (default way)
-string _build_request_url(const string base_url, const string period, 
+inline string _build_request_url(const string base_url, const string period, 
                           const string campaign_id, const string group_1 = "2")
 {
     return base_url + period + "&camp_id=" + campaign_id + "&group1=" + group_1;
@@ -158,7 +158,7 @@ vector<string> PropellerController::get_field_values(const string field_name, co
         size_t end_pos = data.find("\"", start_pos);
         string str = data.substr(start_pos, end_pos - start_pos);
 
-        result.push_back(str);
+        result.emplace_back(str);
     }
 
     return result;
