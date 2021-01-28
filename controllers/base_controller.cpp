@@ -26,7 +26,8 @@ unordered_map<string, double> BaseController::calculate_statistics(const double 
             {"ROI", ROI(revenue, cost)}, 
             {"CR", CR(leads, clicks)},
             {"EPC", EPC(revenue, clicks)}, 
-            {"CPC", CPC(cost, clicks)}};
+            {"CPC", CPC(cost, clicks)},
+            {"CPA", CPA(cost, leads)}};
 }
 
 BaseController::~BaseController() {}

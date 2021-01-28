@@ -20,6 +20,7 @@
 #define CR(leads, clicks) (clicks != 0) ? (100 * leads / clicks) : 0.
 #define EPC(revenue, clicks) (clicks != 0) ? (revenue / clicks) : 0.
 #define CPC(cost, clicks) (clicks != 0) ? (cost / clicks) : 0.
+#define CPA(cost, leads) (leads != 0) ? (cost / leads) : 0.
 
 using namespace std;
 
