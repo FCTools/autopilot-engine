@@ -7,6 +7,7 @@
 // Author: German Yakimov <german13yakimov@gmail.com>
 
 #pragma once
+
 #include <unordered_map>
 
 #include "base_condition.h"
@@ -14,14 +15,15 @@
 // complex condition means conditions like: (cond_1 & cond_2); (cond_1 | cond_2)
 class ComplexCondition: public BaseCondition
 {
-    char operation; // & means AND, | means OR
-    BaseCondition* left;
-    BaseCondition* right;
+    const char operation;
+    BaseCondition* left, *right;
 
 public:
-    ComplexCondition(BaseCondition* l, BaseCondition* r, char operation);
 
-    virtual bool is_true(unordered_map<string, double>& campaign_info);
+    ComplexCondition(BaseCondition* l, BaseCondition* r, const char operation);
+
+    virtual bool is_true(unordered_map<string, double>& campaign_info) const;
 
     virtual ~ComplexCondition();
+
 };

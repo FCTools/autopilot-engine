@@ -1,3 +1,11 @@
+// Copyright © 2020-2021 Filthy Claws Tools - All Rights Reserved
+//
+// This file is part of autopilot.autopilot-engine.
+//
+// Unauthorized copying of this file, via any medium is strictly prohibited
+// Proprietary and confidential
+// Author: German Yakimov <german13yakimov@gmail.com>
+
 #include <string>
 #include <sstream>
 #include <list>
@@ -8,22 +16,24 @@
 
 #include "http.h"
 
+#define DEFAULT_TIMEOUT 30
+
 using namespace std;
 
 namespace http
 {
-    const char* IncorrectResponse::what () const throw ()
+    const char* IncorrectResponse::what() const throw()
     {
         return "Can't find required parameter in http-response.";
     }
 
-    const char* RequestError::what () const throw ()
+    const char* RequestError::what() const throw()
     {
         return "Can't find required parameter in http-response.";
     }
 
-    string make_request(const list<string> headers, const string body, const string url, 
-                                    const string type)
+    string make_request(const list<string> headers, const string body,
+                        const string url, const string type)
     {
         cURLpp::Cleanup cleanup;
 
@@ -35,7 +45,8 @@ namespace http
         request.setOpt<cURLpp::options::PostFields>(body);
         request.setOpt<cURLpp::options::PostFieldSize>(body.length());
         request.setOpt<cURLpp::options::WriteStream>(&response);
-        request.setOpt<cURLpp::Options::Verbose>(true);
+        request.setOpt<cURLpp::options::Verbose>(true);
+        request.setOpt<cURLpp::options::Timeout>(DEFAULT_TIMEOUT);
 
         if (type != "POST")
         {

@@ -7,17 +7,21 @@
 // Author: German Yakimov <german13yakimov@gmail.com>
 
 #pragma once
+
 #include <string>
 
 #include "base_condition.h"
+
 using namespace std;
 
 
 class ConditionsParser
 {
+    
     BaseCondition* build(string source);
 
 public:
+
     ConditionsParser();
 
     BaseCondition* parse_condition(string source);

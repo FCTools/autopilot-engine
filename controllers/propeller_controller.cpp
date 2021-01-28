@@ -25,8 +25,8 @@ using namespace std;
 
 // insert period and campaign_id into tracker url as query parameters
 // default value for group1 is 2 because in tracker 2 means filter by paths (default way)
-string _build_request_url(const string base_url, const string period, const string campaign_id,
-                          const string group_1 = "2")
+string _build_request_url(const string base_url, const string period, 
+                          const string campaign_id, const string group_1 = "2")
 {
     return base_url + period + "&camp_id=" + campaign_id + "&group1=" + group_1;
 }
@@ -37,6 +37,7 @@ PropellerController::PropellerController() : BaseController()
     this->zones_param_number = database::get_zones_param_number(this->name);
 }
 
+// get campaign info from tracker
 unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
                                                                      const size_t period, const string api_key) const
 {
@@ -107,27 +108,26 @@ zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id,
         throw http::IncorrectResponse();
     }
 
-    vector<string> zones_names = this->get_zones(zones_info);
+    vector<string> zones_names = this->get_zones_names(zones_info);
     zones_data result;
 
-    for (auto zone: zones_names)
+    for (auto& zone: zones_names)
     {
-        result.push_back({zone, this->get_zone_info(zone, zones_info)});
+        result.push_back({zone, this->extract_zone_info(zone, zones_info)});
     }
 
     return result;
 }
 
-vector<string> PropellerController::get_zones(string zones_info) const
+vector<string> PropellerController::get_zones_names(const string zones_info) const
 {
     vector<string> result = this->get_field_values("name", zones_info);
     return result;
 }
 
-unordered_map<string, double> PropellerController::get_zone_info(string zone, string zones_info) const
+unordered_map<string, double> PropellerController::extract_zone_info(const string zone, const string zones_info) const
 {
-    size_t start = zones_info.find(zone);
-    size_t end = zones_info.find("}");
+    size_t start = zones_info.find(zone), end = zones_info.find("}");;
     unordered_map<string, double> result;
 
     string zone_info = zones_info.substr(start, end - start);

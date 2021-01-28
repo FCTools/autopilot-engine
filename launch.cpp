@@ -31,6 +31,7 @@ bool env_is_correct()
         {
             spdlog::get("file_logger")->critical("Can't find required environment variable: " + var);
             settings_file.close();
+            
             return false;
         }
     }

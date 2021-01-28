@@ -8,26 +8,25 @@
 
 #include <iostream>
 
+#include "base_condition.h"
 #include "complex_condition.h"
-#include "base_controller.h"
 
 using namespace std;
 
-ComplexCondition::ComplexCondition(BaseCondition* l, BaseCondition* r, char operation): BaseCondition()
+ComplexCondition::ComplexCondition(BaseCondition* l, BaseCondition* r, const char operation_): BaseCondition(), operation(operation_)
 {
     this->left = l;
     this->right = r;
 
-    if (operation != '|' && operation != '&')
+    if (operation_ != OR && operation_ != AND)
     {
         throw invalid_argument("invalid operation: " + to_string(operation));
     }
-    this->operation = operation;
 }
 
-bool ComplexCondition::is_true(unordered_map<string, double>& campaign_info)
+bool ComplexCondition::is_true(unordered_map<string, double>& campaign_info) const
 {
-    if (this->operation == '|')
+    if (this->operation == OR)
     {
         return this->left->is_true(campaign_info) || 
         this->right->is_true(campaign_info);

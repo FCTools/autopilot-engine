@@ -10,8 +10,8 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <pqxx/pqxx>
 
+#include <pqxx/pqxx>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/rotating_file_sink.h"
 
@@ -23,59 +23,30 @@ namespace database
 {
     namespace
     {
-        enum bot_indexes
+        string _build_connection_string()
         {
-            CONDITION_INDEX = 3,
-            PERIOD_INDEX = 9,
-            CAMPAIGN_INDEX = 2,
-            ACTION_INDEX = 4,
-            TS_INDEX = 10,
-            API_KEY_INDEX = 11
-        };
+            const string database_name = string(getenv("DATABASE_NAME"));
+            const string database_host = string(getenv("DATABASE_HOST"));
+            const string database_port = string(getenv("DATABASE_PORT"));
+            const string database_user = string(getenv("DATABASE_USER"));
+            const string database_password = string(getenv("DATABASE_PASSWORD"));
 
-        enum campaign_indexes
-        {
-            TRACKER_ID_INDEX = 3,
-            SOURCE_ID_INDEX = 4
-        };
-
-        enum ts_indexes
-        {
-            ZONE_PARAM_INDEX = 2
-        };
-    }
-
-    string _build_connection_string()
-    {
-        const string database_name = string(getenv("DATABASE_NAME"));
-        const string database_host = string(getenv("DATABASE_HOST"));
-        const string database_port = string(getenv("DATABASE_PORT"));
-        const string database_user = string(getenv("DATABASE_USER"));
-        const string database_password = string(getenv("DATABASE_PASSWORD"));
-
-        if (database_port.empty())
-        {
             return "dbname=" + database_name + 
-                " host=" + database_host + 
-                " port=" + DEFAULT_PORT + 
-                " user=" + database_user + 
-                " password=" + database_password;
+                   " host=" + database_host + 
+                   " port=" + ((database_port.empty()) ? DEFAULT_PORT : database_port) + 
+                   " user=" + database_user + 
+                   " password=" + database_password;
         }
-
-        return "dbname=" + database_name + 
-            " host=" + database_host + 
-            " port=" + database_port + 
-            " user=" + database_user + 
-            " password=" + database_password;
     }
 
-    string get_zones_param_number(string ts)
+    string get_zones_param_number(const string ts)
     {
         pqxx::connection connection(_build_connection_string());
         pqxx::work xact(connection, "Select" + ts);
 
         string query("SELECT * from bot_manager_trafficsource WHERE name='" + ts + "'");
         pqxx::result res = xact.exec(query);
+
         return string((res.begin().begin() + ts_indexes::ZONE_PARAM_INDEX)->c_str());
     }
 
@@ -90,15 +61,12 @@ namespace database
 
         pqxx::result res = xact.exec(query);
         auto bot_info = res.begin().begin();
-        unordered_map<string, string> result;
 
-        result["condition"] = (bot_info + bot_indexes::CONDITION_INDEX)->c_str();
-        result["period"] = (bot_info + bot_indexes::PERIOD_INDEX)->c_str();
-        result["action"] = (bot_info + bot_indexes::ACTION_INDEX)->c_str();
-        result["ts"] = (bot_info + bot_indexes::TS_INDEX)->c_str();
-        result["api_key"] = (bot_info + bot_indexes::API_KEY_INDEX)->c_str();
-        
-        return result;
+        return {{"condition", (bot_info + bot_indexes::CONDITION_INDEX)->c_str()},
+                {"period", (bot_info + bot_indexes::PERIOD_INDEX)->c_str()},
+                {"action", (bot_info + bot_indexes::ACTION_INDEX)->c_str()},
+                {"ts", (bot_info + bot_indexes::TS_INDEX)->c_str()},
+                {"api_key", (bot_info + bot_indexes::API_KEY_INDEX)->c_str()}};
     }
 
     pair<size_t, string> get_campaign_ids(const size_t campaign_id)
@@ -113,7 +81,6 @@ namespace database
         pqxx::result res = xact.exec(query);
 
         string tracker_id_str = (res.begin().begin() + campaign_indexes::TRACKER_ID_INDEX)->c_str();
-
         string source_id = (res.begin().begin() + campaign_indexes::SOURCE_ID_INDEX)->c_str();
         size_t tracker_id = (size_t)stoi(tracker_id_str);
 
@@ -134,7 +101,7 @@ namespace database
 
         for (auto r = res.begin(); r != res.end(); r++)
         {
-            campaign_id_str = (res.begin().begin() + bot_indexes::CAMPAIGN_INDEX)->c_str();
+            string campaign_id_str = (r.begin() + bot_indexes::CAMPAIGN_INDEX)->c_str();
             result.push_back((size_t)stoi(campaign_id_str));
         }
 

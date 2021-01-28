@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <iostream>
 
+#include "base_condition.h"
 #include "conditions_parser.h"
 #include "conditions.h"
 
@@ -19,7 +20,7 @@ ConditionsParser::ConditionsParser() {}
 
 BaseCondition* ConditionsParser::build(string source)
 {
-    if (source.find("&") == string::npos && source.find("|") == string::npos) // elementary condition building
+    if (source.find(AND) == string::npos && source.find(OR) == string::npos) // elementary condition building
     {
         return new ElementaryCondition(source);
     }

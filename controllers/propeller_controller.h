@@ -26,9 +26,9 @@ class PropellerController: public BaseController
     string zones_param_number;
     const string name = "Propeller Ads";
 
-    virtual vector<string> get_zones(string zones_info) const;
+    virtual vector<string> get_zones_names(const string zones_info) const;
 
-    virtual unordered_map<string, double> get_zone_info(string zone, string zones_info) const;
+    virtual unordered_map<string, double> extract_zone_info(const string zone, const string zones_info) const;
 
     vector<string> get_field_values(const string field_name, const string data) const;
 

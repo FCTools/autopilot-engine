@@ -6,14 +6,8 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#include <fstream>
 #include <string>
-#include <sstream>
 #include <unordered_map>
-
-#include <curlpp/cURLpp.hpp>
-#include <curlpp/Easy.hpp>
-#include <curlpp/Options.hpp>
 
 #include "base_controller.h"
 
@@ -21,30 +15,18 @@ using namespace std;
 
 BaseController::BaseController() {}
 
-unordered_map<string, double> BaseController::calculate_statistics(double cost, double revenue, 
-                                                                   int clicks, int leads) const
+unordered_map<string, double> BaseController::calculate_statistics(const double cost, const double revenue, 
+                                                                   const int clicks, const int leads) const
 {
-    unordered_map<string, double> result = {{"ROI", 0.}, {"CR", 0.}, {"EPC", 0.}, {"CPC", 0.}};
-    
-    result["cost"] = cost;
-    result["revenue"] = revenue;
-    result["clicks"] = clicks;
-    result["leads"] = leads;
-    result["profit"] = PROFIT(revenue, cost);
-
-    if (cost > 0)
-    {
-        result["ROI"] = ROI(revenue, cost);
-    }
-    
-    if (clicks > 0)
-    {
-        result["CR"] = CR(leads, clicks);
-        result["EPC"] = EPC(revenue, clicks);
-        result["CPC"] = CPC(cost, clicks);
-    }
-    
-    return result;
+    return {{"cost", cost},
+            {"revenue", revenue},
+            {"clicks", clicks},
+            {"leads", leads},
+            {"profit", PROFIT(revenue, cost)},
+            {"ROI", ROI(revenue, cost)}, 
+            {"CR", CR(leads, clicks)},
+            {"EPC", EPC(revenue, clicks)}, 
+            {"CPC", CPC(cost, clicks)}};
 }
 
 BaseController::~BaseController() {}

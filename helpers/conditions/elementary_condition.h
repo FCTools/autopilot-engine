@@ -17,16 +17,17 @@ using namespace std;
 // elementary condition means conditions like: (clicks > 1000); (revenue < 100) and etc.
 class ElementaryCondition: public BaseCondition
 {
-    string param;
+    string param, operation;
     double value;
-    string operation;
 
 public:
+
     ElementaryCondition();
 
-    ElementaryCondition(string source);
+    ElementaryCondition(const string source);
 
-    virtual bool is_true(unordered_map<string, double>& campaign_info);
+    virtual bool is_true(unordered_map<string, double>& campaign_info) const;
 
     virtual ~ElementaryCondition();
+
 };
