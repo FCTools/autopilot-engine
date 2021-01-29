@@ -50,6 +50,17 @@ namespace database
         return string((res.begin().begin() + ts_indexes::ZONE_PARAM_INDEX)->c_str());
     }
 
+    string get_ts_name(const size_t ts_id)
+    {
+        pqxx::connection connection(_build_connection_string());
+        pqxx::work xact(connection, "Select" + to_string(ts_id));
+
+        string query("SELECT * from bot_manager_trafficsource WHERE id='" + to_string(ts_id) + "'");
+        pqxx::result res = xact.exec(query);
+
+        return string((res.begin().begin() + ts_indexes::NAME_INDEX)->c_str());
+    }
+
     unordered_map<string, string> get_bot_info(const size_t bot_id)
     {
         pqxx::connection connection(_build_connection_string());

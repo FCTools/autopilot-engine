@@ -46,7 +46,7 @@ namespace http
         request.setOpt<cURLpp::options::PostFieldSize>(body.length());
         request.setOpt<cURLpp::options::WriteStream>(&response);
         request.setOpt<cURLpp::options::Verbose>(true);
-        // request.setOpt<cURLpp::options::Timeout>(DEFAULT_TIMEOUT);
+        request.setOpt<cURLpp::options::Timeout>(DEFAULT_TIMEOUT);
 
         if (type != "POST")
         {

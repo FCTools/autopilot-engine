@@ -45,6 +45,7 @@ namespace database
         // field indexes in row from table 'traffic_sources'
         enum ts_indexes
         {
+            NAME_INDEX = 1,
             ZONE_PARAM_INDEX = 2
         };
 
@@ -56,6 +57,8 @@ namespace database
 
     // get campaigns linked with given bot
     vector<size_t> get_bot_campaigns(const size_t bot_id);
+
+    string get_ts_name(const size_t ts_id);
 
     // get internal campaign id
     // return pair of external ids: id from tracker and id from traffic source

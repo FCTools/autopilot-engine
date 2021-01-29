@@ -28,8 +28,6 @@
 #include "http.h"
 #include "main_loop.h"
 
-#define PROPELLER_ADS "1"
-
 using namespace std;
 
 const size_t checking_timeout = (size_t)stoi(string(getenv("CHECKING_TIMEOUT")));
@@ -141,7 +139,7 @@ void _put_action(RedisClient& redis, const string data)
 
 BaseController* _get_controller(string ts)
 {
-    if (ts == PROPELLER_ADS)
+    if (ts == "Propeller Ads")
     {
         return new PropellerController();
     }
@@ -171,12 +169,13 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
     BaseCondition* parsed_condition = parser.parse_condition(condition);
     spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
 
-    BaseController* controller = _get_controller(ts);
+    string ts_name = database::get_ts_name((size_t)stoi(ts));
+    BaseController* controller = _get_controller(ts_name);
     if (!controller)
     {
         return;
     }
-    spdlog::get("file_logger")->info("Select controller for " + ts);
+    spdlog::get("file_logger")->info("Select controller for " + ts_name);
     
     // check bot campaigns
     for (size_t campaign_id: campaigns_ids)
@@ -213,7 +212,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
         if (parsed_condition->is_true(campaign_info))
         {
             string data = "{\"campaign_id\": " + source_id + ", \"action\": "
-            + action + ", \"ts\": \"" + ts + "\", \"api_key\": \"" + api_key + "\"}";
+            + action + ", \"ts\": \"" + ts_name + "\", \"api_key\": \"" + api_key + "\"}";
 
             spdlog::get("file_logger")->info("Condition is true. Bot id: " +to_string(bot_id));
             _put_action(redis, data);
@@ -243,12 +242,13 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
     BaseCondition* parsed_condition = parser.parse_condition(condition);
     spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
 
-    BaseController* controller = _get_controller(ts);
+    string ts_name = database::get_ts_name((size_t)stoi(ts));
+    BaseController* controller = _get_controller(ts_name);
     if (!controller)
     {
         return;
     }
-    spdlog::get("file_logger")->info("Select controller for " + ts);
+    spdlog::get("file_logger")->info("Select controller for " + ts_name);
 
     vector<string> zones_to_act;
 
@@ -277,11 +277,11 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         zones_to_act_string += "]";
 
         string data = "{\"campaign_id\": " + source_id + ", \"action\": "
-                + action + ", \"ts\": \"" + ts + "\", \"zones\": " + 
+                + action + ", \"ts\": \"" + ts_name + "\", \"zones\": " + 
                 zones_to_act_string +", \"api_key\": \"" + api_key + "\"}";
 
         spdlog::get("file_logger")->info("Condition is true for " + to_string(zones_to_act.size()) + 
-                                         "zones. Bot id: " +to_string(bot_id));
+                                         " zones. Bot id: " +to_string(bot_id));
         _put_action(redis, data);
     }
 
