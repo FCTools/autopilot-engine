@@ -11,6 +11,7 @@
 #include <sstream>
 #include <list>
 #include <vector>
+#include <set>
 #include <iostream>
 #include <unordered_map>
 
@@ -94,7 +95,7 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
 }
 
 zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, 
-                                               const size_t period, const string api_key) const
+                                               const size_t period, const string api_key, set<string>& ignored_zones) const
 {
     list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
     const string url = _build_request_url(this->tracker_requests_url, to_string(period), to_string(campaign_tracker_id),
@@ -108,10 +109,14 @@ zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id,
         throw http::IncorrectResponse();
     }
 
-    vector<string> zones_names = this->get_zones_names(zones_info);
+    set<string> zones_names = this->get_zones_names(zones_info);
     zones_data result;
 
-    for (auto& zone: zones_names)
+    set<string> final_zones_names;
+    set_difference(zones_names.begin(), zones_names.end(), ignored_zones.begin(), ignored_zones.end(), 
+                   inserter(final_zones_names, final_zones_names.end()));
+
+    for (auto& zone: final_zones_names)
     {
         result.push_back({zone, this->extract_zone_info(zone, zones_info)});
     }
@@ -119,10 +124,10 @@ zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id,
     return result;
 }
 
-vector<string> PropellerController::get_zones_names(const string zones_info) const
+set<string> PropellerController::get_zones_names(const string zones_info) const
 {
-    vector<string> result = this->get_field_values("name", zones_info);
-    return result;
+    vector<string> result_vec = this->get_field_values("name", zones_info);
+    return set<string>(result_vec.begin(), result_vec.end());
 }
 
 unordered_map<string, double> PropellerController::extract_zone_info(const string zone, const string zones_info) const

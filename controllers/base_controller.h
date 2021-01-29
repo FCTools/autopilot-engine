@@ -11,6 +11,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <set>
 #include <string>
 #include <utility>
 
@@ -37,7 +38,7 @@ protected:
                                                        const int clicks, const int leads) const;
 
     // extract zones names from string with all zones info
-    virtual vector<string> get_zones_names(string zones_info) const = 0;
+    virtual set<string> get_zones_names(string zones_info) const = 0;
 
     // extract info about given zone
     virtual unordered_map<string, double> extract_zone_info(string zone, string zones_info) const = 0;
@@ -52,7 +53,7 @@ public:
 
     // get zones info from tracker for given campaign
     virtual zones_data get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, 
-                                      const size_t period, const string api_key) const = 0;
+                                      const size_t period, const string api_key, set<string>& ignored_zones) const = 0;
 
     virtual ~BaseController();
 

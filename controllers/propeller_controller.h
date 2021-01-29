@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <set>
 #include <unordered_map>
 
 #include "base_controller.h"
@@ -26,7 +27,7 @@ class PropellerController: public BaseController
     string zones_param_number;
     const string name = "Propeller Ads";
 
-    virtual vector<string> get_zones_names(const string zones_info) const;
+    virtual set<string> get_zones_names(const string zones_info) const;
 
     virtual unordered_map<string, double> extract_zone_info(const string zone, const string zones_info) const;
 
@@ -40,7 +41,7 @@ public:
                                                             const size_t period, const string api_key) const;
 
     virtual zones_data get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
-                                      const string api_key) const;
+                                      const string api_key, set<string>& ignored_zones) const;
 
     virtual ~PropellerController();
 };

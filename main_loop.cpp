@@ -14,6 +14,7 @@
 #include <chrono>
 #include <random>
 #include <sstream>
+#include <set>
 #include <unordered_map>
 
 #include "spdlog/spdlog.h"
@@ -78,6 +79,27 @@ namespace uuid
 
         return ss.str();
     }
+}
+
+set<string> _split(string source, char delimiter)
+{
+    if (source.find(delimiter) == string::npos)
+	{
+		return { source };
+	}
+
+	size_t current = 0, next;
+	set<string> tokens;
+
+	while (source.find(delimiter, current) != string::npos)
+	{
+		next = source.find(delimiter, current);
+		tokens.insert(source.substr(current, next - current));
+		current = next + 1;
+	}
+	tokens.insert(source.substr(current, source.length() - current));
+
+	return tokens;
 }
 
 void _extend_storage(vector<string>& storage, vector<string>& new_tasks)
@@ -211,6 +233,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
 
     // get bot campaigns from database
     vector<size_t> campaigns_ids = database::get_bot_campaigns(bot_id);
+    set<string> ignored_zones = _split(bot_info["ignored_zones"], '\n');
 
     ConditionsParser parser;
 
@@ -233,7 +256,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         size_t tracker_id = ids.first;
         string source_id = ids.second;
 
-        auto zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key);
+        auto zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, ref(ignored_zones));
 
         for (auto& zone: zones_info)
         {

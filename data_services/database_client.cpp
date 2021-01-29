@@ -62,11 +62,15 @@ namespace database
         pqxx::result res = xact.exec(query);
         auto bot_info = res.begin().begin();
 
+        string ignored_zones = (bot_info + bot_indexes::IGNORED_ZONES_INDEX)->c_str();
+        ignored_zones.erase(remove(ignored_zones.begin(), ignored_zones.end(), '\r'), ignored_zones.end());
+
         return {{"condition", (bot_info + bot_indexes::CONDITION_INDEX)->c_str()},
                 {"period", (bot_info + bot_indexes::PERIOD_INDEX)->c_str()},
                 {"action", (bot_info + bot_indexes::ACTION_INDEX)->c_str()},
                 {"ts", (bot_info + bot_indexes::TS_INDEX)->c_str()},
-                {"api_key", (bot_info + bot_indexes::API_KEY_INDEX)->c_str()}};
+                {"api_key", (bot_info + bot_indexes::API_KEY_INDEX)->c_str()},
+                {"ignored_zones", ignored_zones}};
     }
 
     pair<size_t, string> get_campaign_ids(const size_t campaign_id)

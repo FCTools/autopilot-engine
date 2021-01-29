@@ -31,7 +31,8 @@ namespace database
             CAMPAIGN_INDEX = 2,
             ACTION_INDEX = 4,
             TS_INDEX = 10,
-            API_KEY_INDEX = 11
+            API_KEY_INDEX = 11,
+            IGNORED_ZONES_INDEX = 12
         };
         
         // field indexes in row from table 'campaigns'
