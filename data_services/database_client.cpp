@@ -63,7 +63,10 @@ namespace database
         auto bot_info = res.begin().begin();
 
         string ignored_zones = (bot_info + bot_indexes::IGNORED_ZONES_INDEX)->c_str();
-        ignored_zones.erase(remove(ignored_zones.begin(), ignored_zones.end(), '\r'), ignored_zones.end());
+        if (ignored_zones.size() > 0 && ignored_zones.find('\r') != string::npos)
+        {
+            ignored_zones.erase(remove(ignored_zones.begin(), ignored_zones.end(), '\r'), ignored_zones.end());
+        }
 
         return {{"condition", (bot_info + bot_indexes::CONDITION_INDEX)->c_str()},
                 {"period", (bot_info + bot_indexes::PERIOD_INDEX)->c_str()},

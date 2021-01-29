@@ -58,6 +58,7 @@ int main(int argc, char** argv)
     auto max_size = 1048576 * 5;
     auto max_files = 10;
     auto logger = spdlog::rotating_logger_mt("file_logger", "logs/info_log.log", max_size, max_files);
+    spdlog::flush_every(chrono::seconds(5));
 
     logger->info("---------------------");
     logger->info("Start new kernel session.");

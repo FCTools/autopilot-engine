@@ -27,11 +27,11 @@ namespace database
         enum bot_indexes
         {
             CONDITION_INDEX = 3,
-            PERIOD_INDEX = 9,
+            PERIOD_INDEX = 8,
             CAMPAIGN_INDEX = 2,
             ACTION_INDEX = 4,
-            TS_INDEX = 10,
-            API_KEY_INDEX = 11,
+            TS_INDEX = 9,
+            API_KEY_INDEX = 10,
             IGNORED_ZONES_INDEX = 12
         };
         

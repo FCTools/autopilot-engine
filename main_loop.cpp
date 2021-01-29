@@ -28,6 +28,8 @@
 #include "http.h"
 #include "main_loop.h"
 
+#define PROPELLER_ADS "1"
+
 using namespace std;
 
 const size_t checking_timeout = (size_t)stoi(string(getenv("CHECKING_TIMEOUT")));
@@ -139,7 +141,7 @@ void _put_action(RedisClient& redis, const string data)
 
 BaseController* _get_controller(string ts)
 {
-    if (ts == "Propeller Ads")
+    if (ts == PROPELLER_ADS)
     {
         return new PropellerController();
     }
@@ -321,8 +323,8 @@ void _worker_main_function(vector<string>& storage)
         string bot_id = *storage.begin();
         storage.erase(storage.begin());
         unique_storage_mutex.unlock();
+
         spdlog::get("file_logger")->info("Get new task. Bot id: " + bot_id);
-        
         _process_task(bot_id);
         spdlog::get("file_logger")->info("Finish task. Bot id: " + bot_id);
     }
