@@ -1,0 +1,6 @@
+(leads <= 10)
+cost: 10
+revenue: 10
+clicks: 50
+leads: 7
+answer: true

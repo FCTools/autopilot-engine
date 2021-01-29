@@ -1,0 +1,6 @@
+...condition...
+cost:
+revenue:
+clicks:
+leads:
+answer: true/false

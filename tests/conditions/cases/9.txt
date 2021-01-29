@@ -1,0 +1,6 @@
+(profit > 20)
+cost: 20
+revenue: 35
+clicks: 10
+leads: 10
+answer: false

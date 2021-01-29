@@ -1,0 +1,6 @@
+(CPC > 0.02)
+cost: 0.09
+revenue: 2.72
+clicks: 6
+leads: 1
+answer: false

@@ -1,0 +1,6 @@
+(ROI > 81)
+cost: 5.98
+revenue: 10.8
+clicks: 1195
+leads: 1
+answer: false

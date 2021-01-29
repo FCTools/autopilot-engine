@@ -1,0 +1,6 @@
+(EPC < 1)
+cost: 24.15
+revenue: 76
+clicks: 88
+leads: 34
+answer: true

@@ -1,0 +1,6 @@
+(CR >= 0.07)
+cost: 5.98
+revenue: 10.80
+clicks: 1195
+leads: 1
+answer: true

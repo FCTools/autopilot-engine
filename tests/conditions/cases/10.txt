@@ -1,0 +1,6 @@
+(ROI < -50)
+cost: 21.14
+revenue: 5
+clicks: 4228
+leads: 11
+answer: true
