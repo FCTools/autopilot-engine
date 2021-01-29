@@ -51,6 +51,7 @@ _deps
 *.out
 *.app
 bin/
+build/
 
 # Config file
 config.env
