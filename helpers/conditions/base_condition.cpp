@@ -6,8 +6,6 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#pragma once
-
 #include "base_condition.h"
 
 BaseCondition::BaseCondition() {}
