@@ -1,0 +1,6 @@
+((ROI > 120) | (CPC > 0.3))
+cost: 10.27
+revenue: 25
+clicks: 44
+leads: 16
+answer: true

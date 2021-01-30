@@ -1,0 +1,6 @@
+((CR > 0.8) | (ROI > 55.5))
+cost: 132
+revenue: 210
+clicks: 1225
+leads: 10
+answer: true

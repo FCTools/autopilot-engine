@@ -1,0 +1,6 @@
+((CPC >= 3) & (CR > 14))
+cost: 84.49
+revenue: 0
+clicks: 41
+leads: 6
+answer: false

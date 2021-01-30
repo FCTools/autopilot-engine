@@ -1,0 +1,6 @@
+((EPC > 0.04) | (ROI > 480))
+cost: 1.27
+revenue: 7.4
+clicks: 235
+leads: 1
+answer: true

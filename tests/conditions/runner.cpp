@@ -80,7 +80,7 @@ bool process_case(string filename)
 
 int main()
 {
-    const size_t cases_number = 20;
+    const size_t cases_number = 28;
 
     for (size_t i = 0; i < cases_number; i++)
     {
