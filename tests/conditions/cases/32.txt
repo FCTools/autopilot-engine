@@ -1,0 +1,6 @@
+((leads > 10) | ((profit > 11) & (clicks <= 20)))
+cost: 10.94
+revenue: 0
+clicks: 44
+leads: 14
+answer: true
