@@ -88,7 +88,17 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     catch (const invalid_argument& exc)
     {
         spdlog::get("file_logger")->error(exc.what());
-        throw http::IncorrectResponse();
+        return {};
+    }
+    catch (http::IncorrectResponse)
+    {
+        spdlog::get("file_logger")->error("Incorrect response while trying to get info about campaign: " + to_string(campaign_tracker_id));
+        return {};
+    }
+    catch (http::RequestError)
+    {
+        spdlog::get("file_logger")->error("Request error while trying to get info about campaign: " + to_string(campaign_tracker_id));
+        return {};
     }
 
     return this->calculate_statistics(cost, revenue, clicks, leads);
@@ -118,7 +128,14 @@ zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id,
 
     for (auto& zone: final_zones_names)
     {
-        result.push_back({zone, this->extract_zone_info(zone, zones_info)});
+        try
+        {
+            result.push_back({zone, this->extract_zone_info(zone, zones_info)});
+        }
+        catch (http::IncorrectResponse)
+        {
+            spdlog::get("file_logger")->error("Can't get zone info: " + zone);
+        }
     }
 
     return result;
