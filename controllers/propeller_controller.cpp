@@ -174,6 +174,7 @@ set<string> PropellerController::get_zones_names(const string zones_info) const
     catch (http::RequestError)
     {
         spdlog::get("file_logger")->error("Request error while trying to get zones names.");
+        return {};
     }
 
     return set<string>(result.begin(), result.end());
