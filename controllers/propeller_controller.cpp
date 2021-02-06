@@ -160,8 +160,23 @@ zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id,
 
 set<string> PropellerController::get_zones_names(const string zones_info) const
 {
-    vector<string> result_vec = this->get_field_values("name", zones_info);
-    return set<string>(result_vec.begin(), result_vec.end());
+    vector<string> result;
+
+    try
+    {
+        result = this->get_field_values("name", zones_info);
+    }
+    catch (http::IncorrectResponse)
+    {
+        spdlog::get("file_logger")->error("Empty zones info (incorrect response).");
+        return {};
+    }
+    catch (http::RequestError)
+    {
+        spdlog::get("file_logger")->error("Request error while trying to get zones names.");
+    }
+
+    return set<string>(result.begin(), result.end());
 }
 
 unordered_map<string, double> PropellerController::extract_zone_info(const string zone, const string zones_info) const
