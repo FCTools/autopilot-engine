@@ -55,7 +55,7 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
     if (campaign_info.size() == 0)
     {
         spdlog::get("file_logger")->error("Error while trying to make request (or empty result)");
-        throw http::IncorrectResponse();
+        return {};
     }
 
     try
@@ -110,13 +110,22 @@ zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id,
     list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
     const string url = _build_request_url(this->tracker_requests_url, to_string(period), to_string(campaign_tracker_id),
                                           this->zones_param_number);
+    string zones_info;
 
-    string zones_info = http::make_request(headers, string(), url, "GET");
+    try
+    {
+        zones_info = http::make_request(headers, string(), url, "GET");
+    }
+    catch(http::RequestError)
+    {
+        spdlog::get("file_logger")->error("Error while trying to make request.");
+        return {};
+    }
 
     if (zones_info.size() == 0)
     {
         spdlog::get("file_logger")->error("Error while trying to make request (or empty result)");
-        throw http::IncorrectResponse();
+        return {};
     }
 
     set<string> zones_names = this->get_zones_names(zones_info);
