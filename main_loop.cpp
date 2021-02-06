@@ -186,22 +186,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
 
         unordered_map<string, double> campaign_info;
 
-        try
-        {
-            campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
-        }
-        catch (const http::IncorrectResponse& exc)
-        {
-            spdlog::get("file_logger")->error(exc.what());
-            spdlog::get("file_logger")->error("Skip campaign: " + to_string(campaign_id));
-            continue;
-        }
-        catch (const http::RequestError& exc)
-        {
-            spdlog::get("file_logger")->error(exc.what());
-            spdlog::get("file_logger")->error("Skip campaign: " + to_string(campaign_id));
-            continue;
-        }
+        campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
 
         if (campaign_info.size() == 0)
         {
@@ -259,6 +244,12 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         string source_id = ids.second;
 
         auto zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, ref(ignored_zones));
+
+        if (zones_info.size() == 0)
+        {
+            spdlog::get("file_logger")->error("Can't get zones info for campaign " + to_string(tracker_id) + ". Skip.");
+            continue;
+        }
 
         for (auto& zone: zones_info)
         {

@@ -134,7 +134,15 @@ zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id,
         }
         catch (http::IncorrectResponse)
         {
-            spdlog::get("file_logger")->error("Can't get zone info: " + zone);
+            spdlog::get("file_logger")->error("Can't get zone info: " + zone + ": incorrect response exception.");
+        }
+        catch (http::RequestError)
+        {
+            spdlog::get("file_logger")->error("Can't get zone info: " + zone + "request error.");
+        }
+        catch (const invalid_argument& exc)
+        {
+            spdlog::get("file_logger")->error("Exception occurred while trying to extract zone info: " + string(exc.what()) + ". Zone: " + zone);
         }
     }
 
