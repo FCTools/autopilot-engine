@@ -264,7 +264,15 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         {
             zones_to_act_string += "\"" + zone + "\",";
         }
-        zones_to_act_string = zones_to_act_string.substr(0, zones_to_act_string.length() - 1);
+        if (zones_to_act_string != "[")
+        {
+            zones_to_act_string = zones_to_act_string.substr(0, zones_to_act_string.length() - 1);
+        }
+        else
+        {
+            spdlog::get("file_logger")->info("Condition is true for 0 zones. Bot id: " + to_string(bot_id));
+            continue;
+        }
         zones_to_act_string += "]";
 
         string data = "{\"campaign_id\": " + source_id + ", \"action\": "
@@ -272,7 +280,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
                 zones_to_act_string +", \"api_key\": \"" + api_key + "\"}";
 
         spdlog::get("file_logger")->info("Condition is true for " + to_string(zones_to_act.size()) + 
-                                         " zones. Bot id: " +to_string(bot_id));
+                                         " zones. Bot id: " + to_string(bot_id));
         _put_action(redis, data);
     }
 
