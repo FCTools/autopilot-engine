@@ -8,6 +8,8 @@
 ## Autopilot engine (C++-based conditions checking module)
 Project name for copyright: autopilot.autopilot-engine
 
+Project documentation: [doc](https://docs.google.com/document/d/1Z79HDBINUZZ2xw2-kPKdatbatP-Nh94qgwU8WsKzlEI/edit)
+
 Supported functions:
 * Play/stop campaign
 * Include/exclude zones

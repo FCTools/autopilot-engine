@@ -84,24 +84,23 @@ unordered_map<string, double> PropellerController::get_campaign_info(const size_
         {
             leads += stoi(leads_path);
         }
+
+        return this->calculate_statistics(cost, revenue, clicks, leads);
     }
     catch (const invalid_argument& exc)
     {
         spdlog::get("file_logger")->error(exc.what());
-        return {};
     }
     catch (http::IncorrectResponse)
     {
         spdlog::get("file_logger")->error("Incorrect response while trying to get info about campaign: " + to_string(campaign_tracker_id));
-        return {};
     }
     catch (http::RequestError)
     {
         spdlog::get("file_logger")->error("Request error while trying to get info about campaign: " + to_string(campaign_tracker_id));
-        return {};
     }
 
-    return this->calculate_statistics(cost, revenue, clicks, leads);
+    return {};
 }
 
 zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, 
@@ -165,19 +164,18 @@ set<string> PropellerController::get_zones_names(const string zones_info) const
     try
     {
         result = this->get_field_values("name", zones_info);
+        return set<string>(result.begin(), result.end());
     }
     catch (http::IncorrectResponse)
     {
         spdlog::get("file_logger")->error("Empty zones info (incorrect response).");
-        return {};
     }
     catch (http::RequestError)
     {
         spdlog::get("file_logger")->error("Request error while trying to get zones names.");
-        return {};
     }
 
-    return set<string>(result.begin(), result.end());
+    return {};
 }
 
 unordered_map<string, double> PropellerController::extract_zone_info(const string zone, const string zones_info) const

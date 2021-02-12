@@ -25,6 +25,7 @@
 #include "conditions_parser.h"
 #include "base_controller.h"
 #include "propeller_controller.h"
+#include "evadav_controller.h"
 #include "http.h"
 #include "main_loop.h"
 
@@ -142,6 +143,10 @@ BaseController* _get_controller(string ts)
     if (ts == "Propeller Ads")
     {
         return new PropellerController();
+    }
+    else if (ts == "Evadav")
+    {
+        // return new EvadavController();
     }
     else
     {
