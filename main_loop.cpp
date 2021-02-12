@@ -146,7 +146,7 @@ BaseController* _get_controller(string ts)
     }
     else if (ts == "Evadav")
     {
-        // return new EvadavController();
+        return new EvadavController();
     }
     else
     {

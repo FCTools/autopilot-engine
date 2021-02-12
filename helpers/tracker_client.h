@@ -6,14 +6,10 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#pragma once
-
-#include <iostream>
+#include <string>
+#include <set>
 #include <unordered_map>
 #include <vector>
-#include <set>
-#include <string>
-#include <utility>
 
 // statistics formulas
 #define PROFIT(revenue, cost) (cost != 0) ? (revenue - cost) : 0.
@@ -27,28 +23,31 @@ using namespace std;
 
 typedef vector<pair<string, unordered_map<string, double>>> zones_data;
 
-// base class for traffic source controller
-class BaseController
+
+class TrackerClient
 {
+    const string tracker_requests_url = string(getenv("TRACKER_REQUEST_URL")) + string(getenv("TRACKER_API_KEY"))
+                                         + "&date=";
 
-protected:
+    // extract zones names from string with all zones info
+    virtual set<string> get_zones_names(const string zones_info) const;
 
-    // calculate campaign (zone) statistics using base data: cost, revenue, clicks and leads
+    // extract info about given zone
+    virtual unordered_map<string, double> extract_zone_info(const string zone, const string zones_info) const;
+
+    vector<string> get_field_values(const string field_name, const string data) const;
+
     unordered_map<string, double> calculate_statistics(const double cost, const double revenue, 
                                                        const int clicks, const int leads) const;
 
 public:
 
-    BaseController();
+    TrackerClient();
 
-    // get campaign info from tracker
-    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
-                                                            const size_t period, const string api_key) const = 0;
+    unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const size_t period) const;
 
-    // get zones info from tracker for given campaign
-    virtual zones_data get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, 
-                                      const size_t period, const string api_key, set<string>& ignored_zones) const = 0;
+    zones_data get_zones_info(const size_t campaign_tracker_id, const size_t period, 
+                              const string zones_param_number, set<string>& ignored_zones) const;
 
-    virtual ~BaseController();
-
+    ~TrackerClient();
 };

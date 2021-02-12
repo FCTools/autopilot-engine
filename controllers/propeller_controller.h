@@ -18,20 +18,11 @@
 using namespace std;
 
 class PropellerController: public BaseController
-{
-    const string tracker_requests_url = string(getenv("TRACKER_REQUEST_URL")) + string(getenv("TRACKER_API_KEY"))
-                                         + "&date=";
-                                         
+{                                         
     const string propeller_requests_url = string(getenv("PROPELLER_REQUESTS_URL"));
 
     string zones_param_number;
     const string name = "Propeller Ads";
-
-    virtual set<string> get_zones_names(const string zones_info) const;
-
-    virtual unordered_map<string, double> extract_zone_info(const string zone, const string zones_info) const;
-
-    vector<string> get_field_values(const string field_name, const string data) const;
 
 public:
 
