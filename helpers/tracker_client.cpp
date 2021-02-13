@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <vector>
 #include <list>
+#include <iostream>
 
 #include "spdlog/spdlog.h"
 
@@ -70,6 +71,7 @@ vector<string> TrackerClient::get_field_values(const string field_name, const st
     vector<string> result;
 
     string pattern = "\"" + field_name + "\":\"";
+    cout << data.size() << endl;
     if (data.find(pattern) == string::npos)
     {
         throw http::IncorrectResponse();
