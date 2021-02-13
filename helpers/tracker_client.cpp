@@ -71,10 +71,10 @@ vector<string> TrackerClient::get_field_values(const string field_name, const st
     vector<string> result;
 
     string pattern = "\"" + field_name + "\":\"";
-    cout << data.size() << endl;
+    // cout << data.size() << endl;
     if (data.find(pattern) == string::npos)
     {
-        cout << data << endl;
+        // cout << data << endl;
         throw http::IncorrectResponse();
     }
 
