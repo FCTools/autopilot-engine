@@ -175,7 +175,7 @@ zones_data TrackerClient::get_zones_info(const size_t campaign_tracker_id, const
 {
    list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
     const string url = _build_request_url(this->tracker_requests_url, to_string(period), to_string(campaign_tracker_id),
-                                          zones_param_number);
+                                          zones_param_number) + "&val_page=All";
     string zones_info;
 
     try
