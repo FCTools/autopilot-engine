@@ -288,7 +288,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
                 zones_to_act_string +", \"api_key\": \"" + api_key + "\"}";
 
         spdlog::get("file_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for " + to_string(zones_to_act.size()) + 
-                                         " zones. Campaign: " + to_string(tracker_id) + "//" + source_id);
+                                         " zones. Campaign: " + to_string(tracker_id) + " | " + source_id);
         _put_action(redis, data);
     }
 
