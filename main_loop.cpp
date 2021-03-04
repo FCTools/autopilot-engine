@@ -195,7 +195,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
 
         if (campaign_info.size() == 0)
         {
-            spdlog::get("file_logger")->error("Can't get campaign info. Skip campaign: " + to_string(campaign_id));
+            spdlog::get("file_logger")->error("Bot id: " + to_string(bot_id) + ". Can't get campaign info. Skip campaign: " + to_string(campaign_id));
             continue;
         }
 
@@ -204,7 +204,8 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
             string data = "{\"campaign_id\": " + source_id + ", \"action\": "
             + action + ", \"ts\": \"" + ts_name + "\", \"api_key\": \"" + api_key + "\"}";
 
-            spdlog::get("file_logger")->info("Condition is true. Bot id: " +to_string(bot_id));
+            spdlog::get("file_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for campaign" + to_string(tracker_id) + "//" + 
+                                             source_id);
             _put_action(redis, data);
         }
     }
@@ -252,7 +253,8 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
 
         if (zones_info.size() == 0)
         {
-            spdlog::get("file_logger")->error("Can't get zones info for campaign " + to_string(tracker_id) + ". Skip.");
+            spdlog::get("file_logger")->error("Bot id: " + to_string(bot_id) + ". Can't get zones info for campaign " + to_string(tracker_id) + "//" + 
+                                              source_id + ". Skip.");
             continue;
         }
 
@@ -275,7 +277,8 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         }
         else
         {
-            spdlog::get("file_logger")->info("Condition is true for 0 zones. Bot id: " + to_string(bot_id));
+            spdlog::get("file_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for 0 zones. Campaign: " + to_string(tracker_id) + "//" + 
+                                              source_id);
             continue;
         }
         zones_to_act_string += "]";
@@ -284,8 +287,8 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
                 + action + ", \"ts\": \"" + ts_name + "\", \"zones\": " + 
                 zones_to_act_string +", \"api_key\": \"" + api_key + "\"}";
 
-        spdlog::get("file_logger")->info("Condition is true for " + to_string(zones_to_act.size()) + 
-                                         " zones. Bot id: " + to_string(bot_id));
+        spdlog::get("file_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for " + to_string(zones_to_act.size()) + 
+                                         " zones. Campaign: " + to_string(tracker_id) + "//" + source_id);
         _put_action(redis, data);
     }
 
