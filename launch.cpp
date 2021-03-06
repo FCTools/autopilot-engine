@@ -67,25 +67,27 @@ int main(int argc, char** argv)
 
     spdlog::flush_every(chrono::seconds(3));
 
+    env_logger->info("---------------------------------------------------------------------------------------");
     logger->info("---------------------------------------------------------------------------------------");
-    logger->info("Start new kernel session.");
 
-    logger->info("Start environment checking...");
+    env_logger->info("Start new kernel session.");
+
+    env_logger->info("Start environment checking...");
 
     if (!env_is_correct())
     {
-        logger->critical("Incorrect environment. Quit.");
+        env_logger->critical("Incorrect environment. Quit.");
         return EXIT_FAILURE;
     }
     
-    logger->info("Environment is correct.");
+    env_logger->info("Environment is correct.");
 
     const size_t workers_number = (size_t)stoi(getenv("POOL_SIZE"));
 
     signal(SIGINT, signal_callback_handler);
 
-    logger->info("Kernel launched.");
-    logger->info("Workers number: " + to_string(workers_number));
+    env_logger->info("Kernel launched.");
+    env_logger->info("Workers number: " + to_string(workers_number));
 
     start(workers_number);
 
