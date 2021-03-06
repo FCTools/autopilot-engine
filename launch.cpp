@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <signal.h>
 
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/rotating_file_sink.h"
@@ -51,6 +52,11 @@ bool env_is_correct()
     return true;
 }
 
+void signal_callback_handler(int signum) {
+    spdlog::get("file_logger")->info("Get keyboard interrupt signal. Quit.");
+    exit(signum);
+}
+
 int main(int argc, char** argv)
 {
     spdlog::set_pattern("[%t] %+");
@@ -60,20 +66,22 @@ int main(int argc, char** argv)
     auto logger = spdlog::rotating_logger_mt("file_logger", "logs/info_log.log", max_size, max_files);
     spdlog::flush_every(chrono::seconds(3));
 
-    logger->info("--------------------------------------------------------");
+    logger->info("---------------------------------------------------------------------------------------");
     logger->info("Start new kernel session.");
 
     logger->info("Start environment checking...");
 
     if (!env_is_correct())
     {
-        logger->critical("Quit.");
+        logger->critical("Incorrect environment. Quit.");
         return EXIT_FAILURE;
     }
     
     logger->info("Environment is correct.");
 
     const size_t workers_number = (size_t)stoi(getenv("POOL_SIZE"));
+
+    signal(SIGINT, signal_callback_handler);
 
     logger->info("Kernel launched.");
     logger->info("Workers number: " + to_string(workers_number));

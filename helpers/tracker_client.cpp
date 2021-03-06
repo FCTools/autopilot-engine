@@ -41,11 +41,11 @@ set<string> TrackerClient::get_zones_names(const string zones_info) const
     }
     catch (http::IncorrectResponse)
     {
-        spdlog::get("file_logger")->error("Empty zones info (incorrect response).");
+        spdlog::get("file_logger")->error("Empty zones info - can't extract names (incorrect response).");
     }
     catch (http::RequestError)
     {
-        spdlog::get("file_logger")->error("Request error while trying to get zones names.");
+        spdlog::get("file_logger")->error("Request error while trying to get zones' names.");
     }
 
     return {};
@@ -71,10 +71,8 @@ vector<string> TrackerClient::get_field_values(const string field_name, const st
     vector<string> result;
 
     string pattern = "\"" + field_name + "\":\"";
-    // cout << data.size() << endl;
     if (data.find(pattern) == string::npos)
     {
-        // cout << data << endl;
         throw http::IncorrectResponse();
     }
 
@@ -167,6 +165,8 @@ unordered_map<string, double> TrackerClient::get_campaign_info(const size_t camp
         spdlog::get("file_logger")->error("Request error while trying to get info about campaign: " + to_string(campaign_tracker_id));
     }
 
+    spdlog::get("file_logger")->error("Incorrect response from tracker: " + campaign_info);
+
     return {};
 }
 
@@ -184,13 +184,13 @@ zones_data TrackerClient::get_zones_info(const size_t campaign_tracker_id, const
     }
     catch(http::RequestError)
     {
-        spdlog::get("file_logger")->error("Error while trying to make request.");
+        spdlog::get("file_logger")->error("RequestError while trying to get zones info from tracker. Campaign id: " + to_string(campaign_tracker_id));
         return {};
     }
 
     if (zones_info.size() == 0)
     {
-        spdlog::get("file_logger")->error("Error while trying to make request (or empty result)");
+        spdlog::get("file_logger")->error("Error or empty result while trying to get zones info from tracker. Campaign id: " + to_string(campaign_tracker_id));
         return {};
     }
 
@@ -209,15 +209,16 @@ zones_data TrackerClient::get_zones_info(const size_t campaign_tracker_id, const
         }
         catch (http::IncorrectResponse)
         {
-            spdlog::get("file_logger")->error("Can't get zone info: " + zone + ": incorrect response exception.");
+            spdlog::get("file_logger")->error("Can't get zone info: " + zone + ": incorrect response exception. Campaign id: " + to_string(campaign_tracker_id));
         }
         catch (http::RequestError)
         {
-            spdlog::get("file_logger")->error("Can't get zone info: " + zone + "request error.");
+            spdlog::get("file_logger")->error("Can't get zone info: " + zone + "request error. Campaign id: " + to_string(campaign_tracker_id));
         }
         catch (const invalid_argument& exc)
         {
-            spdlog::get("file_logger")->error("Exception occurred while trying to extract zone info: " + string(exc.what()) + ". Zone: " + zone);
+            spdlog::get("file_logger")->error("Invalid argument occurred while trying to extract zone" + zone + " info: "
+                                              + string(exc.what()) + ". Campaign id: " + to_string(campaign_tracker_id));
         }
     }
 

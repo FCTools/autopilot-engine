@@ -170,7 +170,8 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
 
     ConditionsParser parser;
 
-    spdlog::get("file_logger")->info("Start parsing for this condition: " + condition);
+    spdlog::get("file_logger")->info("Start condition parsing: " + condition);
+
     BaseCondition* parsed_condition = parser.parse_condition(condition);
     spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
 
@@ -229,7 +230,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
 
     ConditionsParser parser;
 
-    spdlog::get("file_logger")->info("Start parsing for this condition: " + condition);
+    spdlog::get("file_logger")->info("Start condition parsing: " + condition);
     BaseCondition* parsed_condition = parser.parse_condition(condition);
     spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
 
@@ -271,6 +272,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         {
             zones_to_act_string += "\"" + zone + "\",";
         }
+
         if (zones_to_act_string != "[")
         {
             zones_to_act_string = zones_to_act_string.substr(0, zones_to_act_string.length() - 1);
@@ -342,7 +344,7 @@ void start(const size_t workers_num)
     vector<string> tasks;
     vector<thread> workers_pool;
 
-    spdlog::get("file_logger")->info("Create all resources (mutexes, containers). Start to creating workers.");
+    spdlog::get("file_logger")->info("Create resources (mutexes, containers). Start to initializing workers.");
 
     for (size_t _ = 0; _ < workers_num; _++)
     {
@@ -350,7 +352,7 @@ void start(const size_t workers_num)
         (*(workers_pool.end() - 1)).detach();
     }
 
-    spdlog::get("file_logger")->info("Create and detach workers. Start storage updating.");
+    spdlog::get("file_logger")->info("Initialize and detach workers. Start storage updating...");
 
     _start_queue_updating_process(ref(tasks));
 }
