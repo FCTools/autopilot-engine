@@ -43,13 +43,13 @@ bool RedisClient::connectable()
                     status == cpp_redis::connect_state::stopped ||
                     status == cpp_redis::connect_state::failed) 
                 {
-                    spdlog::get("file_logger")->error("Client disconnected from redis on " + host + ":" + to_string(port));
+                    spdlog::get("env_logger")->error("Client disconnected from redis on " + host + ":" + to_string(port));
                 }
             });
     }
     catch(cpp_redis::redis_error)
     {
-        spdlog::get("file_logger")->critical("Can't connect to redis on " + this->actions_addr);
+        spdlog::get("env_logger")->critical("Can't connect to redis on " + this->actions_addr);
         return false;
     }
     
@@ -62,13 +62,13 @@ bool RedisClient::connectable()
                     status == cpp_redis::connect_state::stopped ||
                     status == cpp_redis::connect_state::failed) 
                 {
-                    spdlog::get("file_logger")->error("Client disconnected from redis on " + host + ":" + to_string(port));
+                    spdlog::get("env_logger")->error("Client disconnected from redis on " + host + ":" + to_string(port));
                 }
             });
     }
     catch(cpp_redis::redis_error)
     {
-        spdlog::get("file_logger")->critical("Can't connect to redis on " + this->storage_addr);
+        spdlog::get("env_logger")->critical("Can't connect to redis on " + this->storage_addr);
         return false;
     }
 
@@ -88,7 +88,7 @@ void RedisClient::put_action(string key, string value)
                     status == cpp_redis::connect_state::stopped ||
                     status == cpp_redis::connect_state::failed) 
                 {
-                    spdlog::get("file_logger")->error("Client disconnected from redis on " + host + ":" + to_string(port));
+                    spdlog::get("env_logger")->error("Client disconnected from redis on " + host + ":" + to_string(port));
                 }
             });
 
@@ -97,10 +97,10 @@ void RedisClient::put_action(string key, string value)
     }
     catch(cpp_redis::redis_error)
     {
-        spdlog::get("file_logger")->error("Can't connect to redis on " + this->actions_addr);
+        spdlog::get("env_logger")->error("Can't connect to redis on " + this->actions_addr);
     }
 
-    spdlog::get("file_logger")->info("Put object to redis on " + this->actions_addr);
+    spdlog::get("env_logger")->info("Put object to redis on " + this->actions_addr);
 }
 
 vector<string> RedisClient::get_updates()
@@ -118,7 +118,7 @@ vector<string> RedisClient::get_updates()
                     status == cpp_redis::connect_state::stopped ||
                     status == cpp_redis::connect_state::failed) 
                 {
-                    spdlog::get("file_logger")->error("Client disconnected from redis on " + host + ":" + to_string(port));
+                    spdlog::get("env_logger")->error("Client disconnected from redis on " + host + ":" + to_string(port));
                 }
             });
 
@@ -140,7 +140,7 @@ vector<string> RedisClient::get_updates()
     }
     catch(cpp_redis::redis_error)
     {
-        spdlog::get("file_logger")->error("Can't connect to redis on " + this->storage_addr);
+        spdlog::get("env_logger")->error("Can't connect to redis on " + this->storage_addr);
     }
 
     return result;

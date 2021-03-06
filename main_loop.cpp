@@ -150,7 +150,7 @@ BaseController* _get_controller(string ts)
     }
     else
     {
-        spdlog::get("file_logger")->error("Can't choose controller for traffic source " + ts);
+        spdlog::get("env_logger")->error("Can't choose controller for traffic source " + ts);
         return nullptr;
     }
 }
@@ -170,10 +170,10 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
 
     ConditionsParser parser;
 
-    spdlog::get("file_logger")->info("Start condition parsing: " + condition);
+    spdlog::get("env_logger")->info("Start condition parsing: " + condition);
 
     BaseCondition* parsed_condition = parser.parse_condition(condition);
-    spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
+    spdlog::get("env_logger")->info("Condition " + condition + " was successfully parsed");
 
     string ts_name = database::get_ts_name((size_t)stoi(ts));
     BaseController* controller = _get_controller(ts_name);
@@ -181,7 +181,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
     {
         return;
     }
-    spdlog::get("file_logger")->info("Select controller for " + ts_name);
+    spdlog::get("env_logger")->info("Select controller for " + ts_name);
     
     // check bot campaigns
     for (size_t campaign_id: campaigns_ids)
@@ -196,7 +196,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
 
         if (campaign_info.size() == 0)
         {
-            spdlog::get("file_logger")->error("Bot id: " + to_string(bot_id) + ". Can't get campaign info. Skip campaign: " + to_string(campaign_id));
+            spdlog::get("actions_logger")->error("Bot id: " + to_string(bot_id) + ". Can't get campaign info. Skip campaign: " + to_string(campaign_id));
             continue;
         }
 
@@ -205,7 +205,7 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
             string data = "{\"campaign_id\": " + source_id + ", \"action\": "
             + action + ", \"ts\": \"" + ts_name + "\", \"api_key\": \"" + api_key + "\"}";
 
-            spdlog::get("file_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for campaign " + to_string(tracker_id) + " | " + 
+            spdlog::get("actions_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for campaign " + to_string(tracker_id) + " | " + 
                                              source_id);
             _put_action(redis, data);
         }
@@ -230,9 +230,9 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
 
     ConditionsParser parser;
 
-    spdlog::get("file_logger")->info("Start condition parsing: " + condition);
+    spdlog::get("env_logger")->info("Start condition parsing: " + condition);
     BaseCondition* parsed_condition = parser.parse_condition(condition);
-    spdlog::get("file_logger")->info("Condition " + condition + " was successfully parsed");
+    spdlog::get("env_logger")->info("Condition " + condition + " was successfully parsed");
 
     string ts_name = database::get_ts_name((size_t)stoi(ts));
     BaseController* controller = _get_controller(ts_name);
@@ -240,7 +240,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
     {
         return;
     }
-    spdlog::get("file_logger")->info("Select controller for " + ts_name);
+    spdlog::get("env_logger")->info("Select controller for " + ts_name);
 
     vector<string> zones_to_act;
 
@@ -254,8 +254,8 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
 
         if (zones_info.size() == 0)
         {
-            spdlog::get("file_logger")->error("Bot id: " + to_string(bot_id) + ". Can't get zones info for campaign " + to_string(tracker_id) + " | " + 
-                                              source_id + ". Skip.");
+            spdlog::get("actions_logger")->error("Bot id: " + to_string(bot_id) + ". Can't get zones info for campaign " + to_string(tracker_id) + " | " + 
+                                                source_id + ". Skip.");
             continue;
         }
 
@@ -279,8 +279,8 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         }
         else
         {
-            spdlog::get("file_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for 0 zones. Campaign: " + to_string(tracker_id) + " | " + 
-                                              source_id);
+            spdlog::get("actions_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for 0 zones. Campaign: " + to_string(tracker_id) + " | " + 
+                                                source_id);
             continue;
         }
         zones_to_act_string += "]";
@@ -289,8 +289,8 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
                 + action + ", \"ts\": \"" + ts_name + "\", \"zones\": " + 
                 zones_to_act_string +", \"api_key\": \"" + api_key + "\"}";
 
-        spdlog::get("file_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for " + to_string(zones_to_act.size()) + 
-                                         " zones. Campaign: " + to_string(tracker_id) + " | " + source_id);
+        spdlog::get("actions_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for " + to_string(zones_to_act.size()) + 
+                                            " zones. Campaign: " + to_string(tracker_id) + " | " + source_id);
         _put_action(redis, data);
     }
 
@@ -315,14 +315,14 @@ void _process_task(const string bot_id_str)
             _check_zones(bot_id, ref(bot_info));
             break;
         default:
-            spdlog::get("file_logger")->error("Unknown action: " + to_string(action));
+            spdlog::get("actions_logger")->error("Unknown action: " + to_string(action));
             break;
     }
 }
 
 void _worker_main_function(vector<string>& storage)
 {
-    spdlog::get("file_logger")->info("Initialize worker.");
+    spdlog::get("env_logger")->info("Initialize worker.");
 
     while (true)
     {
@@ -333,9 +333,9 @@ void _worker_main_function(vector<string>& storage)
         storage.erase(storage.begin());
         unique_storage_mutex.unlock();
 
-        spdlog::get("file_logger")->info("Get new task. Bot id: " + bot_id);
+        spdlog::get("actions_logger")->info("Get new task. Bot id: " + bot_id);
         _process_task(bot_id);
-        spdlog::get("file_logger")->info("Finish task. Bot id: " + bot_id);
+        spdlog::get("actions_logger")->info("Finish task. Bot id: " + bot_id);
     }
 }
 
@@ -344,7 +344,7 @@ void start(const size_t workers_num)
     vector<string> tasks;
     vector<thread> workers_pool;
 
-    spdlog::get("file_logger")->info("Create resources (mutexes, containers). Start to initializing workers.");
+    spdlog::get("env_logger")->info("Create resources (mutexes, containers). Start to initializing workers.");
 
     for (size_t _ = 0; _ < workers_num; _++)
     {
@@ -352,7 +352,7 @@ void start(const size_t workers_num)
         (*(workers_pool.end() - 1)).detach();
     }
 
-    spdlog::get("file_logger")->info("Initialize and detach workers. Start storage updating...");
+    spdlog::get("env_logger")->info("Initialize and detach workers. Start storage updating...");
 
     _start_queue_updating_process(ref(tasks));
 }

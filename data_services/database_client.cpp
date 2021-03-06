@@ -68,7 +68,7 @@ namespace database
 
         string query("SELECT * from bot_manager_bot WHERE ID='" + to_string(bot_id) + "'");
 
-        spdlog::get("file_logger")->info("Create database query: " + query);
+        spdlog::get("env_logger")->info("Perform database query: " + query);
 
         pqxx::result res = xact.exec(query);
         auto bot_info = res.begin().begin();
@@ -94,7 +94,7 @@ namespace database
 
         string query("SELECT * from bot_manager_campaign WHERE ID='" + to_string(campaign_id) + "'");
 
-        spdlog::get("file_logger")->info("Create database query: " + query);
+        spdlog::get("env_logger")->info("Perform database query: " + query);
 
         pqxx::result res = xact.exec(query);
 

@@ -61,9 +61,10 @@ int main(int argc, char** argv)
 {
     spdlog::set_pattern("[%t] %+");
 
-    auto max_size = 1048576 * 5;
-    auto max_files = 10;
-    auto logger = spdlog::rotating_logger_mt("file_logger", "logs/info_log.log", max_size, max_files);
+    size_t max_files = 10, max_size = 1048576 * 5;
+    auto logger = spdlog::rotating_logger_mt("actions_logger", "logs/actions_log.log", max_size, max_files);
+    auto env_logger = spdlog::rotating_logger_mt("env_logger", "logs/env_log.log", max_size, max_files);
+
     spdlog::flush_every(chrono::seconds(3));
 
     logger->info("---------------------------------------------------------------------------------------");
