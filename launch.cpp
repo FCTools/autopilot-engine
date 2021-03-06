@@ -54,6 +54,7 @@ bool env_is_correct()
 
 void signal_callback_handler(int signum) {
     cout << "Get keyboard interrupt signal. Quit." << endl;
+    cout << signum << endl;
     exit(signum);
 }
 
