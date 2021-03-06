@@ -53,7 +53,7 @@ bool env_is_correct()
 }
 
 void signal_callback_handler(int signum) {
-    spdlog::get("file_logger")->info("Get keyboard interrupt signal. Quit.");
+    cout << "Get keyboard interrupt signal. Quit." << endl;
     exit(signum);
 }
 
