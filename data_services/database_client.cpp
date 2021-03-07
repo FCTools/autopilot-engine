@@ -84,6 +84,7 @@ namespace database
                 {"action", (bot_info + bot_indexes::ACTION_INDEX)->c_str()},
                 {"ts", (bot_info + bot_indexes::TS_INDEX)->c_str()},
                 {"api_key", (bot_info + bot_indexes::API_KEY_INDEX)->c_str()},
+                {"list_to_add", (bot_info + bot_indexes::LIST_TO_ADD_INDEX)->c_str()},
                 {"ignored_zones", ignored_zones}};
     }
 

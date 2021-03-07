@@ -223,6 +223,7 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
     string api_key = bot_info["api_key"];
     string ts = bot_info["ts"];
     string action = bot_info["action"];
+    string list_to_add = bot_info["list_to_add"];
 
     // get bot campaigns from database
     vector<size_t> campaigns_ids = database::get_bot_campaigns(bot_id);
@@ -286,8 +287,9 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         zones_to_act_string += "]";
 
         string data = "{\"campaign_id\": " + source_id + ", \"action\": "
-                + action + ", \"ts\": \"" + ts_name + "\", \"zones\": " + 
-                zones_to_act_string +", \"api_key\": \"" + api_key + "\"}";
+                      + action + ", \"ts\": \"" + ts_name + "\", \"zones\": " + 
+                      zones_to_act_string +", \"api_key\": \"" + api_key + 
+                      "\", \"list\": \"" + list_to_add + "\"}";
 
         spdlog::get("actions_logger")->info("Bot id: " + to_string(bot_id) + ". Condition is true for " + to_string(zones_to_act.size()) + 
                                             " zones. Campaign: " + to_string(tracker_id) + " | " + source_id);
