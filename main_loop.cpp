@@ -157,6 +157,10 @@ BaseController* _get_controller(string ts)
 
 void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_info)
 {
+    // TODO: put this value to env variables
+    const size_t default_tries = 5;
+    size_t current_tries;
+
     RedisClient redis;
 
     string condition = bot_info["condition"];
@@ -191,8 +195,19 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
         string source_id = ids.second;
 
         unordered_map<string, double> campaign_info;
+        current_tries = default_tries;
 
-        campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
+        while (current_tries)
+        {
+            campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
+
+            if (campaign_info.size() != 0)
+            {
+                break;
+            }
+            current_tries--;
+            this_thread::sleep_for(chrono::seconds(5));
+        }
 
         if (campaign_info.size() == 0)
         {
@@ -216,6 +231,10 @@ void _check_campaign(const size_t bot_id, unordered_map<string, string>& bot_inf
 
 void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
 {
+    // TODO: put this value to env variables
+    const size_t default_tries = 5;
+    size_t current_tries;
+
     RedisClient redis;
 
     string condition = bot_info["condition"];
@@ -250,8 +269,21 @@ void _check_zones(const size_t bot_id, unordered_map<string, string>& bot_info)
         auto ids = database::get_campaign_ids(campaign_id);
         size_t tracker_id = ids.first;
         string source_id = ids.second;
+        zones_data zones_info;
 
-        auto zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, ref(ignored_zones));
+        current_tries = default_tries;
+
+        while (current_tries)
+        {
+            zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, ref(ignored_zones));
+
+            if (zones_info.size() != 0)
+            {
+                break;
+            }
+            current_tries--;
+            this_thread::sleep_for(chrono::seconds(5));
+        }
 
         if (zones_info.size() == 0)
         {

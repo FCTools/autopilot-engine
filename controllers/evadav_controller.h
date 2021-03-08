@@ -5,6 +5,7 @@
 // Unauthorized copying of this file, via any medium is strictly prohibited
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
+
 #pragma once
 
 #include "base_controller.h"
@@ -12,6 +13,7 @@
 using namespace std;
 
 
+// controller for Evadav
 class EvadavController: public BaseController
 {
 

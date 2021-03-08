@@ -17,6 +17,7 @@
 
 using namespace std;
 
+// controller for PropellerAds
 class PropellerController: public BaseController
 {                                         
     const string propeller_requests_url = string(getenv("PROPELLER_REQUESTS_URL"));

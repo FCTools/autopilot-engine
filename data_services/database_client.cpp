@@ -39,6 +39,7 @@ namespace database
         }
     }
 
+    // ts - traffic source
     string get_zones_param_number(const string ts)
     {
         pqxx::connection connection(_build_connection_string());

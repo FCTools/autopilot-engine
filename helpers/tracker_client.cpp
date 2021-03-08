@@ -53,7 +53,7 @@ set<string> TrackerClient::get_zones_names(const string zones_info) const
 
 unordered_map<string, double> TrackerClient::extract_zone_info(const string zone, const string zones_info) const
 {
-    size_t start = zones_info.find(zone), end = zones_info.find("}");;
+    size_t start = zones_info.find(zone), end = zones_info.find("}");
     unordered_map<string, double> result;
 
     string zone_info = zones_info.substr(start, end - start);
