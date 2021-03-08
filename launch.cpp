@@ -76,24 +76,22 @@ int main(int argc, char** argv)
 
     env_logger->info("Start environment checking...");
 
-    // if (!env_is_correct())
-    // {
-    //     env_logger->critical("Incorrect environment. Quit.");
-    //     return EXIT_FAILURE;
-    // }
+    if (!env_is_correct())
+    {
+        env_logger->critical("Incorrect environment. Quit.");
+        return EXIT_FAILURE;
+    }
     
-    // env_logger->info("Environment is correct.");
+    env_logger->info("Environment is correct.");
 
-    // const size_t workers_number = (size_t)stoi(getenv("POOL_SIZE"));
+    const size_t workers_number = (size_t)stoi(getenv("POOL_SIZE"));
 
-    // signal(SIGINT, signal_callback_handler);
+    signal(SIGINT, signal_callback_handler);
 
-    // env_logger->info("Kernel launched.");
-    // env_logger->info("Workers number: " + to_string(workers_number));
+    env_logger->info("Kernel launched.");
+    env_logger->info("Workers number: " + to_string(workers_number));
 
-    // start(workers_number);
-
-    auto data = database::get_bot_info(69);
+    start(workers_number);
 
     return EXIT_SUCCESS;
 }
