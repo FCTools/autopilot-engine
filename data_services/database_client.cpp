@@ -6,9 +6,7 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#include <cstdlib>
 #include <string>
-#include <iostream>
 #include <vector>
 
 #include <pqxx/pqxx>

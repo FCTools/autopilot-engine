@@ -8,7 +8,6 @@
 
 #include <string>
 #include <algorithm>
-#include <iostream>
 
 #include "base_condition.h"
 #include "conditions_parser.h"

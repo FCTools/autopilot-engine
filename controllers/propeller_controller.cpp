@@ -7,12 +7,7 @@
 // Author: German Yakimov <german13yakimov@gmail.com>
 
 #include <string>
-#include <cstring>
-#include <sstream>
-#include <list>
-#include <vector>
 #include <set>
-#include <iostream>
 #include <unordered_map>
 
 #include "spdlog/spdlog.h"
@@ -34,17 +29,13 @@ PropellerController::PropellerController() : BaseController()
 unordered_map<string, double> PropellerController::get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
                                                                      const size_t period, const string api_key) const
 {
-    TrackerClient tracker;
-
-    return tracker.get_campaign_info(campaign_tracker_id, period);
+    return binom::get_campaign_info(campaign_tracker_id, period);
 }
 
 zones_data PropellerController::get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, 
                                                const size_t period, const string api_key, set<string>& ignored_zones) const
 {
-    TrackerClient tracker;
-
-    return tracker.get_zones_info(campaign_tracker_id, period, this->zones_param_number, ignored_zones);
+    return binom::get_zones_info(campaign_tracker_id, period, this->zones_param_number, ignored_zones);
 }
 
 PropellerController::~PropellerController() {}

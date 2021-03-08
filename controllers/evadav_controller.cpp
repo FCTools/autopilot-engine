@@ -18,20 +18,17 @@ EvadavController::EvadavController() : BaseController()
 }
 
 // get campaign info from tracker
-unordered_map<string, double> EvadavController::get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
+unordered_map<string, double> EvadavController::get_campaign_info(const size_t campaign_tracker_id, 
+                                                                  const string campaign_source_id, 
                                                                   const size_t period, const string api_key) const
 {
-    TrackerClient tracker;
-
-    return tracker.get_campaign_info(campaign_tracker_id, period);
+    return binom::get_campaign_info(campaign_tracker_id, period);
 }
 
 zones_data EvadavController::get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, 
                                             const size_t period, const string api_key, set<string>& ignored_zones) const
 {
-    TrackerClient tracker;
-
-    return tracker.get_zones_info(campaign_tracker_id, period, this->zones_param_number, ignored_zones);
+    return binom::get_zones_info(campaign_tracker_id, period, this->zones_param_number, ignored_zones);
 }
 
 EvadavController::~EvadavController() {}

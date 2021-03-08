@@ -23,31 +23,58 @@ using namespace std;
 
 typedef vector<pair<string, unordered_map<string, double>>> zones_data;
 
-
-class TrackerClient
+namespace binom
 {
-    const string tracker_requests_url = string(getenv("TRACKER_REQUEST_URL")) + string(getenv("TRACKER_API_KEY"))
-                                         + "&date=";
+    namespace
+    {
+        const string tracker_requests_url = string(getenv("TRACKER_REQUEST_URL")) + 
+                                            string(getenv("TRACKER_API_KEY")) +
+                                            "&date=";
 
-    // extract zones names from string with all zones info
-    virtual set<string> get_zones_names(const string zones_info) const;
+        // extract zones names from string with all zones info
+        set<string> get_zones_names(const string zones_info);
 
-    // extract info about given zone
-    virtual unordered_map<string, double> extract_zone_info(const string zone, const string zones_info) const;
+        // extract info about given zone
+        unordered_map<string, double> extract_zone_info(const string zone, const string zones_info);
 
-    vector<string> get_field_values(const string field_name, const string data) const;
+        vector<string> get_field_values(const string field_name, const string data);
 
-    unordered_map<string, double> calculate_statistics(const double cost, const double revenue, 
-                                                       const int clicks, const int leads) const;
+        unordered_map<string, double> calculate_statistics(const double cost, const double revenue, 
+                                                           const int clicks, const int leads);
+    }
 
-public:
 
-    TrackerClient();
-
-    unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const size_t period) const;
+    unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const size_t period);
 
     zones_data get_zones_info(const size_t campaign_tracker_id, const size_t period, 
-                              const string zones_param_number, set<string>& ignored_zones) const;
+                              const string zones_param_number, set<string>& ignored_zones);
+}
 
-    ~TrackerClient();
-};
+
+// class TrackerClient
+// {
+//     const string tracker_requests_url = string(getenv("TRACKER_REQUEST_URL")) + string(getenv("TRACKER_API_KEY"))
+//                                          + "&date=";
+
+//     // extract zones names from string with all zones info
+//     virtual set<string> get_zones_names(const string zones_info) const;
+
+//     // extract info about given zone
+//     virtual unordered_map<string, double> extract_zone_info(const string zone, const string zones_info) const;
+
+//     vector<string> get_field_values(const string field_name, const string data) const;
+
+//     unordered_map<string, double> calculate_statistics(const double cost, const double revenue, 
+//                                                        const int clicks, const int leads) const;
+
+// public:
+
+//     TrackerClient();
+
+//     unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const size_t period) const;
+
+//     zones_data get_zones_info(const size_t campaign_tracker_id, const size_t period, 
+//                               const string zones_param_number, set<string>& ignored_zones) const;
+
+//     ~TrackerClient();
+// };

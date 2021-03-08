@@ -9,7 +9,6 @@
 #pragma once
 
 #include <string>
-#include <iostream>
 #include <vector>
 
 #include <cpp_redis/cpp_redis>
