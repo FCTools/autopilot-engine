@@ -17,7 +17,7 @@
 
 using namespace std;
 
-
+// TODO: make redis namespace
 RedisClient::RedisClient()
 {
     this->storage_host = string(getenv("REDIS_STORAGE_HOST"));
