@@ -27,9 +27,6 @@ inline string _build_request_url(const string base_url, const string period,
     return base_url + period + "&camp_id=" + campaign_id + "&group1=" + group_1;
 }
 
-// TrackerClient::TrackerClient() {}
-
-
 namespace binom
 {
     vector<string> get_field_values(const string field_name, const string data)
@@ -234,5 +231,3 @@ namespace binom
         return result;
     }
 }
-
-// TrackerClient::~TrackerClient() {}
