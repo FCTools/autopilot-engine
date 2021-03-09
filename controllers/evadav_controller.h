@@ -8,28 +8,35 @@
 
 #pragma once
 
-#include "base_controller.h"
+#include <unordered_map>
+#include <set>
+#include <string>
 
-using namespace std;
-
+#include "./base_controller.h"
 
 // controller for Evadav
-class EvadavController: public BaseController
-{
+class EvadavController: public BaseController {
+    std::string zones_param_number;
+    const std::string name = "Evadav";
 
-    string zones_param_number;
-    const string name = "Evadav";
-
-public:
+ public:
     EvadavController();
 
     // get campaign info from tracker
-    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
-                                                            const size_t period, const string api_key) const;
+    virtual std::unordered_map<std::string, double> get_campaign_info(
+                                        const size_t campaign_tracker_id,
+                                        const std::string campaign_source_id,
+                                        const size_t period,
+                                        const std::string api_key) const;
 
     // get zones info from tracker for given campaign
-    virtual zones_data get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, 
-                                      const size_t period, const string api_key, set<string>& ignored_zones) const;
+    virtual zones_data get_zones_info(
+                                const size_t campaign_tracker_id,
+                                const std::string campaign_source_id,
+                                const size_t period,
+                                const std::string api_key,
+                                const std::set<std::string>& ignored_zones)
+                                    const;
 
     virtual ~EvadavController();
 };

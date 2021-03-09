@@ -47,5 +47,5 @@ namespace binom
     unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const size_t period);
 
     zones_data get_zones_info(const size_t campaign_tracker_id, const size_t period, 
-                              const string zones_param_number, set<string>& ignored_zones);
+                              const string zones_param_number, const set<string>& ignored_zones);
 }

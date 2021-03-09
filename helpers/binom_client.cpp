@@ -175,7 +175,7 @@ namespace binom
     }
 
     zones_data get_zones_info(const size_t campaign_tracker_id, const size_t period, 
-                                     const string zones_param_number, set<string>& ignored_zones)
+                                     const string zones_param_number, const set<string>& ignored_zones)
     {
     list<string> headers = {"Content-Type: application/json", "Accept: application/json"};
         const string url = _build_request_url(binom::tracker_requests_url, to_string(period), to_string(campaign_tracker_id),
