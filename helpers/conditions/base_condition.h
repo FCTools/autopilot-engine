@@ -14,7 +14,7 @@
 
 // logical operations
 #define AND '&'
-#define OR '|' 
+#define OR '|'
 
 // number relations
 #define LESS "<"
@@ -23,18 +23,14 @@
 #define LESS_OR_EQUAL "<="
 #define GREATER_OR_EQUAL ">="
 
-using namespace std;
-
 // base abstract class for all conditions hierarchy
-class BaseCondition
-{
-
-public:
-
+class BaseCondition {
+ public:
     BaseCondition();
 
-    virtual bool is_true(unordered_map<string, double>& campaign_info) const = 0;
+    virtual bool is_true(
+                const std::unordered_map<std::string, double>& campaign_info)
+                                                                     const = 0;
 
     virtual ~BaseCondition();
-
 };

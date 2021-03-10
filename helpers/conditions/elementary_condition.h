@@ -7,27 +7,25 @@
 // Author: German Yakimov <german13yakimov@gmail.com>
 
 #pragma once
+
 #include <string>
 #include <unordered_map>
 
 #include "base_condition.h"
 
-using namespace std;
-
-// elementary condition means conditions like: (clicks > 1000); (revenue < 100) and etc.
-class ElementaryCondition: public BaseCondition
-{
-    string param, operation;
+// elementary condition means conditions like: (clicks > 1000);
+// (revenue < 100) and etc.
+class ElementaryCondition: public BaseCondition {
+    std::string param, operation;
     double value;
 
-public:
-
+ public:
     ElementaryCondition();
 
-    ElementaryCondition(const string source);
+    explicit ElementaryCondition(const std::string source);
 
-    virtual bool is_true(unordered_map<string, double>& campaign_info) const;
+    virtual bool is_true(
+        const std::unordered_map<std::string, double>& campaign_info) const;
 
     virtual ~ElementaryCondition();
-
 };

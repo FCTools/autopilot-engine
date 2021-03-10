@@ -9,21 +9,20 @@
 #pragma once
 
 #include <unordered_map>
+#include <string>
 
 #include "base_condition.h"
 
 // complex condition means conditions like: (cond_1 & cond_2); (cond_1 | cond_2)
-class ComplexCondition: public BaseCondition
-{
+class ComplexCondition: public BaseCondition {
     const char operation;
     BaseCondition* left, *right;
 
-public:
-
+ public:
     ComplexCondition(BaseCondition* l, BaseCondition* r, const char operation);
 
-    virtual bool is_true(unordered_map<string, double>& campaign_info) const;
+    virtual bool is_true(
+            const std::unordered_map<std::string, double>& campaign_info) const;
 
     virtual ~ComplexCondition();
-
 };
