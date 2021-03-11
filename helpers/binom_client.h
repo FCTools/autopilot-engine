@@ -13,7 +13,7 @@
 #include <utility>
 
 // statistics formulas
-#define PROFIT(revenue, cost) (cost != 0) ? (revenue - cost) : 0.
+#define PROFIT(revenue, cost) (revenue - cost)
 #define ROI(revenue, cost) (cost != 0) ? ((revenue / cost - 1) * 100) : 0.
 #define CR(leads, clicks) (clicks != 0) ? (100 * leads * 1.0 / clicks) : 0.
 #define EPC(revenue, clicks) (clicks != 0) ? (revenue / clicks) : 0.
