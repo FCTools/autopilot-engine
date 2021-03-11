@@ -13,39 +13,30 @@
 #include "conditions_parser.h"
 #include "conditions.h"
 
-using namespace std;
-
 ConditionsParser::ConditionsParser() {}
 
-BaseCondition* ConditionsParser::build(string source)
-{
-    if (source.find(AND) == string::npos && source.find(OR) == string::npos) // elementary condition building
-    {
+BaseCondition* ConditionsParser::build(std::string source) {
+    // elementary condition building
+    if (source.find(AND) == std::string::npos
+        && source.find(OR) == std::string::npos) {
         return new ElementaryCondition(source);
     }
-    
+
     source = source.substr(1, source.length() - 2);
 
     int counter = 0;
     size_t index = 0;
 
-    for (char c: source)
-    {
-        if (c == '(')
-        {
+    for (char c : source) {
+        if (c == '(') {
             counter++;
-        }
-        else if (c == ')')
-        {
+        } else if (c == ')') {
             counter--;
         }
 
-        if (counter < 0)
-        {
+        if (counter < 0) {
             throw;
-        }
-        else if (counter == 0)
-        {
+        } else if (counter == 0) {
             break;
         }
         index++;
@@ -53,14 +44,17 @@ BaseCondition* ConditionsParser::build(string source)
     index++;
 
     char operation = source[index];
-    string left = source.substr(0, index);  // left subcondition
-    string right = source.substr(index + 1, source.length() - index - 1);  // right subcondition
 
-    return new ComplexCondition(this->build(left), this->build(right), operation);
+    // left subcondition
+    std::string left = source.substr(0, index);
+    // right subcondition
+    std::string right = source.substr(index + 1, source.length() - index - 1);
+
+    return new ComplexCondition(this->build(left),
+                                this->build(right), operation);
 }
 
-BaseCondition* ConditionsParser::parse_condition(string source)
-{
-    source.erase(remove(source.begin(), source.end(), ' '), source.end()); 
+BaseCondition* ConditionsParser::parse_condition(std::string source) {
+    source.erase(remove(source.begin(), source.end(), ' '), source.end());
     return this->build(source);
 }

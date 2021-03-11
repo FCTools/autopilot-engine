@@ -11,20 +11,17 @@
 #include <string>
 #include <list>
 
-using namespace std;
+namespace http {
+struct IncorrectResponse : public std::exception {
+    const char* what() const throw();
+};
 
-namespace http
-{
-    struct IncorrectResponse : public exception
-    {
-        const char* what() const throw();
-    };
+struct RequestError : public std::exception {
+    const char* what() const throw();
+};
 
-    struct RequestError : public exception
-    {
-        const char* what() const throw();
-    };
-
-    string make_request(const list<string> headers, const string body, 
-                        const string url, const string type);
-}
+    std::string make_request(const std::list<std::string> headers,
+                             const std::string body,
+                             const std::string url,
+                             const std::string type);
+}  // namespace http

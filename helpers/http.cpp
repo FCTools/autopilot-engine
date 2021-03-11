@@ -18,27 +18,23 @@
 
 #define DEFAULT_TIMEOUT 30
 
-using namespace std;
-
-namespace http
-{
-    const char* IncorrectResponse::what() const throw()
-    {
+namespace http {
+    const char* IncorrectResponse::what() const throw() {
         return "Can't find required parameter in http-response.";
     }
 
-    const char* RequestError::what() const throw()
-    {
+    const char* RequestError::what() const throw() {
         return "Can't find required parameter in http-response.";
     }
 
-    string make_request(const list<string> headers, const string body,
-                        const string url, const string type)
-    {
+    std::string make_request(const std::list<std::string> headers,
+                             const std::string body,
+                             const std::string url,
+                             const std::string type) {
         cURLpp::Cleanup cleanup;
 
         cURLpp::Easy request;
-        ostringstream response;
+        std::ostringstream response;
 
         request.setOpt<cURLpp::options::HttpHeader>(headers);
         request.setOpt<cURLpp::options::Url>(url);
@@ -48,20 +44,17 @@ namespace http
         request.setOpt<cURLpp::options::Verbose>(true);
         request.setOpt<cURLpp::options::Timeout>(DEFAULT_TIMEOUT);
 
-        if (type != "POST")
-        {
+        if (type != "POST") {
             request.setOpt<cURLpp::options::CustomRequest>(type);
         }
 
-        try
-        {
+        try {
             request.perform();
         }
-        catch(...)
-        {
+        catch(...) {
             throw RequestError();
         }
 
         return response.str();
     }
-}
+}  // namespace http
