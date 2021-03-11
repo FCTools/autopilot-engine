@@ -62,8 +62,8 @@ namespace {
         }
         catch (http::IncorrectResponse) {
             spdlog::get("actions_logger")->error("Empty zones info - "
-                                                    "can't extract names "
-                                                    "(incorrect response).");
+                                                 "can't extract names "
+                                                 "(incorrect response).");
         }
         catch (http::RequestError) {
             spdlog::get("actions_logger")->error("Request error while tryi"
