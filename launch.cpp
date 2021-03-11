@@ -19,20 +19,16 @@
 
 #include "database_client.h"
 
-using namespace std;
-
-
-bool env_is_correct()
-{
-    ifstream settings_file("env_variables.env");
-    string var;
+bool env_is_correct() {
+    std::ifstream settings_file("env_variables.env");
+    std::string var;
 
     // check all environment variables
-    while (getline(settings_file, var))
-    {
-        if (!getenv(var.c_str()))
-        {
-            spdlog::get("file_logger")->critical("Can't find required environment variable: " + var);
+    while (getline(settings_file, var)) {
+        if (!getenv(var.c_str())) {
+            spdlog::get("file_logger")->critical("Can't find required"
+                                                 " environment variable: "
+                                                 + var);
             settings_file.close();
             
             return false;
@@ -44,12 +40,12 @@ bool env_is_correct()
     // check redis connection
     RedisClient redis;
 
-    if(!redis.connectable())
-    {
+    if(!redis.connectable()) {
         return false;
     }
 
-    // TODO: add postgres checking here and all external resources like tracker and sources apis
+    // TODO: add postgres checking here and all external
+    // resources like tracker and sources apis
 
     return true;
 }
@@ -64,20 +60,24 @@ int main(int argc, char** argv)
     spdlog::set_pattern("[%t] %+");
 
     size_t max_files = 10, max_size = 1048576 * 5;
-    auto logger = spdlog::rotating_logger_mt("actions_logger", "logs/actions_log.log", max_size, max_files);
-    auto env_logger = spdlog::rotating_logger_mt("env_logger", "logs/env_log.log", max_size, max_files);
+    auto logger = spdlog::rotating_logger_mt("actions_logger",
+                                            "logs/actions_log.log",
+                                            max_size, max_files);
+    auto env_logger = spdlog::rotating_logger_mt("env_logger",
+                                                "logs/env_log.log",
+                                                max_size, max_files);
 
     spdlog::flush_every(chrono::seconds(3));
 
-    env_logger->info("---------------------------------------------------------------------------------------");
-    logger->info("---------------------------------------------------------------------------------------");
+    env_logger->info("----------------------------------------"
+                     "----------------------------------------");
+    logger->info("--------------------------------------------"
+                 "--------------------------------------------");
 
     env_logger->info("Start new kernel session.");
-
     env_logger->info("Start environment checking...");
 
-    if (!env_is_correct())
-    {
+    if (!env_is_correct()) {
         env_logger->critical("Incorrect environment. Quit.");
         return EXIT_FAILURE;
     }

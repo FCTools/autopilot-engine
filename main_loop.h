@@ -13,4 +13,4 @@
 #define EXCLUDE_ZONE 3
 #define INCLUDE_ZONE 4
 
-void start(const std::size_t workers_num);
+void start(const size_t workers_num);
