@@ -20,6 +20,9 @@
 #define CPC(cost, clicks) (clicks != 0) ? (cost / clicks) : 0.
 #define CPA(cost, leads) (leads != 0) ? (cost / leads) : 0.
 
+// empty campaign info
+#define NO_CLICKS "no_clicks"
+
 typedef std::vector<std::pair<std::string,
                         std::unordered_map<std::string, double>>> zones_data;
 

@@ -136,6 +136,11 @@ namespace {
             return {};
         }
 
+        // empty campaign info - returning default
+        if (campaign_info == NO_CLICKS) {
+            return binom::calculate_statistics(0., 0., 0, 0);
+        }
+
         try {
             auto costs_by_paths = binom::get_field_values("cost",
                                                           campaign_info);
@@ -213,6 +218,11 @@ namespace {
                 "Error or empty result while trying to get zones info "
                 "from tracker. Campaign id: "
                 + std::to_string(campaign_tracker_id));
+            return {};
+        }
+
+        // empty campaign info - returning default
+        if (zones_info == NO_CLICKS) {
             return {};
         }
 
