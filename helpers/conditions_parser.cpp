@@ -46,9 +46,9 @@ BaseCondition* ConditionsParser::build(std::string source) {
     char operation = source[index];
 
     // left subcondition
-    std::string left = source.substr(0, index);
+    auto left = source.substr(0, index);
     // right subcondition
-    std::string right = source.substr(index + 1, source.length() - index - 1);
+    auto right = source.substr(index + 1, source.length() - index - 1);
 
     return new ComplexCondition(this->build(left),
                                 this->build(right), operation);

@@ -30,6 +30,7 @@ ElementaryCondition::ElementaryCondition(std::string source): BaseCondition() {
     }
     else {
         size_t relation_index = source.find(LESS);
+        
         if (relation_index == std::string::npos) {
             relation_index = source.find(GREATER);
         }
@@ -46,7 +47,6 @@ bool ElementaryCondition::is_true(
         const std::unordered_map<std::string, double>& campaign_info) const {
     double fact_value = campaign_info.find(this->param)->second;
 
-    // TODO: rewrite this using switch/case
     if (this->operation == LESS) {
         return fact_value < this->value;
     }

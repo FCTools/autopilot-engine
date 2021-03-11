@@ -43,7 +43,7 @@ namespace binom {
         while (data.find(pattern, start_pos) != std::string::npos) {
             start_pos = data.find(pattern, start_pos) + pattern.length();
             size_t end_pos = data.find("\"", start_pos);
-            std::string str = data.substr(start_pos, end_pos - start_pos);
+            auto str = data.substr(start_pos, end_pos - start_pos);
 
             result.emplace_back(str);
         }
@@ -79,7 +79,7 @@ namespace {
         size_t start = zones_info.find(zone), end = zones_info.find("}");
         std::unordered_map<std::string, double> result;
 
-        std::string zone_info = zones_info.substr(start, end - start);
+        auto zone_info = zones_info.substr(start, end - start);
 
         double cost = stod((*(binom::get_field_values("cost",
                                                     zone_info).begin())));
@@ -117,18 +117,17 @@ namespace {
         std::list<std::string> headers = {"Content-Type: application/json",
                                           "Accept: application/json"};
 
-        const std::string url = _build_request_url(
-                                        binom::tracker_requests_url,
-                                        std::to_string(period),
-                                        std::to_string(campaign_tracker_id));
+        auto url = _build_request_url(binom::tracker_requests_url,
+                                      std::to_string(period),
+                                      std::to_string(campaign_tracker_id));
 
         float cost = 0., revenue = 0., clicks = 0.;
         int leads = 0;
 
         spdlog::get("actions_logger")->info("Perform request: " + url);
 
-        std::string campaign_info = http::make_request(headers, std::string(),
-                                                       url, "GET");
+        auto campaign_info = http::make_request(headers, std::string(), 
+                                                url, "GET");
 
         if (campaign_info.size() == 0) {
             spdlog::get("actions_logger")->error("Error while trying to make"

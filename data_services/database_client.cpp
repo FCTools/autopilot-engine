@@ -19,19 +19,18 @@
 namespace database {
 namespace {
     std::string _build_connection_string() {
-        const std::string database_name = std::string(getenv("DATABASE_NAME"));
-        const std::string database_host = std::string(getenv("DATABASE_HOST"));
-        const std::string database_port = std::string(getenv("DATABASE_PORT"));
-        const std::string database_user = std::string(getenv("DATABASE_USER"));
-        const std::string database_password =
-                                    std::string(getenv("DATABASE_PASSWORD"));
+        auto database_name = std::string(getenv("DATABASE_NAME"));
+        auto database_host = std::string(getenv("DATABASE_HOST"));
+        auto database_port = std::string(getenv("DATABASE_PORT"));
+        auto database_user = std::string(getenv("DATABASE_USER"));
+        auto database_password = std::string(getenv("DATABASE_PASSWORD"));
 
         return "dbname=" + database_name +
-                " host=" + database_host +
-                " port=" + ((database_port.empty())
-                 ? DEFAULT_PORT : database_port) +
-                " user=" + database_user +
-                " password=" + database_password;
+               " host=" + database_host +
+               " port=" + ((database_port.empty())
+               ? DEFAULT_PORT : database_port) +
+               " user=" + database_user +
+               " password=" + database_password;
     }
 }  // namespace
 
@@ -44,8 +43,7 @@ namespace {
                           + ts + "'");
         pqxx::result res = xact.exec(query);
 
-        return std::string((res.begin().begin() +
-                                        ts_indexes::ZONE_PARAM_INDEX)->c_str());
+        return { (res.begin().begin() + ts_indexes::ZONE_PARAM_INDEX)->c_str()};
     }
 
     std::string get_ts_name(const size_t ts_id) {
@@ -56,8 +54,7 @@ namespace {
                      + std::to_string(ts_id) + "'");
         pqxx::result res = xact.exec(query);
 
-        return std::string((res.begin().begin() +
-                                            ts_indexes::NAME_INDEX)->c_str());
+        return { (res.begin().begin() + ts_indexes::NAME_INDEX)->c_str() };
     }
 
     std::unordered_map<std::string, std::string> get_bot_info(
@@ -104,13 +101,13 @@ namespace {
 
         pqxx::result res = xact.exec(query);
 
-        std::string tracker_id_str = (res.begin().begin()
-                                 + campaign_indexes::TRACKER_ID_INDEX)->c_str();
-        std::string source_id = (res.begin().begin()
-                             + campaign_indexes::SOURCE_ID_INDEX)->c_str();
-        size_t tracker_id = (size_t)stoi(tracker_id_str);
+        auto tracker_id_str = (res.begin().begin()
+                               + campaign_indexes::TRACKER_ID_INDEX)->c_str();
+        auto source_id = (res.begin().begin()
+                          + campaign_indexes::SOURCE_ID_INDEX)->c_str();
+        size_t tracker_id = (size_t)std::stoi(tracker_id_str);
 
-        return {tracker_id, source_id};
+        return { tracker_id, source_id };
     }
 
     std::vector<size_t> get_bot_campaigns(const size_t bot_id) {
