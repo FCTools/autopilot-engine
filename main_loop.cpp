@@ -22,6 +22,7 @@
 #include "database_client.h"
 #include "conditions.h"
 #include "conditions_parser.h"
+#include "binom_client.h"
 #include "base_controller.h"
 #include "propeller_controller.h"
 #include "evadav_controller.h"
@@ -263,6 +264,10 @@ void _check_zones(const size_t bot_id,
             }
             current_tries--;
             this_thread::sleep_for(chrono::seconds(5));
+        }
+
+        if (zones_info.size() == 1 && zones_info[0].first == NO_CLICKS) {
+            continue;
         }
 
         if (zones_info.size() == 0) {

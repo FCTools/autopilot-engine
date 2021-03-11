@@ -220,9 +220,9 @@ namespace {
             return {};
         }
 
-        // empty campaign info - returning default
+        // empty campaign info - returning default value
         if (zones_info == NO_CLICKS) {
-            return {};
+            return {{NO_CLICKS, {}}};
         }
 
         auto zones_names = binom::get_zones_names(zones_info);
