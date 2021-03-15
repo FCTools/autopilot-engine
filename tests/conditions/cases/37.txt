@@ -1,0 +1,6 @@
+(profit <= -5)
+cost: 0.04
+revenue: 0
+clicks: 3
+leads: 0
+answer: false
