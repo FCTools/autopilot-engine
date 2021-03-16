@@ -15,8 +15,8 @@
 
 namespace conditions_parser {
 namespace {
-    BaseCondition* parse_condition(std::string source);
-} // namespace
     BaseCondition* build(std::string source);
+} // namespace
+    BaseCondition* parse_condition(std::string source);
 } // namespace conditions_parser
 

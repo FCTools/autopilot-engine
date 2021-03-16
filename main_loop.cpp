@@ -151,11 +151,9 @@ void _check_campaign(const size_t bot_id,
     // get bot campaigns from database
     auto campaigns_ids = database::get_bot_campaigns(bot_id);
 
-    ConditionsParser parser;
-
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
 
-    BaseCondition* parsed_condition = parser.parse_condition(condition);
+    BaseCondition* parsed_condition = conditions_parser::parse_condition(condition);
     spdlog::get("env_logger")->info("Condition " + condition
                                     + " was successfully parsed");
 
@@ -230,10 +228,8 @@ void _check_zones(const size_t bot_id,
     auto campaigns_ids = database::get_bot_campaigns(bot_id);
     auto ignored_zones = _split(bot_info["ignored_zones"], '\n');
 
-    ConditionsParser parser;
-
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
-    BaseCondition* parsed_condition = parser.parse_condition(condition);
+    BaseCondition* parsed_condition = conditions_parser::parse_condition(condition);
     spdlog::get("env_logger")->info("Condition " + condition
                                     + " was successfully parsed");
 
