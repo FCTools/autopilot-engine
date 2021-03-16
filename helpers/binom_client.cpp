@@ -54,6 +54,48 @@ namespace binom {
         return result;
     }
 
+    zones_data _get_zones_info_fast(std::string& zones_info, const std::set<std::string>& ignored_zones)
+    {
+        zones_data result;
+
+        std::string search_pattern = "\"name\":\"";
+        size_t start_pos = 0, end_pos;
+        size_t pattern_len = search_pattern.length();
+
+        while (zones_info.find(search_pattern, start_pos) != std::string::npos) {
+            start_pos = zones_info.find(search_pattern, start_pos) + pattern_len;
+            size_t end_pos = zones_info.find("\"", start_pos);
+            auto name = zones_info.substr(start_pos, end_pos - start_pos);
+
+            if (ignored_zones.find(name) != ignored_zones.end())
+            {
+                continue;
+            }
+
+            auto end = zones_info.find("}");
+
+            auto zone_info = zones_info.substr(end_pos, end - end_pos);
+
+            double cost = stod((*(binom::get_field_values("cost",
+                                                    zone_info).begin())));
+            double revenue = stod((*(binom::get_field_values("revenue",
+                                                    zone_info).begin())));
+            double clicks = stod((*(binom::get_field_values("clicks",
+                                                    zone_info).begin())));
+            int leads = stoi((*(binom::get_field_values("leads",
+                                                    zone_info).begin())));
+
+            auto statistics = binom::calculate_statistics(cost, revenue,
+                                                          clicks, leads);
+
+            result.push_back({name, statistics});
+
+            // result.emplace_back(str);
+        }
+
+        return result;
+    }
+
 // private namespace
 namespace {
     std::set<std::string> get_zones_names(const std::string& zones_info) {
@@ -230,37 +272,39 @@ namespace {
             return {{NO_CLICKS, {}}};
         }
 
-        auto zones_names = binom::get_zones_names(zones_info);
-        zones_data result;
+        zones_data result = binom::_get_zones_info_fast(zones_info, ignored_zones);
 
-        std::set<std::string> final_zones_names;
-        set_difference(zones_names.begin(), zones_names.end(),
-                       ignored_zones.begin(), ignored_zones.end(),
-                       inserter(final_zones_names, final_zones_names.end()));
+        // auto zones_names = binom::get_zones_names(zones_info);
+        // zones_data result;
 
-        for (auto& zone : final_zones_names) {
-            try {
-                result.push_back({zone,
-                                  binom::extract_zone_info(zone, zones_info)});
-            }
-            catch (http::IncorrectResponse) {
-                spdlog::get("actions_logger")->error(
-                    "Can't get zone info: "+ zone + ": incorrect response"
-                    " exception. Campaign id: " +
-                    std::to_string(campaign_tracker_id));
-            }
-            catch (http::RequestError) {
-                spdlog::get("actions_logger")->error(
-                    "Can't get zone info: " + zone + "request error. "
-                    "Campaign id: " + std::to_string(campaign_tracker_id));
-            }
-            catch (const std::invalid_argument& exc) {
-                spdlog::get("actions_logger")->error(
-                    "Invalid argument occurred while trying to extract zone"
-                    + zone + " info: " + std::string(exc.what())
-                    + ". Campaign id: " + std::to_string(campaign_tracker_id));
-            }
-        }
+        // std::set<std::string> final_zones_names;
+        // set_difference(zones_names.begin(), zones_names.end(),
+        //                ignored_zones.begin(), ignored_zones.end(),
+        //                inserter(final_zones_names, final_zones_names.end()));
+
+        // for (auto& zone : final_zones_names) {
+        //     try {
+        //         result.push_back({zone,
+        //                           binom::extract_zone_info(zone, zones_info)});
+        //     }
+        //     catch (http::IncorrectResponse) {
+        //         spdlog::get("actions_logger")->error(
+        //             "Can't get zone info: "+ zone + ": incorrect response"
+        //             " exception. Campaign id: " +
+        //             std::to_string(campaign_tracker_id));
+        //     }
+        //     catch (http::RequestError) {
+        //         spdlog::get("actions_logger")->error(
+        //             "Can't get zone info: " + zone + "request error. "
+        //             "Campaign id: " + std::to_string(campaign_tracker_id));
+        //     }
+        //     catch (const std::invalid_argument& exc) {
+        //         spdlog::get("actions_logger")->error(
+        //             "Invalid argument occurred while trying to extract zone"
+        //             + zone + " info: " + std::string(exc.what())
+        //             + ". Campaign id: " + std::to_string(campaign_tracker_id));
+        //     }
+        // }
 
         return result;
     }
