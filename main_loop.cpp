@@ -255,9 +255,18 @@ void _check_zones(const size_t bot_id,
         current_tries = default_tries;
 
         while (current_tries) {
+            spdlog::get("env_logger")->debug(
+                "Bot id: " + std::to_string(bot_id)
+                + ". Start parsing json object with zones info.");
+
             zones_info = controller->get_zones_info(tracker_id, source_id,
                                                     period, api_key,
                                                     ref(ignored_zones));
+
+            spdlog::get("env_logger")->debug(
+                "Bot id: " + std::to_string(bot_id)
+                + ". Json object successfullt parsed. Zones number "
+                + std::to_string(zones_info.size()));
 
             if (zones_info.size() != 0) {
                 break;
@@ -278,11 +287,19 @@ void _check_zones(const size_t bot_id,
             continue;
         }
 
+        spdlog::get("env_logger")->debug(
+                "Bot id: " + std::to_string(bot_id)
+                + ". Start zones checking.");
+
         for (auto& zone : zones_info) {
             if (parsed_condition->is_true(zone.second)) {
                 zones_to_act.push_back(zone.first);
             }
         }
+
+        spdlog::get("env_logger")->debug(
+                "Bot id: " + std::to_string(bot_id)
+                + ". Zones were successfully checked.");
 
         std::string zones_to_act_string = "[";
         for (auto zone : zones_to_act) {
