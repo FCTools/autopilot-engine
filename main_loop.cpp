@@ -26,6 +26,7 @@
 #include "base_controller.h"
 #include "propeller_controller.h"
 #include "evadav_controller.h"
+#include "mgid_controller.h"
 #include "http.h"
 #include "main_loop.h"
 
@@ -127,7 +128,11 @@ BaseController* _get_controller(std::string ts) {
         return new PropellerController();
     } else if (ts == "Evadav") {
         return new EvadavController();
-    } else {
+    } else if (ts == "MGID") {
+        return new MgidController();
+    }
+    else
+    {
         spdlog::get("env_logger")->error("Can't choose controller for"
                                          " traffic source " + ts);
         return nullptr;
