@@ -243,14 +243,30 @@ namespace {
                                         binom::tracker_requests_url,
                                         std::to_string(period),
                                         std::to_string(campaign_tracker_id),
-                                        zones_param_number) + "&val_page=All";
+                                        zones_param_number) + "&val_page=500";
         std::string zones_info;
+        zones_data all_zones_info;
 
         spdlog::get("actions_logger")->info("Perform request: " + request_url);
 
         try {
-            zones_info = http::make_request(headers, std::string(),
-                                            request_url, "GET");
+            size_t counter = 1;
+            zones_data result;
+
+            while (true)
+            {
+                zones_info = http::make_request(headers, std::string(),
+                                                request_url + "&num_page=" + std::to_string(counter), "GET");
+
+                result = binom::_get_zones_info_fast(zones_info, ignored_zones);
+                all_zones_info.insert(all_zones_info.end(), result.begin(), result.end());
+
+                if (result.size() < 500) {
+                    break;
+                }
+                result.clear();
+                counter++;
+            }
         }
         catch(http::RequestError) {
             spdlog::get("actions_logger")->error(
@@ -272,7 +288,7 @@ namespace {
             return {{NO_CLICKS, {}}};
         }
 
-        zones_data result = binom::_get_zones_info_fast(zones_info, ignored_zones);
+        // zones_data result = binom::_get_zones_info_fast(zones_info, ignored_zones);
 
         // auto zones_names = binom::get_zones_names(zones_info);
         // zones_data result;
@@ -306,6 +322,6 @@ namespace {
         //     }
         // }
 
-        return result;
+        return all_zones_info;
     }
 }  // namespace binom
