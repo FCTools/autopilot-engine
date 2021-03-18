@@ -152,6 +152,7 @@ void _check_campaign(const size_t bot_id,
     auto api_key = bot_info["api_key"];
     auto ts = bot_info["ts"];
     auto action = bot_info["action"];
+    auto client_id = bot_info["client_id"];
 
     // get bot campaigns from database
     auto campaigns_ids = database::get_bot_campaigns(bot_id);
@@ -204,7 +205,7 @@ void _check_campaign(const size_t bot_id,
             auto data = "{\"campaign_id\": " + source_id
                         + ", \"action\": " + action + ", \"ts\": \""
                         + ts_name + "\", \"api_key\": \""
-                        + api_key + "\"}";
+                        + api_key + "\", \"client_id\": \"" + client_id + "\"}";
 
             spdlog::get("actions_logger")->info(
                 "Bot id: " + to_string(bot_id) + ". Condition is true for "

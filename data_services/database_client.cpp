@@ -87,7 +87,9 @@ namespace {
                 {"api_key", (bot_info + bot_indexes::API_KEY_INDEX)->c_str()},
                 {"list_to_add", (bot_info +
                                  bot_indexes::LIST_TO_ADD_INDEX)->c_str()},
-                {"ignored_zones", ignored_zones}};
+                {"ignored_zones", ignored_zones},
+                {"client_id", (bot_info +
+                                 bot_indexes::CLIENT_ID)->c_str()}};
     }
 
     std::pair<size_t, std::string> get_campaign_ids(const size_t campaign_id) {

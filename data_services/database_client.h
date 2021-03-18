@@ -29,7 +29,8 @@ namespace {
         TS_INDEX = 9,
         API_KEY_INDEX = 10,
         IGNORED_ZONES_INDEX = 12,
-        LIST_TO_ADD_INDEX = 13,
+        LIST_TO_ADD_INDEX = 13,  // list (audience) for evadav
+        CLIENT_ID = 14  // client key for mgid
     };
 
     // field indexes in row from table 'campaigns'
