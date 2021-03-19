@@ -40,7 +40,7 @@ bool env_is_correct() {
     // check redis connection
     RedisClient redis;
 
-    if(!redis.connectable()) {
+    if(!redis.servers_are_available()) {
         return false;
     }
 
@@ -51,7 +51,7 @@ bool env_is_correct() {
 }
 
 void signal_callback_handler(int signum) {
-    cout << "Get keyboard interrupt signal. Quit." << endl;
+    std::cout << "Get keyboard interrupt signal. Quit." << std::endl;
     exit(0);
 }
 
@@ -67,7 +67,7 @@ int main(int argc, char** argv)
                                                 "logs/env_log.log",
                                                 max_size, max_files);
 
-    spdlog::flush_every(chrono::seconds(3));
+    spdlog::flush_every(std::chrono::seconds(3));
 
     env_logger->info("----------------------------------------"
                      "----------------------------------------");
@@ -84,12 +84,12 @@ int main(int argc, char** argv)
     
     env_logger->info("Environment is correct.");
 
-    const size_t workers_number = (size_t)stoi(getenv("POOL_SIZE"));
+    const size_t workers_number = (size_t)std::stoi(getenv("POOL_SIZE"));
 
     signal(SIGINT, signal_callback_handler);
 
     env_logger->info("Kernel launched.");
-    env_logger->info("Workers number: " + to_string(workers_number));
+    env_logger->info("Workers number: " + std::to_string(workers_number));
 
     start(workers_number);
 
