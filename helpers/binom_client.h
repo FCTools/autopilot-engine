@@ -22,6 +22,7 @@
 
 // empty campaign info
 #define NO_CLICKS "\"no_clicks\""
+#define ZONES_PER_PAGE 500
 
 typedef std::vector<std::pair<std::string,
                         std::unordered_map<std::string, double>>> zones_data;
@@ -33,17 +34,14 @@ namespace {
                                         std::string(getenv("TRACKER_API_KEY")) +
                                         "&date=";
 
-    // extract zones names from string with all zones info
-    std::set<std::string> get_zones_names(const std::string zones_info);
+    zones_data extract_zones_info(std::string &zones_info,
+                                  const std::set<std::string> &ignored_zones);
 
-    // extract info about given zone
-    std::unordered_map<std::string, double> extract_zone_info(
-                                                const std::string zone,
-                                                const std::string zones_info);
-
+    // get values of one fixed field from json-string like: [{}, {}, ...]
     std::vector<std::string> get_field_values(const std::string field_name,
-                                              const std::string data);
+                                              const std::string& data);
 
+    // calculate statistics metrics using basic params
     std::unordered_map<std::string, double> calculate_statistics(
                                                        const double cost,
                                                        const double revenue,
@@ -51,10 +49,12 @@ namespace {
                                                        const int leads);
 }  // namespace
 
+    // statistics for whole campaign
     std::unordered_map<std::string, double> get_campaign_info(
                                             const size_t campaign_tracker_id,
                                             const size_t period);
 
+    // statistics for campaign splitted by zones
     zones_data get_zones_info(const size_t campaign_tracker_id,
                               const size_t period,
                               const std::string zones_param_number,

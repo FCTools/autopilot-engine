@@ -15,6 +15,7 @@
 
 #include <pqxx/pqxx>
 
+// default port for PostgreSQL
 #define DEFAULT_PORT "5432"
 
 namespace database {
