@@ -14,25 +14,29 @@
 
 #include "base_controller.h"
 
-using namespace std;
-
 // controller for PropellerAds
-class PropellerController: public BaseController
-{                                         
-    const string propeller_requests_url = string(getenv("PROPELLER_REQUESTS_URL"));
+class PropellerController: public BaseController {
+    const std::string propeller_requests_url =
+                                std::string(getenv("PROPELLER_REQUESTS_URL"));
 
-    string zones_param_number;
-    const string name = "Propeller Ads";
+    std::string zones_param_number;
+    const std::string name = "Propeller Ads";
 
-public:
-
+ public:
     PropellerController();
 
-    virtual unordered_map<string, double> get_campaign_info(const size_t campaign_tracker_id, const string campaign_source_id, 
-                                                            const size_t period, const string api_key) const;
+    virtual std::unordered_map<std::string, double> get_campaign_info(
+                                        const size_t campaign_tracker_id,
+                                        const std::string campaign_source_id,
+                                        const size_t period,
+                                        const std::string api_key) const;
 
-    virtual zones_data get_zones_info(const size_t campaign_tracker_id, const string campaign_source_id, const size_t period, 
-                                      const string api_key, set<string>& ignored_zones) const;
+    virtual zones_data get_zones_info(
+                            const size_t campaign_tracker_id,
+                            const std::string campaign_source_id,
+                            const size_t period,
+                            const std::string api_key,
+                            const std::set<std::string>& ignored_zones) const;
 
     virtual ~PropellerController();
 };
