@@ -32,19 +32,19 @@
 
 const size_t checking_timeout = (size_t)stoi(std::string(getenv(
                                                         "CHECKING_TIMEOUT")));
-mutex storage_mutex, actions_mutex;
-condition_variable cond_var;
+std::mutex storage_mutex, actions_mutex;
+std::condition_variable cond_var;
 
 // uuid generating logic
 namespace uuid {
-    static random_device rd;
-    static mt19937 gen(rd());
-    static uniform_int_distribution<> dis(0, 15);
-    static uniform_int_distribution<> dis2(8, 11);
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_int_distribution<> dis(0, 15);
+    static std::uniform_int_distribution<> dis2(8, 11);
 
-    string generate_uuid_v4() {
-        stringstream ss;
-        ss << hex;
+    std::string generate_uuid_v4() {
+        std::stringstream ss;
+        ss << std::hex;
 
         for (size_t _ = 0; _ < 8; _++) {
             ss << dis(gen);
@@ -94,7 +94,7 @@ std::set<std::string> _split(std::string source, char delimiter) {
 
 void _extend_storage(std::vector<std::string>& storage,
                      std::vector<std::string>& new_tasks) {
-    lock_guard<mutex> lock_(storage_mutex);
+    std::lock_guard<std::mutex> lock_(storage_mutex);
     storage.reserve(storage.size()
                     + distance(new_tasks.begin(), new_tasks.end()));
     storage.insert(storage.end(), new_tasks.begin(), new_tasks.end());
@@ -112,14 +112,14 @@ void _start_queue_updating_process(std::vector<std::string>& tasks) {
             cond_var.notify_all();
         }
 
-        this_thread::sleep_for(chrono::seconds(checking_timeout));
+        std::this_thread::sleep_for(std::chrono::seconds(checking_timeout));
     }
 }
 
 void _put_action(RedisClient& redis, const std::string data) {
     auto task_id = uuid::generate_uuid_v4();
 
-    lock_guard<mutex> lock_(actions_mutex);
+    std::lock_guard<std::mutex> lock_(actions_mutex);
     redis.put_action(task_id, data);
 }
 
@@ -157,11 +157,9 @@ void _check_campaign(const size_t bot_id,
     // get bot campaigns from database
     auto campaigns_ids = database::get_bot_campaigns(bot_id);
 
-    ConditionsParser parser;
-
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
 
-    BaseCondition* parsed_condition = parser.parse_condition(condition);
+    BaseCondition* parsed_condition = conditions_parser::parse_condition(condition);
     spdlog::get("env_logger")->info("Condition " + condition
                                     + " was successfully parsed");
 
@@ -190,14 +188,14 @@ void _check_campaign(const size_t bot_id,
                 break;
             }
             current_tries--;
-            this_thread::sleep_for(chrono::seconds(5));
+            std::this_thread::sleep_for(std::chrono::seconds(5));
         }
 
         if (campaign_info.size() == 0) {
-            spdlog::get("actions_logger")->error("Bot id: " + to_string(bot_id)
-                                                 + ". Can't get campaign info."
-                                                 " Skip campaign: "
-                                                 + to_string(campaign_id));
+            spdlog::get("actions_logger")->error(
+                "Bot id: " + std::to_string(bot_id)
+                + ". Can't get campaign info. Skip campaign: "
+                + std::to_string(campaign_id));
             continue;
         }
 
@@ -208,8 +206,8 @@ void _check_campaign(const size_t bot_id,
                         + api_key + "\", \"client_id\": \"" + client_id + "\"}";
 
             spdlog::get("actions_logger")->info(
-                "Bot id: " + to_string(bot_id) + ". Condition is true for "
-                "campaign " + to_string(tracker_id) + " | " + source_id);
+                "Bot id: " + std::to_string(bot_id) + ". Condition is true for "
+                "campaign " + std::to_string(tracker_id) + " | " + source_id);
             _put_action(redis, data);
         }
     }
@@ -236,10 +234,8 @@ void _check_zones(const size_t bot_id,
     auto campaigns_ids = database::get_bot_campaigns(bot_id);
     auto ignored_zones = _split(bot_info["ignored_zones"], '\n');
 
-    ConditionsParser parser;
-
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
-    BaseCondition* parsed_condition = parser.parse_condition(condition);
+    BaseCondition* parsed_condition = conditions_parser::parse_condition(condition);
     spdlog::get("env_logger")->info("Condition " + condition
                                     + " was successfully parsed");
 
@@ -278,7 +274,7 @@ void _check_zones(const size_t bot_id,
                 break;
             }
             current_tries--;
-            this_thread::sleep_for(chrono::seconds(5));
+            std::this_thread::sleep_for(std::chrono::seconds(5));
         }
 
         if (zones_info.size() == 1 && zones_info[0].first == NO_CLICKS) {
@@ -287,8 +283,9 @@ void _check_zones(const size_t bot_id,
 
         if (zones_info.size() == 0) {
             spdlog::get("actions_logger")->error(
-                "Bot id: " + to_string(bot_id) + ". Can't get zones info for"
-                " campaign " + to_string(tracker_id) + " | "
+                "Bot id: " + std::to_string(bot_id)
+                + ". Can't get zones info for"
+                " campaign " + std::to_string(tracker_id) + " | "
                 + source_id + ". Skip.");
             continue;
         }
@@ -317,8 +314,10 @@ void _check_zones(const size_t bot_id,
                                             zones_to_act_string.length() - 1);
         } else {
             spdlog::get("actions_logger")->info(
-                "Bot id: " + to_string(bot_id) + ". Condition is true for 0 z"
-                "ones. Campaign: " + to_string(tracker_id) + " | " + source_id);
+                "Bot id: " + std::to_string(bot_id)
+                + ". Condition is true for 0 z"
+                "ones. Campaign: "
+                + std::to_string(tracker_id) + " | " + source_id);
             continue;
         }
         zones_to_act_string += "]";
@@ -330,9 +329,10 @@ void _check_zones(const size_t bot_id,
                            "\", \"list\": \"" + list_to_add + "\"}";
 
         spdlog::get("actions_logger")->info(
-            "Bot id: " + to_string(bot_id) + ". Condition is true for "
-            + to_string(zones_to_act.size()) + " zones. Campaign: "
-            + to_string(tracker_id) + " | " + source_id);
+            "Bot id: " + std::to_string(bot_id) + ". Condition is true for "
+            + std::to_string(zones_to_act.size()) + " zones. Campaign: "
+            + std::to_string(tracker_id) + " | " + source_id);
+
         _put_action(redis, data);
     }
 
@@ -365,7 +365,7 @@ void _worker_main_function(std::vector<std::string>& storage) {
     spdlog::get("env_logger")->info("Initialize worker.");
 
     while (true) {
-        unique_lock<mutex> unique_storage_mutex(storage_mutex);
+        std::unique_lock<std::mutex> unique_storage_mutex(storage_mutex);
 		cond_var.wait(unique_storage_mutex,
                       [&storage]{return !storage.empty(); });
 
@@ -381,7 +381,7 @@ void _worker_main_function(std::vector<std::string>& storage) {
 
 void start(const size_t workers_num) {
     std::vector<std::string> tasks;
-    std::vector<thread> workers_pool;
+    std::vector<std::thread> workers_pool;
 
     spdlog::get("env_logger")->info("Create resources (mutexes, containers)."
                                     "Start to initializing workers.");

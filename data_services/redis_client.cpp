@@ -26,53 +26,40 @@ RedisClient::RedisClient() {
                         (size_t)stoi(std::string(getenv("REDIS_ACTIONS_PORT")));
 
     this->actions_addr = this->actions_host + ":"
-                         + to_string(this->actions_port);
+                         + std::to_string(this->actions_port);
     this->storage_addr = this->storage_host + ":"
-                         + to_string(this->storage_port);
+                         + std::to_string(this->storage_port);
 }
 
-bool RedisClient::connectable() {
+bool RedisClient::server_is_available(const std::string host, const size_t port)
+{
     try {
         cpp_redis::client client;
-        client.connect(this->actions_host, this->actions_port,
-                                        [](const std::string& host,
-                                           size_t port,
-                                           cpp_redis::connect_state status) {
+        client.connect(host, port, [](const std::string& host_, size_t port_,
+                                      cpp_redis::connect_state status) {
                 if (status == cpp_redis::connect_state::dropped ||
                     status == cpp_redis::connect_state::stopped ||
                     status == cpp_redis::connect_state::failed) {
-                    spdlog::get("env_logger")->error("Client disconnected "
-                            "from redis on " + host + ":" + to_string(port));
+                    spdlog::get("env_logger")->error(
+                        "Client disconnected from redis on " + host_
+                        + ":" + std::to_string(port_));
                 }
             });
     }
     catch(cpp_redis::redis_error) {
-        spdlog::get("env_logger")->critical("Can't connect to redis on "
-                                             + this->actions_addr);
-        return false;
-    }
-
-    try {
-        cpp_redis::client client;
-        client.connect(this->storage_host, this->storage_port,
-                                        [](const std::string& host,
-                                           size_t port,
-                                           cpp_redis::connect_state status) {
-                if (status == cpp_redis::connect_state::dropped ||
-                    status == cpp_redis::connect_state::stopped ||
-                    status == cpp_redis::connect_state::failed) {
-                    spdlog::get("env_logger")->error("Client disconnected "
-                            "from redis on " + host + ":" + to_string(port));
-                }
-            });
-    }
-    catch(cpp_redis::redis_error) {
-        spdlog::get("env_logger")->critical("Can't connect to redis on "
-                                            + this->storage_addr);
+        spdlog::get("env_logger")->critical(
+            "Can't connect to redis on " + host + ":" + std::to_string(port));
         return false;
     }
 
     return true;
+}
+
+bool RedisClient::servers_are_available() {
+    return (this->server_is_available(this->actions_host,
+                                      this->actions_port)
+            && this->server_is_available(this->storage_host,
+                                         this->storage_port));
 }
 
 void RedisClient::put_action(std::string key, std::string value) {
@@ -87,7 +74,8 @@ void RedisClient::put_action(std::string key, std::string value) {
                     status == cpp_redis::connect_state::stopped ||
                     status == cpp_redis::connect_state::failed) {
                     spdlog::get("env_logger")->error("Client disconnected "
-                            "from redis on " + host + ":" + to_string(port));
+                            "from redis on " + host + ":"
+                            + std::to_string(port));
                 }
             });
 
@@ -103,7 +91,7 @@ void RedisClient::put_action(std::string key, std::string value) {
                                     + this->actions_addr);
 }
 
-vector<string> RedisClient::get_updates() {
+std::vector<std::string> RedisClient::get_updates() {
     std::vector<std::string> result;
 
     try {
@@ -117,7 +105,8 @@ vector<string> RedisClient::get_updates() {
                     status == cpp_redis::connect_state::stopped ||
                     status == cpp_redis::connect_state::failed) {
                     spdlog::get("env_logger")->error("Client disconnected "
-                            "from redis on " + host + ":" + to_string(port));
+                            "from redis on " + host + ":"
+                            + std::to_string(port));
                 }
             });
 

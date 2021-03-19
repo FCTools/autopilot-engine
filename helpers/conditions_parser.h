@@ -13,12 +13,10 @@
 #include "base_condition.h"
 
 
-class ConditionsParser {
+namespace conditions_parser {
+namespace {
     BaseCondition* build(std::string source);
-
- public:
-    ConditionsParser();
-
+} // namespace
     BaseCondition* parse_condition(std::string source);
-};
+} // namespace conditions_parser
 

@@ -13,48 +13,48 @@
 #include "conditions_parser.h"
 #include "conditions.h"
 
-ConditionsParser::ConditionsParser() {}
-
-BaseCondition* ConditionsParser::build(std::string source) {
+namespace conditions_parser{
+// private namespace
+namespace{
+    BaseCondition* build(std::string source) {
     // elementary condition building
-    if (source.find(AND) == std::string::npos
-        && source.find(OR) == std::string::npos) {
-        return new ElementaryCondition(source);
-    }
-
-    source = source.substr(1, source.length() - 2);
-
-    int counter = 0;
-    size_t index = 0;
-
-    for (char c : source) {
-        if (c == '(') {
-            counter++;
-        } else if (c == ')') {
-            counter--;
+        if (source.find(AND) == std::string::npos
+                && source.find(OR) == std::string::npos) {
+            return new ElementaryCondition(source);
         }
 
-        if (counter < 0) {
-            throw;
-        } else if (counter == 0) {
-            break;
+        source = source.substr(1, source.length() - 2);
+
+        int counter = 0;
+        size_t index = 0;
+
+        for (char c : source) {
+            if (c == '(') {
+                counter++;
+            } else if (c == ')') {
+                counter--;
+            }
+
+            if (counter < 0) {
+                throw;
+            } else if (counter == 0) {
+                break;
+            }
+            index++;
         }
         index++;
+
+        char operation = source[index];
+
+        // get left and right subconditions
+        auto left = source.substr(0, index);
+        auto right = source.substr(index + 1, source.length() - index - 1);
+
+        return new ComplexCondition(build(left), build(right), operation);
     }
-    index++;
-
-    char operation = source[index];
-
-    // left subcondition
-    auto left = source.substr(0, index);
-    // right subcondition
-    auto right = source.substr(index + 1, source.length() - index - 1);
-
-    return new ComplexCondition(this->build(left),
-                                this->build(right), operation);
-}
-
-BaseCondition* ConditionsParser::parse_condition(std::string source) {
-    source.erase(remove(source.begin(), source.end(), ' '), source.end());
-    return this->build(source);
-}
+} // namespace
+    BaseCondition* parse_condition(std::string source) {
+        source.erase(remove(source.begin(), source.end(), ' '), source.end());
+        return conditions_parser::build(source);
+    }
+} // namespace conditions_parser
