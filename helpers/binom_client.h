@@ -22,6 +22,7 @@
 
 // empty campaign info
 #define NO_CLICKS "\"no_clicks\""
+#define ZONES_PER_PAGE 500
 
 typedef std::vector<std::pair<std::string,
                         std::unordered_map<std::string, double>>> zones_data;
@@ -33,13 +34,8 @@ namespace {
                                         std::string(getenv("TRACKER_API_KEY")) +
                                         "&date=";
 
-    // extract zones names from json-string with zones info
-    std::set<std::string> get_zones_names(const std::string& zones_info);
-
-    // extract info about given zone from json-string
-    std::unordered_map<std::string, double> extract_zone_info(
-                                                const std::string zone,
-                                                const std::string& zones_info);
+    zones_data extract_zones_info(std::string &zones_info,
+                                  const std::set<std::string> &ignored_zones);
 
     // get values of one fixed field from json-string like: [{}, {}, ...]
     std::vector<std::string> get_field_values(const std::string field_name,
