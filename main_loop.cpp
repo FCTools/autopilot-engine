@@ -29,8 +29,7 @@
 #include "main_loop.h"
 #include "uuid.h"
 
-const size_t checking_timeout = (size_t)stoi(std::string(getenv(
-    "CHECKING_TIMEOUT")));
+const size_t checking_timeout = (size_t)stoi(std::string(getenv("CHECKING_TIMEOUT")));
 std::mutex storage_mutex, actions_mutex;
 std::condition_variable cond_var;
 
@@ -107,13 +106,8 @@ BaseController *_get_controller(std::string ts)
     }
 }
 
-void _check_campaign(const size_t bot_id,
-                     std::unordered_map<std::string, std::string> &bot_info)
+void _check_campaign(const size_t bot_id, std::unordered_map<std::string, std::string>& bot_info)
 {
-    // TODO: put this value to env variables
-    // const size_t default_tries = 5;
-    // size_t current_tries;
-
     RedisClient redis;
 
     auto condition = bot_info["condition"];
@@ -145,35 +139,66 @@ void _check_campaign(const size_t bot_id,
         size_t tracker_id = ids.first;
         auto source_id = ids.second;
 
-        auto campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
+        std::unordered_map<std::string, double> campaign_info;
 
-        if (campaign_info.size() == 0)
-        {
-            spdlog::get("actions_logger")->error("Bot id: " + std::to_string(bot_id) + ". Can't get campaign info. Skip campaign: " + std::to_string(campaign_id));
-            continue;
+        {  //  getting campaign statistics from tracker
+            campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
+
+            if (campaign_info.size() == 0)
+            {
+                spdlog::get("actions_logger")->error(
+                    "Bot id: " + std::to_string(bot_id) + ". Can't get campaign info. Skip campaign: "
+                    + std::to_string(campaign_id));
+                continue;
+            }
         }
 
-        if (parsed_condition->is_true(campaign_info))
-        {
-            auto data = "{\"campaign_id\": " + source_id + ", \"action\": " + action + ", \"ts\": \"" + ts_name + "\", \"api_key\": \"" + api_key + "\"}";
+        {  // checking condition for campaign and put handling_result to redis
+            if (parsed_condition->is_true(campaign_info))
+            {
+                auto data = "{\"campaign_id\": " + source_id + ", \"action\": " + action + ", \"ts\": \""
+                            + ts_name + "\", \"api_key\": \"" + api_key + "\"}";
 
-            spdlog::get("actions_logger")->info("Bot id: " + std::to_string(bot_id) + ". Condition is true for "
-                                                                                      "campaign " +
-                                                std::to_string(tracker_id) + " | " + source_id);
+                spdlog::get("actions_logger")->info(
+                    "Bot id: " + std::to_string(bot_id) + ". Condition is true for campaign "
+                    + std::to_string(tracker_id) + " | " + source_id);
 
-            _put_action(redis, data);
+                _put_action(redis, data);
+            }
         }
     }
 
     delete controller;
 }
 
-void _check_zones(const size_t bot_id, std::unordered_map<std::string, std::string> &bot_info)
+std::string _check_condition_for_zones(zones_data& zones_info, BaseCondition *parsed_condition,
+                                       std::vector<std::string>& zones_to_act)
 {
-    // TODO: put this value to env variables
-    const size_t default_tries = 5;
-    size_t current_tries;
+    for (auto &zone : zones_info)
+    {
+        if (parsed_condition->is_true(zone.second))
+        {
+            zones_to_act.push_back(zone.first);
+        }
+    }
 
+    std::string zones_to_act_string = "[";
+    for (auto zone : zones_to_act)
+    {
+        zones_to_act_string += "\"" + zone + "\",";
+    }
+
+    if (zones_to_act_string != "[")
+    {
+        zones_to_act_string = zones_to_act_string.substr(0, zones_to_act_string.length() - 1);
+        return zones_to_act_string + "]";
+    }
+    
+    return std::string();
+}
+
+void _check_zones(const size_t bot_id, std::unordered_map<std::string, std::string>& bot_info)
+{
     RedisClient redis;
 
     auto condition = bot_info["condition"];
@@ -199,79 +224,68 @@ void _check_zones(const size_t bot_id, std::unordered_map<std::string, std::stri
     }
     spdlog::get("env_logger")->info("Select controller for " + ts_name);
 
-    std::vector<std::string> zones_to_act;
-
     for (size_t campaign_id : campaigns_ids)
     {
         auto ids = database::get_campaign_ids(campaign_id);
         size_t tracker_id = ids.first;
         auto source_id = ids.second;
+
         zones_data zones_info;
+        std::string zones_to_act_string;
+        std::vector<std::string> zones_to_act;
 
-        spdlog::get("env_logger")->info("Bot id: " + std::to_string(bot_id)
-                                        + ". Start parsing json object with zones info.");
+        { // getting zones info from tracker
+            spdlog::get("env_logger")->debug("Bot id: " + std::to_string(bot_id)
+                                            + ". Start parsing json object with zones info.");
 
-        zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, ref(ignored_zones));
+            zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, ref(ignored_zones));
 
-        spdlog::get("env_logger")->info("Bot id: " + std::to_string(bot_id)
-                                        + ". Json object successfullt parsed. Zones number "
-                                        + std::to_string(zones_info.size()));
+            spdlog::get("env_logger")->debug("Bot id: " + std::to_string(bot_id)
+                                            + ". Json object successfullt parsed. Zones number: "
+                                            + std::to_string(zones_info.size()));
 
-        // satisfying of this condition means empty campaign statistics (no clicks)
-        if (zones_info.size() == 1 && zones_info[0].first == NO_CLICKS)
-        {
-            continue;
-        }
-
-        if (zones_info.size() == 0)
-        {
-            spdlog::get("actions_logger")->error(
-                "Bot id: " + std::to_string(bot_id) + ". Can't get zones info for campaign "
-                + std::to_string(tracker_id) + " | " + source_id + ". Skip.");
-            continue;
-        }
-
-        spdlog::get("env_logger")->info("Bot id: " + std::to_string(bot_id) + ". Start zones checking.");
-
-        for (auto &zone : zones_info)
-        {
-            if (parsed_condition->is_true(zone.second))
+            // satisfying of this condition means empty campaign statistics (no clicks)
+            if (zones_info.size() == 1 && zones_info[0].first == NO_CLICKS)
             {
-                zones_to_act.push_back(zone.first);
+                continue;
+            }
+
+            if (zones_info.size() == 0)
+            {
+                spdlog::get("actions_logger")->error(
+                    "Bot id: " + std::to_string(bot_id) + ". Can't get zones info for campaign "
+                    + std::to_string(tracker_id) + " | " + source_id + ". Skip.");
+                continue;
             }
         }
 
-        spdlog::get("env_logger")->info("Bot id: " + std::to_string(bot_id) + ". Zones were successfully checked.");
+        {  // checking condition for zones
+            spdlog::get("env_logger")->info("Bot id: " + std::to_string(bot_id) + ". Start zones checking.");
 
-        std::string zones_to_act_string = "[";
-        for (auto zone : zones_to_act)
-        {
-            zones_to_act_string += "\"" + zone + "\",";
+            zones_to_act_string = _check_condition_for_zones(zones_info, parsed_condition, zones_to_act);
+
+            spdlog::get("env_logger")->info("Bot id: " + std::to_string(bot_id) + ". Zones were successfully checked.");
+
+            if (zones_to_act_string.size() == 0)
+            {
+                spdlog::get("actions_logger")->info(
+                    "Bot id: " + std::to_string(bot_id) + ". Condition is true for 0 zones. Campaign: "
+                    + std::to_string(tracker_id) + " | " + source_id);
+                continue;
+            }
         }
 
-        if (zones_to_act_string != "[")
-        {
-            zones_to_act_string = zones_to_act_string.substr(0,
-                                                             zones_to_act_string.length() - 1);
+        {  // building handling result in json format and put it to redis
+            std::string handling_result = "{\"campaign_id\": " + source_id + ", \"action\": " + action + ", \"ts\": \""
+                                        + ts_name + "\", \"zones\": " + zones_to_act_string + ", \"api_key\": \""
+                                        + api_key + "\", \"list\": \"" + list_to_add + "\"}";
+
+            spdlog::get("actions_logger")->info(
+                "Bot id: " + std::to_string(bot_id) + ". Condition is true for "+ std::to_string(zones_to_act.size())
+                + " zones. Campaign: " + std::to_string(tracker_id) + " | " + source_id);
+
+            _put_action(redis, handling_result);
         }
-        else
-        {
-            spdlog::get("actions_logger")->info("Bot id: " + std::to_string(bot_id) + ". Condition is true for 0 z"
-                                                                                      "ones. Campaign: " +
-                                                std::to_string(tracker_id) + " | " + source_id);
-            continue;
-        }
-        zones_to_act_string += "]";
-
-        std::string data = "{\"campaign_id\": " + source_id + ", \"action\": " + action + ", \"ts\": \""
-                           + ts_name + "\", \"zones\": " + zones_to_act_string + ", \"api_key\": \""
-                           + api_key + "\", \"list\": \"" + list_to_add + "\"}";
-
-        spdlog::get("actions_logger")->info(
-            "Bot id: " + std::to_string(bot_id) + ". Condition is true for "+ std::to_string(zones_to_act.size())
-            + " zones. Campaign: " + std::to_string(tracker_id) + " | " + source_id);
-
-        _put_action(redis, data);
     }
 
     delete controller;
@@ -286,17 +300,17 @@ void _process_task(const std::string bot_id_str)
 
     switch (action)
     {
-    case START_CAMPAIGN:
-    case STOP_CAMPAIGN:
-        _check_campaign(bot_id, ref(bot_info));
-        break;
-    case INCLUDE_ZONE:
-    case EXCLUDE_ZONE:
-        _check_zones(bot_id, ref(bot_info));
-        break;
-    default:
-        spdlog::get("actions_logger")->error("Unknown action: " + std::to_string(action));
-        break;
+        case START_CAMPAIGN:
+        case STOP_CAMPAIGN:
+            _check_campaign(bot_id, ref(bot_info));
+            break;
+        case INCLUDE_ZONE:
+        case EXCLUDE_ZONE:
+            _check_zones(bot_id, ref(bot_info));
+            break;
+        default:
+            spdlog::get("actions_logger")->error("Unknown action: " + std::to_string(action));
+            break;
     }
 }
 
@@ -307,8 +321,7 @@ void _worker_main_function(std::vector<std::string> &storage)
     while (true)
     {
         std::unique_lock<std::mutex> unique_storage_mutex(storage_mutex);
-        cond_var.wait(unique_storage_mutex,
-                      [&storage] { return !storage.empty(); });
+        cond_var.wait(unique_storage_mutex, [&storage] { return !storage.empty(); });
 
         auto bot_id = *storage.begin();
         storage.erase(storage.begin());
@@ -325,8 +338,7 @@ void start(const size_t workers_num)
     std::vector<std::string> tasks;
     std::vector<std::thread> workers_pool;
 
-    spdlog::get("env_logger")->info("Create resources (mutexes, containers)."
-                                    "Start to initializing workers.");
+    spdlog::get("env_logger")->info("Create resources (mutexes, containers). Start to initializing workers.");
 
     for (size_t _ = 0; _ < workers_num; _++)
     {
@@ -334,8 +346,7 @@ void start(const size_t workers_num)
         (*(workers_pool.end() - 1)).detach();
     }
 
-    spdlog::get("env_logger")->info("Initialize and detach workers."
-                                    " Start storage updating...");
+    spdlog::get("env_logger")->info("Initialize and detach workers. Start storage updating...");
 
     queue_updating_process(ref(tasks));
 }

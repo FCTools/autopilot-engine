@@ -23,12 +23,10 @@ bool env_is_correct() {
     std::ifstream settings_file("env_variables.env");
     std::string var;
 
-    // check all environment variables
+    // check environment variables
     while (getline(settings_file, var)) {
         if (!getenv(var.c_str())) {
-            spdlog::get("file_logger")->critical("Can't find required"
-                                                 " environment variable: "
-                                                 + var);
+            spdlog::get("file_logger")->critical("Can't find required environment variable: " + var);
             settings_file.close();
             
             return false;
@@ -52,20 +50,17 @@ bool env_is_correct() {
 
 void signal_callback_handler(int signum) {
     std::cout << "Get keyboard interrupt signal. Quit." << std::endl;
-    exit(0);
+    exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char** argv)
 {
     spdlog::set_pattern("[%t] %+");
 
+    // TODO: remove hardcoded values
     size_t max_files = 10, max_size = 1048576 * 5;
-    auto logger = spdlog::rotating_logger_mt("actions_logger",
-                                            "logs/actions_log.log",
-                                            max_size, max_files);
-    auto env_logger = spdlog::rotating_logger_mt("env_logger",
-                                                "logs/env_log.log",
-                                                max_size, max_files);
+    auto logger = spdlog::rotating_logger_mt("actions_logger", "logs/actions_log.log", max_size, max_files);
+    auto env_logger = spdlog::rotating_logger_mt("env_logger", "logs/env_log.log", max_size, max_files);
 
     spdlog::flush_every(std::chrono::seconds(3));
 
