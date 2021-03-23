@@ -13,24 +13,19 @@
 
 #include <cpp_redis/cpp_redis>
 
-using namespace std;
-
-class RedisClient
+namespace redis
 {
+namespace{
     size_t storage_port, actions_port;
-    string storage_host, actions_host, storage_addr, actions_addr;
-
-public:
-    RedisClient();
+    std::string storage_host, actions_host, storage_addr, actions_addr;
+} //namespace
 
     // check that redis servers are alive and available
     bool connectable();
 
     // put new entry into actions redis
-    void put_action(string key, string value);
+    void put_action(std::string key, std::string value);
 
     // get all new entries from storage redisa
-    vector<string> get_updates();
-
-    ~RedisClient();
-};
+    std::vector<std::string> get_updates();
+} //namespace redis
