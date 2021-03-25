@@ -16,15 +16,14 @@
 // there are 2 redis servers: storage redis and actions redis
 // Storage redis is used for new bots tasks
 // Actions redis is used for campaigns/zones managment - tasks for autopilot-ts 
-class RedisClient
+namespace redis
 {
+namespace {
     size_t storage_port, actions_port;
     std::string storage_host, actions_host, storage_addr, actions_addr;
 
     bool server_is_available(const std::string host, const size_t port);
-
-public:
-    RedisClient();
+} //namespace
 
     // check that redis servers are alive and available
     bool servers_are_available();
@@ -32,8 +31,6 @@ public:
     // put new entry into actions redis
     void put_action(std::string key, std::string value);
 
-    // get all new entries from storage redis
+    // get all new entries from storage redisa
     std::vector<std::string> get_updates();
-
-    ~RedisClient();
-};
+} //namespace redis

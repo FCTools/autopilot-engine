@@ -36,9 +36,9 @@ bool env_is_correct() {
     settings_file.close();
 
     // check redis connection
-    RedisClient redis;
+    
 
-    if(!redis.servers_are_available()) {
+    if(!redis::servers_are_available()) {
         return false;
     }
 
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
     
     env_logger->info("Environment is correct.");
 
-    const size_t workers_number = (size_t)std::stoi(getenv("POOL_SIZE"));
+    const std::size_t workers_number = (size_t)std::stoi(getenv("POOL_SIZE"));
 
     signal(SIGINT, signal_callback_handler);
 

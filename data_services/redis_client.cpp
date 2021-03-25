@@ -9,29 +9,13 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-
 #include <cpp_redis/cpp_redis>
 #include "spdlog/spdlog.h"
 
 #include "redis_client.h"
 
-// TODO: make redis namespace
-RedisClient::RedisClient() {
-    this->storage_host = std::string(getenv("REDIS_STORAGE_HOST"));
-    this->storage_port =
-                        (size_t)stoi(std::string(getenv("REDIS_STORAGE_PORT")));
-
-    this->actions_host = std::string(getenv("REDIS_ACTIONS_HOST"));
-    this->actions_port =
-                        (size_t)stoi(std::string(getenv("REDIS_ACTIONS_PORT")));
-
-    this->actions_addr = this->actions_host + ":"
-                         + std::to_string(this->actions_port);
-    this->storage_addr = this->storage_host + ":"
-                         + std::to_string(this->storage_port);
-}
-
-bool RedisClient::server_is_available(const std::string host, const size_t port)
+namespace redis {
+bool server_is_available(const std::string host, const size_t port)
 {
     try {
         cpp_redis::client client;
@@ -55,18 +39,18 @@ bool RedisClient::server_is_available(const std::string host, const size_t port)
     return true;
 }
 
-bool RedisClient::servers_are_available() {
-    return (this->server_is_available(this->actions_host,
-                                      this->actions_port)
-            && this->server_is_available(this->storage_host,
-                                         this->storage_port));
+bool servers_are_available() {
+    return (redis::server_is_available(redis::actions_host,
+                                       redis::actions_port)
+            && redis::server_is_available(redis::storage_host,
+                                         redis::storage_port));
 }
 
-void RedisClient::put_action(std::string key, std::string value) {
+void put_action(std::string key, std::string value) {
     cpp_redis::client client;
 
     try {
-        client.connect(this->actions_host, this->actions_port,
+        client.connect(redis::actions_host, redis::actions_port,
                                         [](const std::string& host,
                                            size_t port,
                                            cpp_redis::connect_state status) {
@@ -84,20 +68,20 @@ void RedisClient::put_action(std::string key, std::string value) {
     }
     catch(cpp_redis::redis_error) {
         spdlog::get("env_logger")->error("Can't connect to redis on "
-                                         + this->actions_addr);
+                                         + redis::actions_addr);
     }
 
     spdlog::get("env_logger")->info("Put object to redis on "
-                                    + this->actions_addr);
+                                    + redis::actions_addr);
 }
 
-std::vector<std::string> RedisClient::get_updates() {
+std::vector<std::string> get_updates() {
     std::vector<std::string> result;
 
     try {
         cpp_redis::client client;
 
-        client.connect(this->storage_host, this->storage_port,
+        client.connect(redis::storage_host, redis::storage_port,
                                         [](const std::string& host,
                                            size_t port,
                                            cpp_redis::connect_state status) {
@@ -110,26 +94,15 @@ std::vector<std::string> RedisClient::get_updates() {
                 }
             });
 
-        cpp_redis::client::reply_callback_t reply;
+            client.sync_commit();
+            client.del(result);
+            client.sync_commit();
+        }
+        catch (cpp_redis::redis_error) {
+            spdlog::get("env_logger")->error("Can't connect to redis on "
+                                            + storage_addr);
+        }
 
-        client.keys("*", [&result](cpp_redis::reply &reply) {
-            if (reply.is_array()) {
-                for (auto& key : reply.as_array()) {
-                    result.emplace_back(key.as_string());
-                }
-            }
-        });
-
-        client.sync_commit();
-        client.del(result);
-        client.sync_commit();
+        return result;
     }
-    catch (cpp_redis::redis_error) {
-        spdlog::get("env_logger")->error("Can't connect to redis on "
-                                         + this->storage_addr);
-    }
-
-    return result;
-}
-
-RedisClient::~RedisClient() {}
+} // namespace redis
