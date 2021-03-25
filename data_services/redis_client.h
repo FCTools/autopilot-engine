@@ -13,15 +13,20 @@
 
 #include <cpp_redis/cpp_redis>
 
+// there are 2 redis servers: storage redis and actions redis
+// Storage redis is used for new bots tasks
+// Actions redis is used for campaigns/zones managment - tasks for autopilot-ts 
 namespace redis
 {
-namespace{
+namespace {
     size_t storage_port, actions_port;
     std::string storage_host, actions_host, storage_addr, actions_addr;
+
+    bool server_is_available(const std::string host, const size_t port);
 } //namespace
 
     // check that redis servers are alive and available
-    bool connectable();
+    bool servers_are_available();
 
     // put new entry into actions redis
     void put_action(std::string key, std::string value);

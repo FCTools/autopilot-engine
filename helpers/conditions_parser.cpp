@@ -19,8 +19,8 @@ namespace{
     BaseCondition* build(std::string source) {
     // elementary condition building
         if (source.find(AND) == std::string::npos
-        && source.find(OR) == std::string::npos) {
-        return new ElementaryCondition(source);
+                && source.find(OR) == std::string::npos) {
+            return new ElementaryCondition(source);
         }
 
         source = source.substr(1, source.length() - 2);
@@ -46,13 +46,11 @@ namespace{
 
         char operation = source[index];
 
-        // left subcondition
+        // get left and right subconditions
         auto left = source.substr(0, index);
-        // right subcondition
         auto right = source.substr(index + 1, source.length() - index - 1);
 
-        return new ComplexCondition(build(left),
-                                build(right), operation);
+        return new ComplexCondition(build(left), build(right), operation);
     }
 } // namespace
     BaseCondition* parse_condition(std::string source) {
@@ -60,4 +58,3 @@ namespace{
         return conditions_parser::build(source);
     }
 } // namespace conditions_parser
-
