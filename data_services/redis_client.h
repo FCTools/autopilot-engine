@@ -19,8 +19,12 @@
 namespace redis
 {
 namespace {
-    size_t storage_port, actions_port;
-    std::string storage_host, actions_host, storage_addr, actions_addr;
+    std::size_t storage_port = (std::size_t)std::stoi(getenv("REDIS_STORAGE_PORT"));
+    std::size_t actions_port = (std::size_t)std::stoi(getenv("REDIS_ACTIONS_PORT"));
+    std::string storage_host = std::string(getenv("REDIS_STORAGE_HOST"));
+    std::string actions_host = std::string(getenv("REDIS_ACTIONS_HOST"));
+    std::string storage_addr = redis::storage_host + std::to_string(storage_port);
+    std::string actions_addr = redis::actions_host + std::to_string(actions_port);
 
     bool server_is_available(const std::string host, const size_t port);
 } //namespace
