@@ -214,6 +214,7 @@ void _check_zones(const size_t bot_id, std::unordered_map<std::string, std::stri
     auto ts = bot_info["ts"];
     auto action = bot_info["action"];
     auto list_to_add = bot_info["list_to_add"];
+    auto client_id = bot_info["client_id"];
 
     // get bot campaigns from database
     auto campaigns_ids = database::get_bot_campaigns(bot_id);
@@ -285,7 +286,8 @@ void _check_zones(const size_t bot_id, std::unordered_map<std::string, std::stri
         {  // building handling result in json format and put it to redis
             std::string handling_result = "{\"campaign_id\": " + source_id + ", \"action\": " + action + ", \"ts\": \""
                                         + ts_name + "\", \"zones\": " + zones_to_act_string + ", \"api_key\": \""
-                                        + api_key + "\", \"list\": \"" + list_to_add + "\"}";
+                                        + api_key + "\", \"list\": \"" + list_to_add + "\", \"client_id\": \""
+                                        + client_id + "\"}";
 
             spdlog::get("actions_logger")->info(
                 "Bot id: " + std::to_string(bot_id) + ". Condition is true for "+ std::to_string(zones_to_act.size())
