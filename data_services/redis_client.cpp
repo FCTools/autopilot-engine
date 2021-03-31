@@ -94,6 +94,16 @@ std::vector<std::string> get_updates() {
                 }
             });
 
+            cpp_redis::client::reply_callback_t reply;
+
+            client.keys("*", [&result](cpp_redis::reply &reply) {
+                if (reply.is_array()) {
+                    for (auto& key : reply.as_array()) {
+                        result.emplace_back(key.as_string());
+                    }
+                }
+            });
+
             client.sync_commit();
             client.del(result);
             client.sync_commit();
