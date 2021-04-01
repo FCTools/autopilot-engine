@@ -69,10 +69,15 @@ void queue_updating_process(std::vector<std::string> &tasks)
     while (true)
     {
         auto updates = redis::get_updates();
+
+        // DELETE THIS
         std::cout << "get updates" << std::endl;
 
         if (!updates.empty())
         {
+            // DELETE THIS
+            std::cout << "get updates" << std::endl;
+
             _extend_storage(tasks, updates);
             cond_var.notify_all();
         }
