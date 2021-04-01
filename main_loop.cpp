@@ -125,7 +125,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     auto action = bot_info["action"];
     auto client_id = bot_info["client_id"];
 
-    std::cout << "get bot info" << std::endl;
+    std::cout << "get bot info check campaign" << std::endl;
 
     // get bot campaigns from database
     auto campaigns_ids = database::get_bot_campaigns(bot_id);
@@ -310,6 +310,7 @@ void _process_task(const std::string bot_id_str)
     const std::size_t bot_id = (size_t)std::stoi(bot_id_str);
     auto bot_info = database::get_bot_info(bot_id);
     std::size_t action = (std::size_t)std::stoi(bot_info["action"]);
+    std::cout << "get bot info process task" << std::endl;
 
     switch (action)
     {
