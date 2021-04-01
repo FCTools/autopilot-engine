@@ -83,7 +83,7 @@ namespace {
 
         std::cout << "get all info" << std::endl;
 
-        std::cout << (bot_info + bot_indexes::CONDITION_INDEX)->c_str() << std::endl;
+        std::cout << (bot_info + bot_indexes::PERIOD_INDEX)->c_str() << std::endl;
 
         return {{"condition", (bot_info +
                                bot_indexes::CONDITION_INDEX)->c_str()},
