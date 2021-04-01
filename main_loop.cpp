@@ -81,6 +81,8 @@ void queue_updating_process(std::vector<std::string> &tasks)
             _extend_storage(tasks, updates);
             cond_var.notify_all();
         }
+        // DELETE THIS
+        std::cout << "extend storage" << std::endl;
 
         std::this_thread::sleep_for(std::chrono::seconds(checking_timeout));
     }
