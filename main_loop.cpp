@@ -125,6 +125,8 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     auto action = bot_info["action"];
     auto client_id = bot_info["client_id"];
 
+    std::cout << "get bot info" << std::endl;
+
     // get bot campaigns from database
     auto campaigns_ids = database::get_bot_campaigns(bot_id);
 
@@ -323,6 +325,8 @@ void _process_task(const std::string bot_id_str)
             spdlog::get("actions_logger")->error("Unknown action: " + std::to_string(action));
             break;
     }
+
+    std::cout << "finish task" << std::endl;
 }
 
 void _worker_main_function(std::vector<std::string> &storage)
