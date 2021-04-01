@@ -10,6 +10,8 @@
 #include <vector>
 #include <utility>
 
+#include <iostream>
+
 #include <pqxx/pqxx>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/rotating_file_sink.h"
@@ -78,6 +80,8 @@ namespace {
                                 ignored_zones.end(), '\r'),
                                 ignored_zones.end());
         }
+
+        std::cout << "get all info" << std::endl;
 
         return {{"condition", (bot_info +
                                bot_indexes::CONDITION_INDEX)->c_str()},
