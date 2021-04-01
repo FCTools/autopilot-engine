@@ -76,7 +76,7 @@ void queue_updating_process(std::vector<std::string> &tasks)
         if (!updates.empty())
         {
             // DELETE THIS
-            std::cout << "get updates" << std::endl;
+            std::cout << "get updates: not empty" << std::endl;
 
             _extend_storage(tasks, updates);
             cond_var.notify_all();
