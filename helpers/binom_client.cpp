@@ -264,7 +264,6 @@ namespace binom
                 spdlog::get("actions_logger")->error("RequestError while trying to get zones info from tracker."
                                                      " Campaign id: " +
                                                      std::to_string(campaign_tracker_id));
-                return {};
             }
 
             tries--;
