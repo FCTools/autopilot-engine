@@ -233,6 +233,8 @@ namespace binom
                     tmp_zones_info = http::make_request(headers, std::string(),
                         request_url + "&num_page=" + std::to_string(ZONES_PER_PAGE), "GET");
 
+                    std::cout << tmp_zones_info << std::endl;
+
                     spdlog::get("actions_logger")->info("Perform request: " + request_url
                                                         + "&num_page=" + std::to_string(page_number));
 
@@ -272,8 +274,6 @@ namespace binom
                                                  std::to_string(campaign_tracker_id));
             return {};
         }
-
-        std::cout << zones_info << std::endl;
 
         return zones_info;
     }
