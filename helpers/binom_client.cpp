@@ -236,8 +236,6 @@ namespace binom
                         break;
                     }
 
-                    std::cout << tmp_zones_info << std::endl;
-
                     spdlog::get("actions_logger")->info("Perform request: " + request_url
                                                         + "&num_page=" + std::to_string(page_number));
 
