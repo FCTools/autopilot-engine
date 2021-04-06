@@ -70,7 +70,6 @@ namespace binom
 
             if (ignored_zones.find(name) != ignored_zones.end())
             {
-                std::cout << "name in ignored zones " << std::endl;
                 continue;
             }
 
@@ -214,7 +213,7 @@ namespace binom
         // TODO: add hardcoded value to environment variable: 500
         auto request_url = _build_request_url(binom::tracker_requests_url, std::to_string(period),
                                               std::to_string(campaign_tracker_id), zones_param_number)
-                                              + "&val_page=500";
+                                              + "&val_page=" + std::to_string(ZONES_PER_PAGE);
         std::string tmp_zones_info;
         zones_data zones_info, zones_page;
 
@@ -231,9 +230,11 @@ namespace binom
                 while (true)
                 {
                     tmp_zones_info = http::make_request(headers, std::string(),
-                        request_url + "&num_page=" + std::to_string(ZONES_PER_PAGE), "GET");
+                        request_url + "&num_page=" + std::to_string(page_number), "GET");
 
-                    std::cout << tmp_zones_info << std::endl;
+                    if (tmp_zones_info == "null") {
+                        break;
+                    }
 
                     spdlog::get("actions_logger")->info("Perform request: " + request_url
                                                         + "&num_page=" + std::to_string(page_number));
