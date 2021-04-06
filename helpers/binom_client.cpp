@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <vector>
 #include <list>
+#include <iostream>
 
 #include "spdlog/spdlog.h"
 
@@ -69,6 +70,7 @@ namespace binom
 
             if (ignored_zones.find(name) != ignored_zones.end())
             {
+                std::cout << "name in ignored zones " << std::endl;
                 continue;
             }
 
