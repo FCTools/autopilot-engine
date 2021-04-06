@@ -70,19 +70,11 @@ void queue_updating_process(std::vector<std::string> &tasks)
     {
         auto updates = redis::get_updates();
 
-        // DELETE THIS
-        std::cout << "get updates" << std::endl;
-
         if (!updates.empty())
         {
-            // DELETE THIS
-            std::cout << "get updates: not empty" << std::endl;
-
             _extend_storage(tasks, updates);
             cond_var.notify_all();
         }
-        // DELETE THIS
-        std::cout << "extend storage" << std::endl;
 
         std::this_thread::sleep_for(std::chrono::seconds(checking_timeout));
     }
@@ -310,7 +302,6 @@ void _process_task(const std::string bot_id_str)
     const std::size_t bot_id = (size_t)std::stoi(bot_id_str);
     auto bot_info = database::get_bot_info(bot_id);
     std::size_t action = (std::size_t)std::stoi(bot_info["action"]);
-    std::cout << "get bot info process task" << std::endl;
 
     switch (action)
     {
@@ -326,8 +317,6 @@ void _process_task(const std::string bot_id_str)
             spdlog::get("actions_logger")->error("Unknown action: " + std::to_string(action));
             break;
     }
-
-    std::cout << "finish task" << std::endl;
 }
 
 void _worker_main_function(std::vector<std::string> &storage)
