@@ -273,6 +273,8 @@ namespace binom
             return {};
         }
 
+        std::cout << zones_info << std::endl;
+
         return zones_info;
     }
 } // namespace binom
