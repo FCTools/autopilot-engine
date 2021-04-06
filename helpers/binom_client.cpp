@@ -62,6 +62,11 @@ namespace binom
         std::string search_pattern = "\"name\":\"";
         size_t start_pos = 0, end_pos, pattern_len = search_pattern.length();
 
+        if (zones_info.find(search_pattern) == std::string::npos)
+        {
+            throw http::RequestError();
+        }
+
         while (zones_info.find(search_pattern, start_pos) != std::string::npos)
         {
             start_pos = zones_info.find(search_pattern, start_pos) + pattern_len;
@@ -210,7 +215,6 @@ namespace binom
         std::list<std::string> headers = {"Content-Type: application/json",
                                           "Accept: application/json"};
 
-        // TODO: add hardcoded value to environment variable: 500
         auto request_url = _build_request_url(binom::tracker_requests_url, std::to_string(period),
                                               std::to_string(campaign_tracker_id), zones_param_number)
                                               + "&val_page=" + std::to_string(ZONES_PER_PAGE);
@@ -256,7 +260,7 @@ namespace binom
                 }
 
                 return zones_info;
-            }
+            } 
             catch (http::RequestError)
             {
                 spdlog::get("actions_logger")->error("RequestError while trying to get zones info from tracker."
@@ -265,6 +269,7 @@ namespace binom
             }
 
             tries--;
+            std::this_thread::sleep_for(std::chrono::seconds(5));
         }
 
         if (tmp_zones_info.size() == 0)
