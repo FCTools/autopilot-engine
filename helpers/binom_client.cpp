@@ -134,73 +134,81 @@ namespace binom
 
             campaign_info = http::make_request(headers, std::string(), request_url, "GET");
 
-            if (campaign_info.size() != 0)
-            {
-                break;
-            }
-            else
+            if (campaign_info.size() == 0)
             {
                 spdlog::get("actions_logger")->error("Error while trying to make request (or empty result)");
+
+                tries--;
+
+                // TODO: remove hardcoded value: 5 seconds
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+                continue;
             }
-            tries--;
 
-            // TODO: remove hardcoded value: 5 seconds
-            std::this_thread::sleep_for(std::chrono::seconds(5));
-        }
-
-        if (campaign_info.size() == 0)
-        {
-            return {};
-        }
-
-        // empty campaign info - returning default
-        if (campaign_info == NO_CLICKS)
-        {
-            return binom::calculate_statistics(0., 0., 0, 0);
-        }
-
-        try
-        {
-            auto costs_by_paths = binom::get_field_values("cost", campaign_info);
-            auto revenues_by_paths = binom::get_field_values("revenue", campaign_info);
-            auto clicks_by_paths = binom::get_field_values("clicks", campaign_info);
-            auto leads_by_paths = binom::get_field_values("leads", campaign_info);
-
-            for (auto cost_path : costs_by_paths)
+            // empty campaign info - returning default
+            if (campaign_info == NO_CLICKS)
             {
-                cost += stof(cost_path);
+                return binom::calculate_statistics(0., 0., 0, 0);
             }
 
-            for (auto revenue_path : revenues_by_paths)
+            try
             {
-                revenue += stof(revenue_path);
-            }
+                auto costs_by_paths = binom::get_field_values("cost", campaign_info);
+                auto revenues_by_paths = binom::get_field_values("revenue", campaign_info);
+                auto clicks_by_paths = binom::get_field_values("clicks", campaign_info);
+                auto leads_by_paths = binom::get_field_values("leads", campaign_info);
 
-            for (auto clicks_path : clicks_by_paths)
+                for (auto cost_path : costs_by_paths)
+                {
+                    cost += stof(cost_path);
+                }
+
+                for (auto revenue_path : revenues_by_paths)
+                {
+                    revenue += stof(revenue_path);
+                }
+
+                for (auto clicks_path : clicks_by_paths)
+                {
+                    clicks += stof(clicks_path);
+                }
+
+                for (auto leads_path : leads_by_paths)
+                {
+                    leads += stoi(leads_path);
+                }
+
+                return binom::calculate_statistics(cost, revenue, clicks, leads);
+            }
+            catch (const std::invalid_argument &exc)
             {
-                clicks += stof(clicks_path);
-            }
+                spdlog::get("actions_logger")->error(exc.what());
 
-            for (auto leads_path : leads_by_paths)
+                tries--;
+
+                // TODO: remove hardcoded value: 5 seconds
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+            }
+            catch (http::IncorrectResponse)
             {
-                leads += stoi(leads_path);
-            }
+                spdlog::get("actions_logger")->error(
+                    "Incorrect response while trying to get info about campaign: " + std::to_string(campaign_tracker_id));
+                
+                tries--;
 
-            return binom::calculate_statistics(cost, revenue, clicks, leads);
-        }
-        catch (const std::invalid_argument &exc)
-        {
-            spdlog::get("actions_logger")->error(exc.what());
-        }
-        catch (http::IncorrectResponse)
-        {
-            spdlog::get("actions_logger")->error(
-                "Incorrect response while trying to get info about campaign: " + std::to_string(campaign_tracker_id));
-        }
-        catch (http::RequestError)
-        {
-            spdlog::get("actions_logger")->error(
-                "Request error while trying to get info about campaign: " + std::to_string(campaign_tracker_id));
+                // TODO: remove hardcoded value: 5 seconds
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+            }
+            catch (http::RequestError)
+            {
+                spdlog::get("actions_logger")->error(
+                    "Request error while trying to get info about campaign: " + std::to_string(campaign_tracker_id));
+
+                tries--;
+
+                // TODO: remove hardcoded value: 5 seconds
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+            }
         }
 
         spdlog::get("actions_logger")->error("Incorrect response from tracker: " + campaign_info);
