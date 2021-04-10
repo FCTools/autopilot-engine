@@ -55,3 +55,4 @@ build/
 
 # Config file
 config.env
+set-env.sh
