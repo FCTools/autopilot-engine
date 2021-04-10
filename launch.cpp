@@ -36,8 +36,6 @@ bool env_is_correct() {
     settings_file.close();
 
     // check redis connection
-    
-
     if(!redis::servers_are_available()) {
         return false;
     }
@@ -72,10 +70,10 @@ int main(int argc, char** argv)
     env_logger->info("Start new kernel session.");
     env_logger->info("Start environment checking...");
 
-    if (!env_is_correct()) {
-        env_logger->critical("Incorrect environment. Quit.");
-        return EXIT_FAILURE;
-    }
+    // if (!env_is_correct()) {
+        // env_logger->critical("Incorrect environment. Quit.");
+        // return EXIT_FAILURE;
+    // }
     
     env_logger->info("Environment is correct.");
 
@@ -86,7 +84,27 @@ int main(int argc, char** argv)
     env_logger->info("Kernel launched.");
     env_logger->info("Workers number: " + std::to_string(workers_number));
 
-    start(workers_number);
+    // start(workers_number);
+    auto data = database::get_bot_info(2);
+    std::cout << data["period"] << std::endl;
+    std::cout << data["action"] << std::endl;
+    std::cout << data["condition"] << std::endl;
+    std::cout << data["ts"] << std::endl;
+    std::cout << data["api_key"] << std::endl;
+    std::cout << data["list_to_add"] << std::endl;
+    std::cout << data["ignored_zones"] << std::endl;
+    std::cout << data["client_id"] << std::endl;
+    std::cout << data["campaigns"] << std::endl;
+
+    auto campaigns = database::get_bot_campaigns(data["campaigns"]);
+
+    for (auto campaign : campaigns)
+    {
+        auto tracker_id = campaign.first;
+        auto source_id = campaign.second;
+
+        std::cout << tracker_id << " " << source_id << std::endl;
+    }
 
     return EXIT_SUCCESS;
 }

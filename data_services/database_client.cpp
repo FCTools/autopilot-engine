@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <utility>
-
+#include <algorithm>
 #include <iostream>
 
 #include <pqxx/pqxx>
@@ -81,10 +81,6 @@ namespace {
                                 ignored_zones.end());
         }
 
-        std::cout << (bot_info + bot_indexes::CLIENT_ID)->c_str() << std::endl;
-
-        std::cout << "get all info" << std::endl;
-
         return {{"condition", (bot_info +
                                bot_indexes::CONDITION_INDEX)->c_str()},
                 {"period", (bot_info + bot_indexes::PERIOD_INDEX)->c_str()},
@@ -95,46 +91,37 @@ namespace {
                                  bot_indexes::LIST_TO_ADD_INDEX)->c_str()},
                 {"ignored_zones", ignored_zones},
                 {"client_id", (bot_info +
-                                 bot_indexes::CLIENT_ID)->c_str()}};
+                                 bot_indexes::CLIENT_ID)->c_str()},
+                {"campaigns", (bot_info +
+                                 bot_indexes::CAMPAIGNS_INDEX)->c_str()}};
     }
 
-    std::pair<size_t, std::string> get_campaign_ids(const size_t campaign_id) {
-        pqxx::connection connection(_build_connection_string());
-        pqxx::work xact(connection, "Select" + std::to_string(campaign_id));
+    std::vector<std::pair<std::string, std::string>> get_bot_campaigns(std::string campaigns_json_str) {
+        std::vector<std::pair<std::string, std::string>> result;
+    
+        // removing spaces
+        campaigns_json_str.erase(remove_if(campaigns_json_str.begin(),
+                                           campaigns_json_str.end(), isspace),
+                                           campaigns_json_str.end());
 
-        std::string query("SELECT * from bot_manager_campaign WHERE ID='"
-                          + std::to_string(campaign_id) + "'");
+        const std::string tracker_id_pattern = "\"tracker_id\":\"";
+        const size_t tracker_id_pattern_len = tracker_id_pattern.length();
+        const std::string source_id_pattern = "\"source_id\":\"";
+        const size_t source_id_pattern_len = source_id_pattern.length();
 
-        spdlog::get("env_logger")->info("Perform database query: " + query);
+        size_t start_pos = 0, end_pos;
 
-        pqxx::result res = xact.exec(query);
+        while (campaigns_json_str.find(source_id_pattern, start_pos) != std::string::npos)
+        {
+            start_pos = campaigns_json_str.find(source_id_pattern, start_pos) + source_id_pattern_len;
+            end_pos = campaigns_json_str.find("\"", start_pos);
+            std::string source_id = campaigns_json_str.substr(start_pos, end_pos - start_pos);
 
-        auto tracker_id_str = (res.begin().begin()
-                               + campaign_indexes::TRACKER_ID_INDEX)->c_str();
-        auto source_id = (res.begin().begin()
-                          + campaign_indexes::SOURCE_ID_INDEX)->c_str();
-        size_t tracker_id = (size_t)std::stoi(tracker_id_str);
-
-        return { tracker_id, source_id };
-    }
-
-    std::vector<size_t> get_bot_campaigns(const size_t bot_id) {
-        pqxx::connection connection(_build_connection_string());
-        pqxx::work xact(connection, "Select" + std::to_string(bot_id));
-
-        std::string query(
-            "SELECT * from bot_manager_bot_campaigns_list WHERE bot_id='"
-             + std::to_string(bot_id) + "'");
-        pqxx::result res = xact.exec(query);
-
-        std::vector<size_t> result;
-
-        std::string campaign_id_str;
-
-        for (auto r = res.begin(); r != res.end(); r++) {
-            std::string campaign_id_str = (r.begin()
-                                      + bot_indexes::CAMPAIGN_INDEX)->c_str();
-            result.emplace_back((size_t)stoi(campaign_id_str));
+            start_pos = campaigns_json_str.find(tracker_id_pattern, start_pos) + tracker_id_pattern_len;
+            end_pos = campaigns_json_str.find("\"", start_pos);
+            std::string tracker_id = campaigns_json_str.substr(start_pos, end_pos - start_pos);
+            
+            result.push_back({tracker_id, source_id});
         }
 
         return result;

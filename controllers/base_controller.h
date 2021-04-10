@@ -42,14 +42,14 @@ class BaseController {
 
     // get campaign info from tracker
     virtual std::unordered_map<std::string, double> get_campaign_info(
-                                        const size_t campaign_tracker_id,
+                                        const std::string campaign_tracker_id,
                                         const std::string campaign_source_id,
                                         const size_t period,
                                         const std::string api_key) const = 0;
 
     // get zones info from tracker for given campaign
     virtual zones_data get_zones_info(
-                                const size_t campaign_tracker_id,
+                                const std::string campaign_tracker_id,
                                 const std::string campaign_source_id,
                                 const size_t period,
                                 const std::string api_key,

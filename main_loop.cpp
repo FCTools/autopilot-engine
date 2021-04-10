@@ -120,7 +120,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     std::cout << "get bot info check campaign" << std::endl;
 
     // get bot campaigns from database
-    auto campaigns_ids = database::get_bot_campaigns(bot_id);
+    auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
 
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
 
@@ -136,11 +136,11 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     spdlog::get("env_logger")->info("Select controller for " + ts_name);
 
     // check bot campaigns
-    for (std::size_t campaign_id : campaigns_ids)
+    for (auto campaign : campaigns_ids)
     {
-        auto ids = database::get_campaign_ids(campaign_id);
-        std::size_t tracker_id = ids.first;
-        auto source_id = ids.second;
+        // auto ids = database::get_campaign_ids(campaign_id);
+        auto tracker_id = campaign.first;
+        auto source_id = campaign.second;
 
         std::unordered_map<std::string, double> campaign_info;
 
@@ -151,7 +151,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
             {
                 spdlog::get("actions_logger")->error(
                     "Bot id: " + std::to_string(bot_id) + ". Can't get campaign info. Skip campaign: "
-                    + std::to_string(campaign_id));
+                    + tracker_id + " | " + source_id);
                 continue;
             }
         }
@@ -166,7 +166,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
 
                     spdlog::get("actions_logger")->info(
                         "Bot id: " + std::to_string(bot_id) + ". Condition is true for campaign "
-                        + std::to_string(tracker_id) + " | " + source_id);
+                        + tracker_id + " | " + source_id);
 
                     _put_action(data);
                 }
@@ -213,7 +213,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
     auto client_id = bot_info["client_id"];
 
     // get bot campaigns from database
-    auto campaigns_ids = database::get_bot_campaigns(bot_id);
+    auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
     auto ignored_zones = _split(bot_info["ignored_zones"], '\n');
 
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
@@ -228,11 +228,11 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
     }
     spdlog::get("env_logger")->info("Select controller for " + ts_name);
 
-    for (std::size_t campaign_id : campaigns_ids)
+    for (auto campaign : campaigns_ids)
     {
-        auto ids = database::get_campaign_ids(campaign_id);
-        std::size_t tracker_id = ids.first;
-        auto source_id = ids.second;
+        // auto ids = database::get_campaign_ids(campaign_id);
+        auto tracker_id = campaign.first;
+        auto source_id = campaign.second;
 
         zones_data zones_info;
         std::string zones_to_act_string;
@@ -258,7 +258,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
             {
                 spdlog::get("actions_logger")->error(
                     "Bot id: " + std::to_string(bot_id) + ". Can't get zones info for campaign "
-                    + std::to_string(tracker_id) + " | " + source_id + ". Skip.");
+                    + tracker_id + " | " + source_id + ". Skip.");
                 continue;
             }
         }
@@ -274,7 +274,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
             {
                 spdlog::get("actions_logger")->info(
                     "Bot id: " + std::to_string(bot_id) + ". Condition is true for 0 zones. Campaign: "
-                    + std::to_string(tracker_id) + " | " + source_id);
+                    + tracker_id + " | " + source_id);
                 continue;
             }
         }
@@ -287,7 +287,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
 
             spdlog::get("actions_logger")->info(
                 "Bot id: " + std::to_string(bot_id) + ". Condition is true for "+ std::to_string(zones_to_act.size())
-                + " zones. Campaign: " + std::to_string(tracker_id) + " | " + source_id);
+                + " zones. Campaign: " + tracker_id + " | " + source_id);
 
             _put_action(handling_result);
         }

@@ -26,13 +26,13 @@ class PropellerController: public BaseController {
     PropellerController();
 
     virtual std::unordered_map<std::string, double> get_campaign_info(
-                                        const size_t campaign_tracker_id,
+                                        const std::string campaign_tracker_id,
                                         const std::string campaign_source_id,
                                         const size_t period,
                                         const std::string api_key) const;
 
     virtual zones_data get_zones_info(
-                            const size_t campaign_tracker_id,
+                            const std::string campaign_tracker_id,
                             const std::string campaign_source_id,
                             const size_t period,
                             const std::string api_key,

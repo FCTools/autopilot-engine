@@ -23,7 +23,7 @@ PropellerController::PropellerController() : BaseController() {
 
 // get campaign info from tracker
 std::unordered_map<std::string, double> PropellerController::get_campaign_info(
-                                        const size_t campaign_tracker_id,
+                                        const std::string campaign_tracker_id,
                                         const std::string campaign_source_id,
                                         const size_t period,
                                         const std::string api_key) const {
@@ -31,7 +31,7 @@ std::unordered_map<std::string, double> PropellerController::get_campaign_info(
 }
 
 zones_data PropellerController::get_zones_info(
-                            const size_t campaign_tracker_id,
+                            const std::string campaign_tracker_id,
                             const std::string campaign_source_id,
                             const size_t period,
                             const std::string api_key,

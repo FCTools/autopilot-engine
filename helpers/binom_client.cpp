@@ -113,12 +113,12 @@ namespace binom
         }
     } // namespace
 
-    std::unordered_map<std::string, double> get_campaign_info(const size_t campaign_tracker_id, const size_t period)
+    std::unordered_map<std::string, double> get_campaign_info(const std::string campaign_tracker_id, const size_t period)
     {
         std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json"};
 
         auto request_url = _build_request_url(binom::tracker_requests_url, std::to_string(period),
-                                              std::to_string(campaign_tracker_id));
+                                              campaign_tracker_id);
 
         // TODO: remove hardcoded value: 5 tries
         const size_t default_tries = 5;
@@ -192,7 +192,7 @@ namespace binom
             catch (http::IncorrectResponse)
             {
                 spdlog::get("actions_logger")->error(
-                    "Incorrect response while trying to get info about campaign: " + std::to_string(campaign_tracker_id));
+                    "Incorrect response while trying to get info about campaign: " + campaign_tracker_id);
                 
                 tries--;
 
@@ -202,7 +202,7 @@ namespace binom
             catch (http::RequestError)
             {
                 spdlog::get("actions_logger")->error(
-                    "Request error while trying to get info about campaign: " + std::to_string(campaign_tracker_id));
+                    "Request error while trying to get info about campaign: " + campaign_tracker_id);
 
                 tries--;
 
@@ -216,7 +216,7 @@ namespace binom
         return {};
     }
 
-    zones_data get_zones_info(const size_t campaign_tracker_id, const size_t period,
+    zones_data get_zones_info(const std::string campaign_tracker_id, const size_t period,
                               const std::string zones_param_number,
                               const std::set<std::string> &ignored_zones)
     {
@@ -224,7 +224,7 @@ namespace binom
                                           "Accept: application/json"};
 
         auto request_url = _build_request_url(binom::tracker_requests_url, std::to_string(period),
-                                              std::to_string(campaign_tracker_id), zones_param_number)
+                                              campaign_tracker_id, zones_param_number)
                                               + "&val_page=" + std::to_string(ZONES_PER_PAGE);
         std::string tmp_zones_info;
         zones_data zones_info, zones_page;
@@ -273,7 +273,7 @@ namespace binom
             {
                 spdlog::get("actions_logger")->error("RequestError while trying to get zones info from tracker."
                                                      " Campaign id: " +
-                                                     std::to_string(campaign_tracker_id));
+                                                     campaign_tracker_id);
             }
 
             tries--;
@@ -284,7 +284,7 @@ namespace binom
         {
             spdlog::get("actions_logger")->error("Error or empty result while trying to get zones info "
                                                  "from tracker. Campaign id: " +
-                                                 std::to_string(campaign_tracker_id));
+                                                 campaign_tracker_id);
             return {};
         }
 
