@@ -86,14 +86,18 @@ namespace {
                 {"period", (bot_info + bot_indexes::PERIOD_INDEX)->c_str()},
                 {"action", (bot_info + bot_indexes::ACTION_INDEX)->c_str()},
                 {"ts", (bot_info + bot_indexes::TS_INDEX)->c_str()},
-                {"api_key", (bot_info + bot_indexes::API_KEY_INDEX)->c_str()},
+                {"ts_api_key", (bot_info + bot_indexes::TS_API_KEY_INDEX)->c_str()},
                 {"list_to_add", (bot_info +
                                  bot_indexes::LIST_TO_ADD_INDEX)->c_str()},
                 {"ignored_zones", ignored_zones},
                 {"client_id", (bot_info +
                                  bot_indexes::CLIENT_ID)->c_str()},
                 {"campaigns", (bot_info +
-                                 bot_indexes::CAMPAIGNS_INDEX)->c_str()}};
+                                 bot_indexes::CAMPAIGNS_INDEX)->c_str()},
+                {"tracker", (bot_info +
+                                 bot_indexes::TRACKER_INDEX)->c_str()},
+                {"tracker_api_key", (bot_info +
+                                 bot_indexes::TRACKER_API_KEY_INDEX)->c_str()}};
     }
 
     std::vector<std::pair<std::string, std::string>> get_bot_campaigns(std::string campaigns_json_str) {

@@ -90,11 +90,13 @@ int main(int argc, char** argv)
     std::cout << data["action"] << std::endl;
     std::cout << data["condition"] << std::endl;
     std::cout << data["ts"] << std::endl;
-    std::cout << data["api_key"] << std::endl;
+    std::cout << data["ts_api_key"] << std::endl;
     std::cout << data["list_to_add"] << std::endl;
     std::cout << data["ignored_zones"] << std::endl;
     std::cout << data["client_id"] << std::endl;
     std::cout << data["campaigns"] << std::endl;
+    std::cout << data["tracker"] << std::endl;
+    std::cout << data["tracker_api_key"] << std::endl;
 
     auto campaigns = database::get_bot_campaigns(data["campaigns"]);
 

@@ -112,12 +112,13 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
 {
     auto condition = bot_info["condition"];
     auto period = (size_t)std::stoi(bot_info["period"]);
-    auto api_key = bot_info["api_key"];
+    auto ts_api_key = bot_info["ts_api_key"];
     auto ts = bot_info["ts"];
     auto action = bot_info["action"];
     auto client_id = bot_info["client_id"];
 
-    std::cout << "get bot info check campaign" << std::endl;
+    auto tracker = bot_info["tracker"];
+    auto tracker_api_key = bot_info["tracker_api_key"];
 
     // get bot campaigns from database
     auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
@@ -145,7 +146,8 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
         std::unordered_map<std::string, double> campaign_info;
 
         {  //  getting campaign statistics from tracker
-            campaign_info = controller->get_campaign_info(tracker_id, source_id, period, api_key);
+            campaign_info = controller->get_campaign_info(tracker_id, source_id, period, ts_api_key,
+                                                          tracker, tracker_api_key);
 
             if (campaign_info.size() == 0)
             {
@@ -162,7 +164,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
                 auto data = "{\"campaign_id\": " + source_id
                             + ", \"action\": " + action + ", \"ts\": \""
                             + ts_name + "\", \"api_key\": \""
-                            + api_key + "\", \"client_id\": \"" + client_id + "\"}";
+                            + ts_api_key + "\", \"client_id\": \"" + client_id + "\"}";
 
                     spdlog::get("actions_logger")->info(
                         "Bot id: " + std::to_string(bot_id) + ". Condition is true for campaign "
@@ -212,6 +214,9 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
     auto list_to_add = bot_info["list_to_add"];
     auto client_id = bot_info["client_id"];
 
+    auto tracker = bot_info["tracker"];
+    auto tracker_api_key = bot_info["tracker_api_key"];
+
     // get bot campaigns from database
     auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
     auto ignored_zones = _split(bot_info["ignored_zones"], '\n');
@@ -242,7 +247,8 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
             spdlog::get("env_logger")->debug("Bot id: " + std::to_string(bot_id)
                                             + ". Start parsing json object with zones info.");
 
-            zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, ref(ignored_zones));
+            zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, tracker,
+                                                    tracker_api_key, ref(ignored_zones));
 
             spdlog::get("env_logger")->debug("Bot id: " + std::to_string(bot_id)
                                             + ". Json object successfullt parsed. Zones number: "

@@ -45,14 +45,18 @@ class BaseController {
                                         const std::string campaign_tracker_id,
                                         const std::string campaign_source_id,
                                         const size_t period,
-                                        const std::string api_key) const = 0;
+                                        const std::string ts_api_key,
+                                        const std::string tracker,
+                                        const std::string tracker_api_key) const = 0;
 
     // get zones info from tracker for given campaign
     virtual zones_data get_zones_info(
                                 const std::string campaign_tracker_id,
                                 const std::string campaign_source_id,
                                 const size_t period,
-                                const std::string api_key,
+                                const std::string ts_api_key,
+                                const std::string tracker,
+                                const std::string tracker_api_key,
                                 const std::set<std::string>& ignored_zones)
                                     const = 0;
 

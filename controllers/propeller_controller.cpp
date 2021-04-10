@@ -26,7 +26,9 @@ std::unordered_map<std::string, double> PropellerController::get_campaign_info(
                                         const std::string campaign_tracker_id,
                                         const std::string campaign_source_id,
                                         const size_t period,
-                                        const std::string api_key) const {
+                                        const std::string ts_api_key,
+                                        const std::string tracker,
+                                        const std::string tracker_api_key) const {
     return binom::get_campaign_info(campaign_tracker_id, period);
 }
 
@@ -34,7 +36,9 @@ zones_data PropellerController::get_zones_info(
                             const std::string campaign_tracker_id,
                             const std::string campaign_source_id,
                             const size_t period,
-                            const std::string api_key,
+                            const std::string ts_api_key,
+                            const std::string tracker,
+                            const std::string tracker_api_key,
                             const std::set<std::string>& ignored_zones) const {
     return binom::get_zones_info(campaign_tracker_id, period,
                                  this->zones_param_number, ignored_zones);

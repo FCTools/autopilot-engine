@@ -27,8 +27,10 @@ namespace {
         CAMPAIGN_INDEX = 2,
         ACTION_INDEX = 4,
         CAMPAIGNS_INDEX = 15,
+        TRACKER_INDEX = 16,
+        TRACKER_API_KEY_INDEX = 17,
         TS_INDEX = 9,
-        API_KEY_INDEX = 10,
+        TS_API_KEY_INDEX = 10,
         IGNORED_ZONES_INDEX = 12,
         LIST_TO_ADD_INDEX = 13,  // list (audience) for evadav
         CLIENT_ID = 14  // client key for mgid
