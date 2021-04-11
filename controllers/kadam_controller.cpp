@@ -17,18 +17,22 @@ KadamController::KadamController() : BaseController() {
 
 // get campaign info from tracker
 std::unordered_map<std::string, double> KadamController::get_campaign_info(
-                                        const size_t campaign_tracker_id,
+                                        const std::string campaign_tracker_id,
                                         const std::string campaign_source_id,
                                         const size_t period,
-                                        const std::string api_key) const {
+                                        const std::string ts_api_key,
+                                        const std::string tracker,
+                                        const std::string tracker_api_key) const {
     return binom::get_campaign_info(campaign_tracker_id, period);
 }
 
 zones_data KadamController::get_zones_info(
-                                    const size_t campaign_tracker_id,
+                                    const std::string campaign_tracker_id,
                                     const std::string campaign_source_id,
                                     const size_t period,
                                     const std::string api_key,
+                                    const std::string tracker,
+                                    const std::string tracker_api_key,
                                     const std::set<std::string>& ignored_zones)
                                             const {
     return binom::get_zones_info(campaign_tracker_id, period,
