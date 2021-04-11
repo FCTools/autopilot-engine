@@ -243,7 +243,7 @@ namespace binom
                 {
                     tmp_zones_info = http::make_request(headers, std::string(),
                         request_url + "&num_page=" + std::to_string(page_number), "GET");
-
+                    
                     if (tmp_zones_info == "null") {
                         break;
                     }
