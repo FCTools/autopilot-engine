@@ -5,8 +5,7 @@ SET(CMAKE_CXX_STANDARD 11)
 # standard ubuntu directories
 include_directories(/usr/local/include /usr/include /usr/local/include/pqxx)
 
-# standard mac os directories
-
+# standard mac os directories (developing case)
 if (APPLE)
     include_directories(/opt/homebrew/opt/libpqxx@6/include /opt/homebrew/opt/curlpp/include)
     link_directories(/opt/homebrew/opt/libpqxx@6/lib /opt/homebrew/opt/curlpp/lib)
