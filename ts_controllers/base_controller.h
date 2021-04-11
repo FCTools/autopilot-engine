@@ -50,6 +50,7 @@ class BaseController {
                                         const size_t period,
                                         const std::string ts_api_key,
                                         const std::string tracker,
+                                        const std::string tracker_requests_url,
                                         const std::string tracker_api_key) const = 0;
 
     // get zones info from tracker for given campaign
@@ -59,6 +60,7 @@ class BaseController {
                                 const size_t period,
                                 const std::string ts_api_key,
                                 const std::string tracker,
+                                const std::string tracker_requests_url,
                                 const std::string tracker_api_key,
                                 const std::set<std::string>& ignored_zones)
                                     const = 0;

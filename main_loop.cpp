@@ -114,6 +114,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     auto client_id = bot_info["client_id"];
 
     auto tracker = bot_info["tracker"];
+    auto tracker_requests_url = bot_info["tracker_url"];
     auto tracker_api_key = bot_info["tracker_api_key"];
 
     // split bot campaigns from database into pairs
@@ -142,7 +143,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
 
         {  //  getting campaign statistics from tracker
             campaign_info = controller->get_campaign_info(tracker_id, source_id, period, ts_api_key,
-                                                          tracker, tracker_api_key);
+                                                          tracker, tracker_requests_url, tracker_api_key);
 
             if (campaign_info.size() == 0)
             {
@@ -210,6 +211,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
     auto client_id = bot_info["client_id"];
 
     auto tracker = bot_info["tracker"];
+    auto tracker_requests_url = bot_info["tracker_url"];
     auto tracker_api_key = bot_info["tracker_api_key"];
 
     // split bot campaigns from database into pairs
@@ -242,7 +244,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
                                             + ". Start parsing json object with zones info.");
 
             zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, tracker,
-                                                    tracker_api_key, ref(ignored_zones));
+                                                    tracker_requests_url, tracker_api_key, ref(ignored_zones));
 
             spdlog::get("env_logger")->debug("Bot id: " + std::to_string(bot_id)
                                             + ". Json object successfullt parsed. Zones number: "

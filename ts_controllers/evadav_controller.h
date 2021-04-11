@@ -29,6 +29,7 @@ class EvadavController: public BaseController {
                                         const size_t period,
                                         const std::string ts_api_key,
                                         const std::string tracker,
+                                        const std::string tracker_requests_url,
                                         const std::string tracker_api_key) const;
 
     // get zones info from tracker for given campaign
@@ -38,6 +39,7 @@ class EvadavController: public BaseController {
                                 const size_t period,
                                 const std::string ts_api_key,
                                 const std::string tracker,
+                                const std::string tracker_requests_url,
                                 const std::string tracker_api_key,
                                 const std::set<std::string>& ignored_zones)
                                     const;

@@ -22,9 +22,10 @@ std::unordered_map<std::string, double> MgidController::get_campaign_info(
                                         const size_t period,
                                         const std::string ts_api_key,
                                         const std::string tracker,
+                                        const std::string tracker_requests_url,
                                         const std::string tracker_api_key) const {
     if (tracker == BINOM) {
-        return binom::get_campaign_info(campaign_tracker_id, period);
+        return binom::get_campaign_info(campaign_tracker_id, tracker_requests_url, tracker_api_key, period);
     }
 
     throw;
@@ -36,11 +37,12 @@ zones_data MgidController::get_zones_info(
                                     const size_t period,
                                     const std::string ts_api_key,
                                     const std::string tracker,
+                                    const std::string tracker_requests_url,
                                     const std::string tracker_api_key,
                                     const std::set<std::string>& ignored_zones)
                                             const {
     if (tracker == BINOM) {
-        return binom::get_zones_info(campaign_tracker_id, period,
+        return binom::get_zones_info(campaign_tracker_id, tracker_requests_url, tracker_api_key, period,
                                     this->zones_param_number, ignored_zones);
     }
 

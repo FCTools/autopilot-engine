@@ -42,10 +42,14 @@ namespace {
     // statistics for whole campaign
     std::unordered_map<std::string, double> get_campaign_info(
                                             const std::string campaign_tracker_id,
+                                            const std::string tracker_requests_url,
+                                            const std::string tracker_api_key,
                                             const size_t period);
 
     // statistics for campaign splitted by zones
     zones_data get_zones_info(const std::string campaign_tracker_id,
+                              const std::string tracker_requests_url,
+                              const std::string tracker_api_key,
                               const size_t period,
                               const std::string zones_param_number,
                               const std::set<std::string>& ignored_zones);

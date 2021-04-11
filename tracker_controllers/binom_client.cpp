@@ -113,7 +113,11 @@ namespace binom
         }
     } // namespace
 
-    std::unordered_map<std::string, double> get_campaign_info(const std::string campaign_tracker_id, const size_t period)
+    std::unordered_map<std::string, double> get_campaign_info(
+                                                            const std::string campaign_tracker_id,
+                                                            const std::string tracker_requests_url,
+                                                            const std::string tracker_api_key,
+                                                            const size_t period)
     {
         std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json"};
 
@@ -216,12 +220,14 @@ namespace binom
         return {};
     }
 
-    zones_data get_zones_info(const std::string campaign_tracker_id, const size_t period,
+    zones_data get_zones_info(const std::string campaign_tracker_id,
+                              const std::string tracker_requests_url,
+                              const std::string tracker_api_key,
+                              const size_t period,
                               const std::string zones_param_number,
                               const std::set<std::string> &ignored_zones)
     {
-        std::list<std::string> headers = {"Content-Type: application/json",
-                                          "Accept: application/json"};
+        std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json"};
 
         auto request_url = _build_request_url(binom::tracker_requests_url, std::to_string(period),
                                               campaign_tracker_id, zones_param_number)
