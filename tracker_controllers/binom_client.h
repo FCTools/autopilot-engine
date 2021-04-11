@@ -12,17 +12,7 @@
 #include <vector>
 #include <utility>
 
-// statistics formulas
-#define PROFIT(revenue, cost) (revenue - cost)
-#define ROI(revenue, cost) (cost != 0) ? ((revenue / cost - 1) * 100) : 0.
-#define CR(leads, clicks) (clicks != 0) ? (100 * leads * 1.0 / clicks) : 0.
-#define EPC(revenue, clicks) (clicks != 0) ? (revenue / clicks) : 0.
-#define CPC(cost, clicks) (clicks != 0) ? (cost / clicks) : 0.
-#define CPA(cost, leads) (leads != 0) ? (cost / leads) : 0.
-
-// empty campaign info
-#define NO_CLICKS "\"no_clicks\""
-#define ZONES_PER_PAGE 500
+#include "tracker_controllers/consts.h"
 
 typedef std::vector<std::pair<std::string,
                         std::unordered_map<std::string, double>>> zones_data;

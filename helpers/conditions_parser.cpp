@@ -53,6 +53,7 @@ namespace{
         return new ComplexCondition(build(left), build(right), operation);
     }
 } // namespace
+
     BaseCondition* parse_condition(std::string source) {
         source.erase(remove(source.begin(), source.end(), ' '), source.end());
         return conditions_parser::build(source);

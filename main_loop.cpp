@@ -116,7 +116,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     auto tracker = bot_info["tracker"];
     auto tracker_api_key = bot_info["tracker_api_key"];
 
-    // get bot campaigns from database
+    // split bot campaigns from database into pairs
     auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
 
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
@@ -135,7 +135,6 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     // check bot campaigns
     for (auto campaign : campaigns_ids)
     {
-        // auto ids = database::get_campaign_ids(campaign_id);
         auto tracker_id = campaign.first;
         auto source_id = campaign.second;
 
@@ -213,7 +212,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
     auto tracker = bot_info["tracker"];
     auto tracker_api_key = bot_info["tracker_api_key"];
 
-    // get bot campaigns from database
+    // split bot campaigns from database into pairs
     auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
     auto ignored_zones = _split(bot_info["ignored_zones"], '\n');
 
@@ -231,7 +230,6 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
 
     for (auto campaign : campaigns_ids)
     {
-        // auto ids = database::get_campaign_ids(campaign_id);
         auto tracker_id = campaign.first;
         auto source_id = campaign.second;
 

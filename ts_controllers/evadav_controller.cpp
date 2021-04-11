@@ -8,7 +8,7 @@
 
 #include "ts_controllers/evadav_controller.h"
 #include "data_services/database_client.h"
-#include "tracker_controllers/binom_client.h"
+#include "tracker_controllers/tracker_controllers.h"
 
 EvadavController::EvadavController() : BaseController() {
     this->zones_param_number = database::get_zones_param_number(this->name);
@@ -22,7 +22,12 @@ std::unordered_map<std::string, double> EvadavController::get_campaign_info(
                                         const std::string ts_api_key,
                                         const std::string tracker,
                                         const std::string tracker_api_key) const {
-    return binom::get_campaign_info(campaign_tracker_id, period);
+
+    if (tracker == BINOM) {
+        return binom::get_campaign_info(campaign_tracker_id, period);
+    }
+
+    throw;
 }
 
 zones_data EvadavController::get_zones_info(
@@ -34,8 +39,13 @@ zones_data EvadavController::get_zones_info(
                                     const std::string tracker_api_key,
                                     const std::set<std::string>& ignored_zones)
                                             const {
-    return binom::get_zones_info(campaign_tracker_id, period,
-                                 this->zones_param_number, ignored_zones);
+    
+    if (tracker == BINOM) {
+        return binom::get_zones_info(campaign_tracker_id, period,
+                                    this->zones_param_number, ignored_zones);
+    }
+
+    throw;
 }
 
 EvadavController::~EvadavController() {}
