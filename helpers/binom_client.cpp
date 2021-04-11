@@ -244,8 +244,6 @@ namespace binom
                     tmp_zones_info = http::make_request(headers, std::string(),
                         request_url + "&num_page=" + std::to_string(page_number), "GET");
                     
-                    spdlog::get("actions_logger")->info("tmp zones info length: " + std::to_string(tmp_zones_info.length()));
-
                     if (tmp_zones_info == "null") {
                         break;
                     }
