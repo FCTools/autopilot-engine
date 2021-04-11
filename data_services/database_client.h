@@ -28,6 +28,7 @@ namespace {
         ACTION_INDEX = 4,
         CAMPAIGNS_INDEX = 15,
         TRACKER_INDEX = 16,
+        TRACKER_URL_INDEX = 18,
         TRACKER_API_KEY_INDEX = 17,
         TS_INDEX = 9,
         TS_API_KEY_INDEX = 10,

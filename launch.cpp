@@ -96,6 +96,7 @@ int main(int argc, char** argv)
     std::cout << data["campaigns"] << std::endl;
     std::cout << data["tracker"] << std::endl;
     std::cout << data["tracker_api_key"] << std::endl;
+    std::cout << data["tracker_url"] << std::endl;
 
     auto campaigns = database::get_bot_campaigns(data["campaigns"]);
 

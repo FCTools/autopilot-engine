@@ -97,7 +97,9 @@ namespace {
                 {"tracker", (bot_info +
                                  bot_indexes::TRACKER_INDEX)->c_str()},
                 {"tracker_api_key", (bot_info +
-                                 bot_indexes::TRACKER_API_KEY_INDEX)->c_str()}};
+                                 bot_indexes::TRACKER_API_KEY_INDEX)->c_str()},
+                {"tracker_url", (bot_info +
+                                 bot_indexes::TRACKER_URL_INDEX)->c_str()}};
     }
 
     std::vector<std::pair<std::string, std::string>> get_bot_campaigns(std::string campaigns_json_str) {
