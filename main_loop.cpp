@@ -17,19 +17,12 @@
 
 #include "spdlog/spdlog.h"
 
-#include "redis_client.h"
-#include "database_client.h"
-#include "conditions.h"
-#include "conditions_parser.h"
-#include "binom_client.h"
-#include "base_controller.h"
-#include "propeller_controller.h"
-#include "evadav_controller.h"
-#include "mgid_controller.h"
-#include "kadam_controller.h"
-#include "http.h"
+#include "data_services/data_services.h"
+#include "conditions/conditions.h"
+#include "helpers/helpers.h"
+#include "tracker_controllers/tracker_controllers.h"
+#include "ts_controllers/ts_controllers.h"
 #include "main_loop.h"
-#include "uuid.h"
 
 const std::size_t checking_timeout = (size_t)std::stoi(std::string(getenv("CHECKING_TIMEOUT")));
 std::mutex storage_mutex, actions_mutex;

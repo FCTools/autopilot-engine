@@ -15,8 +15,8 @@
 
 #include "spdlog/spdlog.h"
 
-#include "binom_client.h"
-#include "http.h"
+#include "tracker_controllers/binom_client.h"
+#include "helpers/http.h"
 
 // insert period and campaign_id into tracker url as query parameters
 // default value for group1 is 2 because in

@@ -6,8 +6,10 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#include "conditions/base_condition.h"
+#pragma once
 
-BaseCondition::BaseCondition() {}
-
-BaseCondition::~BaseCondition() {}
+#include "ts_controllers/base_controller.h"
+#include "ts_controllers/evadav_controller.h"
+#include "ts_controllers/kadam_controller.h"
+#include "ts_controllers/mgid_controller.h"
+#include "ts_controllers/propeller_controller.h"

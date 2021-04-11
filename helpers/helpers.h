@@ -6,8 +6,8 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#include "conditions/base_condition.h"
+#pragma once
 
-BaseCondition::BaseCondition() {}
-
-BaseCondition::~BaseCondition() {}
+#include "helpers/conditions_parser.h"
+#include "helpers/http.h"
+#include "helpers/uuid.h"

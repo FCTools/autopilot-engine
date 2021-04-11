@@ -15,7 +15,6 @@
 #include "spdlog/sinks/rotating_file_sink.h"
 
 #include "main_loop.h"
-
 #include "data_services/redis_client.h"
 #include "data_services/database_client.h"
 

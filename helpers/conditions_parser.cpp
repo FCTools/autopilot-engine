@@ -9,9 +9,9 @@
 #include <string>
 #include <algorithm>
 
-#include "base_condition.h"
-#include "conditions_parser.h"
-#include "conditions.h"
+#include "conditions/base_condition.h"
+#include "helpers/conditions_parser.h"
+#include "conditions/conditions.h"
 
 namespace conditions_parser{
 // private namespace

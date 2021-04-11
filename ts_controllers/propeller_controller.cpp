@@ -12,10 +12,9 @@
 
 #include "spdlog/spdlog.h"
 
-#include "propeller_controller.h"
-#include "base_controller.h"
-#include "database_client.h"
-#include "binom_client.h"
+#include "ts_controllers/propeller_controller.h"
+#include "data_services/database_client.h"
+#include "tracker_controllers/binom_client.h"
 
 PropellerController::PropellerController() : BaseController() {
     this->zones_param_number = database::get_zones_param_number(this->name);

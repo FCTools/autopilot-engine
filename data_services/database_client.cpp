@@ -16,7 +16,7 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/rotating_file_sink.h"
 
-#include "database_client.h"
+#include "data_services/database_client.h"
 
 namespace database {
 namespace {

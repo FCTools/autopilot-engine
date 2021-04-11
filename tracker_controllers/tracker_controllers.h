@@ -6,8 +6,6 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#include "conditions/base_condition.h"
+#pragma once
 
-BaseCondition::BaseCondition() {}
-
-BaseCondition::~BaseCondition() {}
+#include "tracker_controllers/binom_client.h"

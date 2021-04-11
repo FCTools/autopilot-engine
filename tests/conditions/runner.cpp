@@ -3,8 +3,8 @@
 #include <cstring>
 #include <fstream>
 
-#include "conditions.h"
-#include "conditions_parser.h"
+#include "conditions/conditions.h"
+#include "helpers/conditions_parser.h"
 
 
 // statistics formulas

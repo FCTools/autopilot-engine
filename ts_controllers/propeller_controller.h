@@ -12,7 +12,7 @@
 #include <set>
 #include <unordered_map>
 
-#include "base_controller.h"
+#include "ts_controllers/base_controller.h"
 
 // controller for PropellerAds
 class PropellerController: public BaseController {

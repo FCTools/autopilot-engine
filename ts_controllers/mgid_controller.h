@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include "./base_controller.h"
+#include "ts_controllers//base_controller.h"
 
 
 class MgidController: public BaseController {

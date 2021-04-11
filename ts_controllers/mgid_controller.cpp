@@ -6,9 +6,9 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#include "mgid_controller.h"
-#include "database_client.h"
-#include "binom_client.h"
+#include "ts_controllers/mgid_controller.h"
+#include "data_services/database_client.h"
+#include "tracker_controllers/binom_client.h"
 
 
 MgidController::MgidController() : BaseController() {

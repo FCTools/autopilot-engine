@@ -9,8 +9,8 @@
 #include <string>
 #include <unordered_map>
 
-#include "base_condition.h"
-#include "elementary_condition.h"
+#include "conditions/base_condition.h"
+#include "conditions/elementary_condition.h"
 
 ElementaryCondition::ElementaryCondition(): BaseCondition() {}
 
