@@ -57,4 +57,18 @@ namespace http {
 
         return response.str();
     }
+
+    std::string build_url(const std::string base_url, std::unordered_map<std::string, std::string> params)
+    {
+        std::string result = base_url + "?";
+
+        for (auto &param : params)
+        {
+            result += param.first + "=" + param.second + "&";
+        }
+        result = result.substr(0, result.length() - 1);
+
+        return result;
+    }
+
 }  // namespace http

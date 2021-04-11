@@ -17,6 +17,7 @@
 #include "main_loop.h"
 #include "data_services/redis_client.h"
 #include "data_services/database_client.h"
+#include "helpers/http.h"
 
 bool env_is_correct() {
     std::ifstream settings_file("env_variables.env");

@@ -10,6 +10,7 @@
 
 #include <string>
 #include <list>
+#include <unordered_map>
 
 namespace http {
 struct IncorrectResponse : public std::exception {
@@ -24,4 +25,6 @@ struct RequestError : public std::exception {
                              const std::string body,
                              const std::string url,
                              const std::string type);
+
+    std::string build_url(const std::string base_url, std::unordered_map<std::string, std::string> params);
 }  // namespace http

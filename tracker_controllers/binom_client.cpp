@@ -120,9 +120,16 @@ namespace binom
                                                             const size_t period)
     {
         std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json"};
+        std::unordered_map<std::string, std::string> params = {{"page", "Stats"},
+                                                               {"group2", "1"},
+                                                               {"group3", "1"},
+                                                               {"api_key", tracker_api_key},
+                                                               {"date", std::to_string(period)},
+                                                               {"camp_id", campaign_tracker_id},
+                                                               {"group1", "2"}};
 
-        auto request_url = _build_request_url(binom::tracker_requests_url, std::to_string(period),
-                                              campaign_tracker_id);
+        auto request_url = http::build_url(tracker_requests_url, params);
+                    
 
         // TODO: remove hardcoded value: 5 tries
         const size_t default_tries = 5;
@@ -228,10 +235,17 @@ namespace binom
                               const std::set<std::string> &ignored_zones)
     {
         std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json"};
+        std::unordered_map<std::string, std::string> params = {{"page", "Stats"},
+                                                               {"group2", "1"},
+                                                               {"group3", "1"},
+                                                               {"api_key", tracker_api_key},
+                                                               {"date", std::to_string(period)},
+                                                               {"camp_id", campaign_tracker_id},
+                                                               {"group1", zones_param_number},
+                                                               {"val_page", std::to_string(ZONES_PER_PAGE)}};
 
-        auto request_url = _build_request_url(binom::tracker_requests_url, std::to_string(period),
-                                              campaign_tracker_id, zones_param_number)
-                                              + "&val_page=" + std::to_string(ZONES_PER_PAGE);
+        auto request_url = http::build_url(tracker_requests_url, params);
+        
         std::string tmp_zones_info;
         zones_data zones_info, zones_page;
 
