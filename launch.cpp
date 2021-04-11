@@ -15,9 +15,9 @@
 #include "spdlog/sinks/rotating_file_sink.h"
 
 #include "main_loop.h"
-#include "redis_client.h"
 
-#include "database_client.h"
+#include "data_services/redis_client.h"
+#include "data_services/database_client.h"
 
 bool env_is_correct() {
     std::ifstream settings_file("env_variables.env");

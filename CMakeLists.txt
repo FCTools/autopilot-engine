@@ -11,14 +11,16 @@ include_directories(/opt/homebrew/opt/libpqxx@6/include /opt/homebrew/opt/curlpp
 link_directories(/opt/homebrew/opt/libpqxx@6/lib /opt/homebrew/opt/curlpp/lib)
 link_directories(/usr/local/lib)
 
-include_directories(helpers helpers/conditions controllers data_services)
+include_directories(helpers helpers/conditions ts_controllers tracker_controllers data_services)
+include_directories(.)
 
 add_subdirectory(data_services)
-add_subdirectory(controllers)
+add_subdirectory(ts_controllers)
+add_subdirectory(tracker_controllers)
 add_subdirectory(helpers)
 add_subdirectory(helpers/conditions)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -g")
 
 add_executable(main launch.cpp main_loop.cpp)
-target_link_libraries(main controllers data_services helpers conditions pqxx curlpp curl cpp_redis tacopie spdlog)
+target_link_libraries(main ts_controllers tracker_controllers data_services helpers conditions pqxx curlpp curl cpp_redis tacopie spdlog)

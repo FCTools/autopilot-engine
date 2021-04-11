@@ -106,8 +106,7 @@ BaseController *_get_controller(std::string ts)
     else
     {
         spdlog::get("env_logger")->error("Can't choose controller for"
-                                         " traffic source " +
-                                         ts);
+                                         " traffic source " + ts);
         return nullptr;
     }
 }
