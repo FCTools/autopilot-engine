@@ -26,6 +26,7 @@
 #include "propeller_controller.h"
 #include "evadav_controller.h"
 #include "mgid_controller.h"
+#include "kadam_controller.h"
 #include "http.h"
 #include "main_loop.h"
 #include "uuid.h"
@@ -98,6 +99,9 @@ BaseController *_get_controller(std::string ts)
     }
     else if (ts == "MGID") {
         return new MgidController();
+    }
+    else if (ts == "Kadam") {
+        return new KadamController();
     }
     else
     {
