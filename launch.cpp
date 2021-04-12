@@ -19,13 +19,16 @@
 #include "data_services/database_client.h"
 #include "helpers/http.h"
 
-bool env_is_correct() {
+bool env_is_correct()
+{
     std::ifstream settings_file("env_variables.env");
     std::string var;
 
     // check environment variables
-    while (getline(settings_file, var)) {
-        if (!getenv(var.c_str())) {
+    while (getline(settings_file, var))
+    {
+        if (!getenv(var.c_str()))
+        {
             spdlog::get("file_logger")->critical("Can't find required environment variable: " + var);
             settings_file.close();
             
@@ -36,7 +39,8 @@ bool env_is_correct() {
     settings_file.close();
 
     // check redis connection
-    if(!redis::servers_are_available()) {
+    if(!redis::servers_are_available())
+    {
         return false;
     }
 
@@ -46,7 +50,8 @@ bool env_is_correct() {
     return true;
 }
 
-void signal_callback_handler(int signum) {
+void signal_callback_handler(int signum)
+{
     std::cout << "Get keyboard interrupt signal. Quit." << std::endl;
     exit(EXIT_SUCCESS);
 }

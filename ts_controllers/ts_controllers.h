@@ -13,3 +13,8 @@
 #include "ts_controllers/kadam_controller.h"
 #include "ts_controllers/mgid_controller.h"
 #include "ts_controllers/propeller_controller.h"
+
+#define PROPELLER_ADS "Propeller Ads"
+#define EVADAV "Evadav"
+#define MGID "MGID"
+#define KADAM "Kadam"

@@ -8,4 +8,7 @@
 
 #pragma once
 
+// trackers' names
+#define BINOM "Binom"
+
 #include "tracker_controllers/binom_client.h"

@@ -23,9 +23,6 @@
 #define CPC(cost, clicks) (clicks != 0) ? (cost / clicks) : 0.
 #define CPA(cost, leads) (leads != 0) ? (cost / leads) : 0.
 
-// trackers' names
-#define BINOM "Binom"
-
 typedef std::vector<std::pair<std::string,
                     std::unordered_map<std::string, double>>> zones_data;
 
@@ -62,8 +59,7 @@ class BaseController {
                                 const std::string tracker,
                                 const std::string tracker_requests_url,
                                 const std::string tracker_api_key,
-                                const std::set<std::string>& ignored_zones)
-                                    const = 0;
+                                const std::set<std::string>& ignored_zones) const = 0;
 
     virtual ~BaseController();
 };

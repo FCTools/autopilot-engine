@@ -16,9 +16,6 @@
 
 // controller for PropellerAds
 class PropellerController: public BaseController {
-    const std::string propeller_requests_url =
-                                std::string(getenv("PROPELLER_REQUESTS_URL"));
-
     std::string zones_param_number;
     const std::string name = "Propeller Ads";
 
@@ -44,8 +41,7 @@ class PropellerController: public BaseController {
                                 const std::string tracker,
                                 const std::string tracker_requests_url,
                                 const std::string tracker_api_key,
-                                const std::set<std::string>& ignored_zones)
-                                    const;
+                                const std::set<std::string>& ignored_zones) const;
 
     virtual ~PropellerController();
 };

@@ -44,7 +44,7 @@ namespace http {
         request.setOpt<cURLpp::options::Verbose>(true);
         request.setOpt<cURLpp::options::Timeout>(DEFAULT_TIMEOUT);
 
-        if (type != "POST") {
+        if (type != http::POST) {
             request.setOpt<cURLpp::options::CustomRequest>(type);
         }
 

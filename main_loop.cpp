@@ -82,18 +82,18 @@ void _put_action(const std::string data)
 
 BaseController *_get_controller(std::string ts)
 {
-    if (ts == "Propeller Ads")
+    if (ts == PROPELLER_ADS)
     {
         return new PropellerController();
     }
-    else if (ts == "Evadav")
+    else if (ts == EVADAV)
     {
         return new EvadavController();
     }
-    else if (ts == "MGID") {
+    else if (ts == MGID) {
         return new MgidController();
     }
-    else if (ts == "Kadam") {
+    else if (ts == KADAM) {
         return new KadamController();
     }
     else

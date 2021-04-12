@@ -13,6 +13,9 @@
 #include <unordered_map>
 
 namespace http {
+const std::string POST = "POST";
+const std::string GET = "GET";
+
 struct IncorrectResponse : public std::exception {
     const char* what() const throw();
 };

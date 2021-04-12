@@ -18,15 +18,6 @@
 #include "tracker_controllers/binom_client.h"
 #include "helpers/http.h"
 
-// insert period and campaign_id into tracker url as query parameters
-// default value for group1 is 2 because in
-// tracker 2 means filter by paths (default way)
-inline std::string _build_request_url(const std::string base_url, const std::string period,
-                                      const std::string campaign_id, const std::string group_1 = "2")
-{
-    return base_url + period + "&camp_id=" + campaign_id + "&group1=" + group_1;
-}
-
 namespace binom
 {
     std::vector<std::string> get_field_values(const std::string field_name, const std::string &data)
@@ -262,7 +253,7 @@ namespace binom
                 while (true)
                 {
                     tmp_zones_info = http::make_request(headers, std::string(),
-                        request_url + "&num_page=" + std::to_string(page_number), "GET");
+                        request_url + "&num_page=" + std::to_string(page_number), http::GET);
                     
                     if (tmp_zones_info == "null") {
                         break;

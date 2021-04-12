@@ -19,11 +19,6 @@ typedef std::vector<std::pair<std::string,
 
 namespace binom {
 namespace {
-    const std::string tracker_requests_url = std::string(
-                                        getenv("TRACKER_REQUEST_URL")) +
-                                        std::string(getenv("TRACKER_API_KEY")) +
-                                        "&date=";
-
     zones_data extract_zones_info(std::string &zones_info,
                                   const std::set<std::string> &ignored_zones);
 
