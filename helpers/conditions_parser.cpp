@@ -9,9 +9,9 @@
 #include <string>
 #include <algorithm>
 
-#include "base_condition.h"
-#include "conditions_parser.h"
-#include "conditions.h"
+#include "conditions/base_condition.h"
+#include "helpers/conditions_parser.h"
+#include "conditions/conditions.h"
 
 namespace conditions_parser{
 // private namespace
@@ -53,6 +53,7 @@ namespace{
         return new ComplexCondition(build(left), build(right), operation);
     }
 } // namespace
+
     BaseCondition* parse_condition(std::string source) {
         source.erase(remove(source.begin(), source.end(), ' '), source.end());
         return conditions_parser::build(source);

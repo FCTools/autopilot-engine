@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <string>
 
-#include "base_condition.h"
+#include "conditions/base_condition.h"
 
 // complex condition means conditions like: (cond_1 & cond_2); (cond_1 | cond_2)
 class ComplexCondition: public BaseCondition {

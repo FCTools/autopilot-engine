@@ -26,8 +26,12 @@ namespace {
         PERIOD_INDEX = 8,
         CAMPAIGN_INDEX = 2,
         ACTION_INDEX = 4,
+        CAMPAIGNS_INDEX = 15,
+        TRACKER_INDEX = 16,
+        TRACKER_URL_INDEX = 18,
+        TRACKER_API_KEY_INDEX = 17,
         TS_INDEX = 9,
-        API_KEY_INDEX = 10,
+        TS_API_KEY_INDEX = 10,
         IGNORED_ZONES_INDEX = 12,
         LIST_TO_ADD_INDEX = 13,  // list (audience) for evadav
         CLIENT_ID = 14  // client key for mgid
@@ -53,13 +57,10 @@ namespace {
                                                         const size_t bot_id);
 
     // get campaigns linked with given bot
-    std::vector<size_t> get_bot_campaigns(const size_t bot_id);
+    std::vector<std::pair<std::string, std::string>> get_bot_campaigns(
+                                            std::string campaigns_json_str);
 
     std::string get_ts_name(const size_t ts_id);
-
-    // get internal campaign id
-    // return pair of external ids: id from tracker and id from traffic source
-    std::pair<size_t, std::string> get_campaign_ids(const size_t campaign_id);
 
     std::string get_zones_param_number(const std::string ts);
 }  // namespace database

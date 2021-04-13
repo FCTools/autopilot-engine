@@ -6,8 +6,7 @@
 // Proprietary and confidential
 // Author: German Yakimov <german13yakimov@gmail.com>
 
-#include "conditions/base_condition.h"
+#pragma once
 
-BaseCondition::BaseCondition() {}
-
-BaseCondition::~BaseCondition() {}
+#include "data_services/database_client.h"
+#include "data_services/redis_client.h"

@@ -8,8 +8,8 @@
 
 #include <iostream>
 
-#include "base_condition.h"
-#include "complex_condition.h"
+#include "conditions/base_condition.h"
+#include "conditions/complex_condition.h"
 
 ComplexCondition::ComplexCondition(
                                 BaseCondition* l,

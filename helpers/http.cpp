@@ -14,7 +14,7 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 
-#include "http.h"
+#include "helpers/http.h"
 
 #define DEFAULT_TIMEOUT 30
 
@@ -44,7 +44,7 @@ namespace http {
         request.setOpt<cURLpp::options::Verbose>(true);
         request.setOpt<cURLpp::options::Timeout>(DEFAULT_TIMEOUT);
 
-        if (type != "POST") {
+        if (type != http::POST) {
             request.setOpt<cURLpp::options::CustomRequest>(type);
         }
 
@@ -57,4 +57,18 @@ namespace http {
 
         return response.str();
     }
+
+    std::string build_url(const std::string base_url, std::unordered_map<std::string, std::string> params)
+    {
+        std::string result = base_url + "?";
+
+        for (auto &param : params)
+        {
+            result += param.first + "=" + param.second + "&";
+        }
+        result = result.substr(0, result.length() - 1);
+
+        return result;
+    }
+
 }  // namespace http
