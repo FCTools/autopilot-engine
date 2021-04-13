@@ -12,28 +12,13 @@
 #include <vector>
 #include <utility>
 
-// statistics formulas
-#define PROFIT(revenue, cost) (revenue - cost)
-#define ROI(revenue, cost) (cost != 0) ? ((revenue / cost - 1) * 100) : 0.
-#define CR(leads, clicks) (clicks != 0) ? (100 * leads * 1.0 / clicks) : 0.
-#define EPC(revenue, clicks) (clicks != 0) ? (revenue / clicks) : 0.
-#define CPC(cost, clicks) (clicks != 0) ? (cost / clicks) : 0.
-#define CPA(cost, leads) (leads != 0) ? (cost / leads) : 0.
-
-// empty campaign info
-#define NO_CLICKS "\"no_clicks\""
-#define ZONES_PER_PAGE 500
+#include "tracker_controllers/consts.h"
 
 typedef std::vector<std::pair<std::string,
                         std::unordered_map<std::string, double>>> zones_data;
 
 namespace binom {
 namespace {
-    const std::string tracker_requests_url = std::string(
-                                        getenv("TRACKER_REQUEST_URL")) +
-                                        std::string(getenv("TRACKER_API_KEY")) +
-                                        "&date=";
-
     zones_data extract_zones_info(std::string &zones_info,
                                   const std::set<std::string> &ignored_zones);
 
@@ -51,11 +36,15 @@ namespace {
 
     // statistics for whole campaign
     std::unordered_map<std::string, double> get_campaign_info(
-                                            const size_t campaign_tracker_id,
+                                            const std::string campaign_tracker_id,
+                                            const std::string tracker_requests_url,
+                                            const std::string tracker_api_key,
                                             const size_t period);
 
     // statistics for campaign splitted by zones
-    zones_data get_zones_info(const size_t campaign_tracker_id,
+    zones_data get_zones_info(const std::string campaign_tracker_id,
+                              const std::string tracker_requests_url,
+                              const std::string tracker_api_key,
                               const size_t period,
                               const std::string zones_param_number,
                               const std::set<std::string>& ignored_zones);

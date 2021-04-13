@@ -11,7 +11,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "base_condition.h"
+#include "conditions/base_condition.h"
 
 // elementary condition means conditions like: (clicks > 1000);
 // (revenue < 100) and etc.

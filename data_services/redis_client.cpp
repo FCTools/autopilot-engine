@@ -9,10 +9,11 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+
 #include <cpp_redis/cpp_redis>
 #include "spdlog/spdlog.h"
 
-#include "redis_client.h"
+#include "data_services/redis_client.h"
 
 namespace redis {
 bool server_is_available(const std::string host, const size_t port)

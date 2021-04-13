@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include "base_condition.h"
+#include "conditions/base_condition.h"
 
 
 namespace conditions_parser {
