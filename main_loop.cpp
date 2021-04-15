@@ -28,7 +28,7 @@ const std::size_t checking_timeout = (size_t)std::stoi(std::string(getenv("CHECK
 std::mutex storage_mutex, actions_mutex;
 std::condition_variable cond_var;
 
-std::set<std::string> _split(std::string source, char delimiter)
+std::set<std::string> split(std::string source, char delimiter)
 {
     if (source.find(delimiter) == std::string::npos)
     {
@@ -122,7 +122,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
 
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
 
-    BaseCondition *parsed_condition = conditions_parser::parse_condition(condition);
+    BaseCondition *parsed_condition = conditions_parser::parse_spa_condition(condition);
     spdlog::get("env_logger")->info("Condition " + condition + " was successfully parsed");
 
     auto ts_name = database::get_ts_name((size_t)std::stoi(ts));
@@ -216,10 +216,10 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
 
     // split bot campaigns from database into pairs
     auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
-    auto ignored_zones = _split(bot_info["ignored_zones"], '\n');
+    auto ignored_zones = split(bot_info["ignored_zones"], '\n');
 
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
-    BaseCondition *parsed_condition = conditions_parser::parse_condition(condition);
+    BaseCondition *parsed_condition = conditions_parser::parse_spa_condition(condition);
     spdlog::get("env_logger")->info("Condition " + condition + " was successfully parsed");
 
     auto ts_name = database::get_ts_name((size_t)std::stoi(ts));

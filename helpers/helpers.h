@@ -8,6 +8,11 @@
 
 #pragma once
 
+#include <set>
+#include <string>
+
 #include "helpers/conditions_parser.h"
 #include "helpers/http.h"
 #include "helpers/uuid.h"
+
+std::set<std::string> split(std::string source, char delimiter);
