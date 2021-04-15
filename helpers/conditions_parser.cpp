@@ -8,10 +8,12 @@
 
 #include <string>
 #include <algorithm>
+#include <vector>
 
 #include "conditions/base_condition.h"
 #include "helpers/conditions_parser.h"
 #include "conditions/conditions.h"
+#include "helpers/helpers.h"
 
 namespace conditions_parser{
 // private namespace
@@ -54,8 +56,40 @@ namespace{
     }
 } // namespace
 
-    BaseCondition* parse_condition(std::string source) {
+    BaseCondition* parse_spa_condition(std::string source) {
         source.erase(remove(source.begin(), source.end(), ' '), source.end());
-        return conditions_parser::build(source);
+        source = source.substr(1, source.length() - 2);
+        auto conditions_groups = split(source, OR);
+
+        std::vector<BaseCondition*> builded_groups;
+
+        for (auto group : conditions_groups)
+        {
+            auto elementary_conditions_in_group = split(group, AND);
+            std::vector<BaseCondition*> builded_elementary_conditions;
+
+            for (auto condition : elementary_conditions_in_group)
+            {
+                builded_elementary_conditions.push_back(conditions_parser::build(condition));
+            }
+
+            BaseCondition *result = builded_elementary_conditions[0];
+
+            for (std::size_t i = 1; i < builded_elementary_conditions.size(); i++)
+            {
+                result = new ComplexCondition(result, builded_elementary_conditions[i], AND);
+            }
+
+            builded_groups.push_back(result);
+        }
+
+        BaseCondition *result_condition = builded_groups[0];
+
+        for (std::size_t i = 1; i < builded_groups.size(); i++)
+        {
+            result_condition = new ComplexCondition(result_condition, builded_groups[i], OR);
+        }
+        
+        return result_condition;
     }
 } // namespace conditions_parser
