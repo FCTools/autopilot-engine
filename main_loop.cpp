@@ -122,6 +122,15 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
 
     // DELETEME
     std::cout << "Get all info" << std::endl;
+    std::cout << condition << std::endl;
+    std::cout << period << std::endl;
+    std::cout << ts_api_key << std::endl;
+    std::cout << ts << std::endl;
+    std::cout << action << std::endl;
+    std::cout << tracker << std::endl;
+    std::cout << tracker_requests_url << std::endl;
+    std::cout << tracker_api_key << std::endl;
+
 
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
 
