@@ -56,6 +56,7 @@ namespace{
     }
 } // namespace
 
+    // FIXME: this function
     BaseCondition* parse_spa_condition(std::string source) {
         source.erase(remove(source.begin(), source.end(), ' '), source.end());
         source = source.substr(1, source.length() - 2);

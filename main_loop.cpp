@@ -120,29 +120,13 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     // split bot campaigns from database into pairs
     auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
 
-    // DELETEME
-    std::cout << "Get all info" << std::endl;
-    std::cout << condition << std::endl;
-    std::cout << period << std::endl;
-    std::cout << ts_api_key << std::endl;
-    std::cout << ts << std::endl;
-    std::cout << action << std::endl;
-    std::cout << tracker << std::endl;
-    std::cout << tracker_requests_url << std::endl;
-    std::cout << tracker_api_key << std::endl;
-
-    // spdlog::get("env_logger")->info("Start condition parsing: " + condition);
+    spdlog::get("env_logger")->info("Start condition parsing: " + condition);
 
     BaseCondition *parsed_condition = conditions_parser::parse_spa_condition(condition);
     spdlog::get("env_logger")->info("Condition " + condition + " was successfully parsed");
 
-    std::cout << "parse condition" << std::endl;
-
     auto ts_name = database::get_ts_name((size_t)std::stoi(ts));
     BaseController *controller = _get_controller(ts_name);
-
-    // DELETEME
-    std::cout << "Get controller" << std::endl;
 
     if (!controller)
     {
