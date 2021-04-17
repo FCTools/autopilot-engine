@@ -120,6 +120,8 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     // split bot campaigns from database into pairs
     auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
 
+    std::cout << "Get all info" << std::endl;
+
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
 
     BaseCondition *parsed_condition = conditions_parser::parse_spa_condition(condition);
