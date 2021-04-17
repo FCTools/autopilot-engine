@@ -120,6 +120,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     // split bot campaigns from database into pairs
     auto campaigns_ids = database::get_bot_campaigns(bot_info["campaigns"]);
 
+    // DELETEME
     std::cout << "Get all info" << std::endl;
 
     spdlog::get("env_logger")->info("Start condition parsing: " + condition);
@@ -129,6 +130,10 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
 
     auto ts_name = database::get_ts_name((size_t)std::stoi(ts));
     BaseController *controller = _get_controller(ts_name);
+
+    // DELETEME
+    std::cout << "Get controller" << std::endl;
+
     if (!controller)
     {
         return;
