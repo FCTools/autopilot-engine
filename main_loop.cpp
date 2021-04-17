@@ -131,8 +131,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     std::cout << tracker_requests_url << std::endl;
     std::cout << tracker_api_key << std::endl;
 
-
-    spdlog::get("env_logger")->info("Start condition parsing: " + condition);
+    // spdlog::get("env_logger")->info("Start condition parsing: " + condition);
 
     BaseCondition *parsed_condition = conditions_parser::parse_spa_condition(condition);
     spdlog::get("env_logger")->info("Condition " + condition + " was successfully parsed");
