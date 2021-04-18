@@ -17,8 +17,6 @@
 #include "main_loop.h"
 #include "data_services/redis_client.h"
 
-#include "helpers/conditions_parser.h"
-
 bool env_is_correct()
 {
     std::ifstream settings_file("env_variables.env");

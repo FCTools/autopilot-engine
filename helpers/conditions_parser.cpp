@@ -58,8 +58,14 @@ namespace{
 
     // FIXME: this function
     BaseCondition* parse_spa_condition(std::string source) {
+        if (source.find(AND) == std::string::npos && source.find(OR) == std::string::npos)
+        {
+            return new ElementaryCondition(source);
+        }
+
         source.erase(remove(source.begin(), source.end(), ' '), source.end());
         source = source.substr(1, source.length() - 2);
+
         auto conditions_groups = split(source, OR);
 
         std::vector<BaseCondition*> builded_groups;
