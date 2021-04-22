@@ -211,6 +211,8 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
     auto list_to_add = bot_info["list_to_add"];
     auto client_id = bot_info["client_id"];
 
+    std::cout << api_key << std::endl;
+
     auto tracker = bot_info["tracker"];
     auto tracker_requests_url = bot_info["tracker_url"];
     auto tracker_api_key = bot_info["tracker_api_key"];
