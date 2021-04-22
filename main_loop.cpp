@@ -205,7 +205,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
 {
     auto condition = bot_info["condition"];
     std::size_t period = (size_t)stoi(bot_info["period"]);
-    auto api_key = bot_info["api_key"];
+    auto api_key = bot_info["ts_api_key"];
     auto ts = bot_info["ts"];
     auto action = bot_info["action"];
     auto list_to_add = bot_info["list_to_add"];
