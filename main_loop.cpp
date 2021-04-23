@@ -182,7 +182,10 @@ std::string _check_condition_for_zones(zones_data& zones_info, BaseCondition *pa
     {
         if (parsed_condition->is_true(zone.second))
         {
-            zones_to_act.push_back(zone.first);
+            if (find(zones_to_act.begin(), zones_to_act.end(), zone.first) == zones_to_act.end())
+            {
+                zones_to_act.push_back(zone.first);
+            }
         }
     }
 
