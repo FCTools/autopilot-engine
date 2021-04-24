@@ -52,14 +52,21 @@ namespace keitaro
             return result;
         }
 
+        // tested
         std::pair<std::string, std::string> get_range_this_month()
         {
-            return {get_past_time(stoi(get_day()) * 24 * 60 * 60), get_now()};
+            return {get_past_time((stoi(get_day(0)) - 1) * 24 * 60 * 60), get_now()};
         }
 
+        // tested
         std::pair<std::string, std::string> get_range_last_month()
         {
-            return {"", ""};
+            std::string last_month_last_day = get_past_time(stoi(get_day(0)) * 24 * 60 * 60);
+            auto last_month_last_day_int = stoi(get_day(stoi(get_day(0)) * 24 * 60 * 60));
+            
+            std::string last_month_first_day = get_past_time((stoi(get_day(0)) - 1) * 24 * 60 * 60 +
+                                                            last_month_last_day_int * 24 * 60 * 60);
+            return {last_month_first_day, last_month_last_day};
         }
 
         std::pair<std::string, std::string> get_range_this_year()

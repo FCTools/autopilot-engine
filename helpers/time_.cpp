@@ -13,7 +13,7 @@
 
 using namespace std;
 
-std::string get_day()
+std::string get_day(std::size_t seconds)
 {
     std::time_t rawtime;
     tm* timeinfo;
@@ -22,7 +22,7 @@ std::string get_day()
     time(&rawtime);
     timeinfo = localtime(&rawtime);
     std::time_t epoch = mktime(timeinfo);
-    epoch -= 7 * 60 * 60;  // make time
+    epoch -= (7 * 60 * 60 + (long)seconds);  // make time
 
     timeinfo = localtime(&epoch);
 
