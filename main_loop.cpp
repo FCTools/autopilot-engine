@@ -96,6 +96,9 @@ BaseController *_get_controller(std::string ts)
     else if (ts == KADAM) {
         return new KadamController();
     }
+    else if (ts == VIMMY) {
+        return new VimmyController();
+    }
     else
     {
         spdlog::get("env_logger")->error("Can't choose controller for"
