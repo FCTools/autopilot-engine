@@ -17,6 +17,7 @@
 
 #include "tracker_controllers/keitaro_client.h"
 #include "helpers/http.h"
+#include "helpers/time_.h"
 
 namespace keitaro
 {
@@ -53,7 +54,7 @@ namespace keitaro
 
         std::pair<std::string, std::string> get_range_this_month()
         {
-            return {"", ""};
+            return {get_past_time(stoi(get_day()) * 24 * 60 * 60), get_now()};
         }
 
         std::pair<std::string, std::string> get_range_last_month()
@@ -73,7 +74,7 @@ namespace keitaro
 
         std::pair<std::string, std::string> get_range_last_n_days(std::size_t days_number)
         {
-            return {"", ""};
+            return {get_past_time(days_number * 24 * 60 * 60), get_now()};
         }
 
         std::string calculate_range(std::size_t period)
