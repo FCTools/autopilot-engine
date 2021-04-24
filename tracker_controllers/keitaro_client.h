@@ -45,5 +45,5 @@ namespace {
                               const size_t period,
                               const std::string zones_param_number,
                               const std::set<std::string>& ignored_zones);
-    
+
 }  // namespace keitaro

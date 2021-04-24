@@ -69,19 +69,33 @@ namespace keitaro
             return {last_month_first_day, last_month_last_day};
         }
 
+        // tested
+        std::pair<std::string, std::string> get_range_last_n_days(std::size_t days_number)
+        {
+            return {get_past_time(days_number * 24 * 60 * 60), get_now()};
+        }
+
+        // tested
         std::pair<std::string, std::string> get_range_this_year()
         {
-            return {"", ""};
+            int days = 0;
+
+            while (stoi(get_month((stoi(get_day(0)) + days) * 24 * 60 * 60)) != 12)
+            {
+                auto last_month_last_day_int = stoi(get_day((stoi(get_day(0)) + days) * 24 * 60 * 60));
+                days += last_month_last_day_int;
+            }
+
+            days += stoi(get_day(0)) - 1;
+
+            auto first_day = get_past_time(days * 24 * 60 * 60);
+
+            return {first_day, get_now()};
         }
 
         std::pair<std::string, std::string> get_range_this_week()
         {
             return {"", ""};
-        }
-
-        std::pair<std::string, std::string> get_range_last_n_days(std::size_t days_number)
-        {
-            return {get_past_time(days_number * 24 * 60 * 60), get_now()};
         }
 
         std::string calculate_range(std::size_t period)

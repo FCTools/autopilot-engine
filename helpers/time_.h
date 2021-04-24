@@ -13,5 +13,7 @@ std::string get_now();
 // return day that was "seconds" seconds ago
 std::string get_day(std::size_t seconds);
 
+std::string get_month(std::size_t seconds);
+
 std::string get_past_time(const std::size_t seconds);
 

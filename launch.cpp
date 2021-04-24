@@ -88,9 +88,9 @@ int main(int argc, char** argv)
     env_logger->info("Kernel launched.");
     env_logger->info("Workers number: " + std::to_string(workers_number));
 
-    auto this_month = keitaro::get_range_last_month();
+    // auto this_month = keitaro::get_range_this_year();
 
-    std::cout << this_month.first << " " << this_month.second << std::endl;
+    // std::cout << this_month.first << " " << this_month.second << std::endl;
 
     // start(workers_number);
 

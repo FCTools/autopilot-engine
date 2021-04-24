@@ -31,6 +31,24 @@ std::string get_day(std::size_t seconds)
     return std::string(buffer);
 }
 
+std::string get_month(std::size_t seconds)
+{
+    std::time_t rawtime;
+    tm* timeinfo;
+    char buffer[256];
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    std::time_t epoch = mktime(timeinfo);
+    epoch -= (7 * 60 * 60 + (long)seconds);  // make time
+
+    timeinfo = localtime(&epoch);
+
+    std::strftime(buffer, 256, "%m", timeinfo);
+
+    return std::string(buffer);
+}
+
 std::string get_now()
 {
     return get_past_time(0);
