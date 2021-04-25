@@ -52,52 +52,6 @@ namespace keitaro
             return result;
         }
 
-        // tested
-        std::pair<std::string, std::string> get_range_this_month()
-        {
-            return {get_past_time((stoi(get_day(0)) - 1) * 24 * 60 * 60), get_now()};
-        }
-
-        // tested
-        std::pair<std::string, std::string> get_range_last_month()
-        {
-            std::string last_month_last_day = get_past_time(stoi(get_day(0)) * 24 * 60 * 60);
-            auto last_month_last_day_int = stoi(get_day(stoi(get_day(0)) * 24 * 60 * 60));
-            
-            std::string last_month_first_day = get_past_time((stoi(get_day(0)) - 1) * 24 * 60 * 60 +
-                                                            last_month_last_day_int * 24 * 60 * 60);
-            return {last_month_first_day, last_month_last_day};
-        }
-
-        // tested
-        std::pair<std::string, std::string> get_range_last_n_days(std::size_t days_number)
-        {
-            return {get_past_time(days_number * 24 * 60 * 60), get_now()};
-        }
-
-        // tested
-        std::pair<std::string, std::string> get_range_this_year()
-        {
-            int days = 0;
-
-            while (stoi(get_month((stoi(get_day(0)) + days) * 24 * 60 * 60)) != 12)
-            {
-                auto last_month_last_day_int = stoi(get_day((stoi(get_day(0)) + days) * 24 * 60 * 60));
-                days += last_month_last_day_int;
-            }
-
-            days += stoi(get_day(0)) - 1;
-
-            auto first_day = get_past_time(days * 24 * 60 * 60);
-
-            return {first_day, get_now()};
-        }
-
-        std::pair<std::string, std::string> get_range_this_week()
-        {
-            return {"", ""};
-        }
-
         std::string calculate_range(std::size_t period)
         {
             std::unordered_map<std::string, std::string> result;
