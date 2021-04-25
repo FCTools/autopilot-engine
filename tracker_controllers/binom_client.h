@@ -22,16 +22,7 @@ namespace {
     zones_data extract_zones_info(std::string &zones_info,
                                   const std::set<std::string> &ignored_zones);
 
-    // get values of one fixed field from json-string like: [{}, {}, ...]
-    std::vector<std::string> get_field_values(const std::string field_name,
-                                              const std::string& data);
-
     // calculate statistics metrics using basic params
-    std::unordered_map<std::string, double> calculate_statistics(
-                                                       const double cost,
-                                                       const double revenue,
-                                                       const int clicks,
-                                                       const int leads);
 }  // namespace
 
     // statistics for whole campaign

@@ -134,7 +134,73 @@ namespace keitaro
 
         std::string data_encoded = keitaro::dump_to_string(data);
 
-        
+        // TODO: remove hardcoded value: 5 tries
+        const size_t default_tries = 5;
+        size_t tries = default_tries;
+
+        float cost = 0., revenue = 0., clicks = 0.;
+        int leads = 0;
+        std::string campaign_info;
+
+        std::string request_url = tracker_requests_url + "/report/build";
+
+        while (tries != 0)
+        {
+            spdlog::get("actions_logger")->info("Perform request: " + request_url);
+
+            campaign_info = http::make_request(headers, data_encoded, request_url, "POST");
+
+            if (campaign_info.size() == 0)
+            {
+                spdlog::get("actions_logger")->error("Error while trying to make request (or empty result)");
+                tries--;
+
+                // TODO: remove hardcoded value: 5 seconds
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+                continue;
+            }
+
+            try
+            {
+                double cost = stod(get_field_values("cost", campaign_info)[0]);
+                double revenue = stod(get_field_values("revenue", campaign_info)[0]);
+                double clicks = stod(get_field_values("clicks", campaign_info)[0]);
+                double leads = stod(get_field_values("leads", campaign_info)[0]);
+
+                return calculate_statistics(cost, revenue, clicks, leads);
+            }
+            catch (const std::invalid_argument &exc)
+            {
+                spdlog::get("actions_logger")->error(exc.what());
+
+                tries--;
+
+                // TODO: remove hardcoded value: 5 seconds
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+            }
+            catch (http::IncorrectResponse)
+            {
+                spdlog::get("actions_logger")->error(
+                    "Incorrect response while trying to get info about campaign: " + campaign_tracker_id);
+                
+                tries--;
+
+                // TODO: remove hardcoded value: 5 seconds
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+            }
+            catch (http::RequestError)
+            {
+                spdlog::get("actions_logger")->error(
+                    "Request error while trying to get info about campaign: " + campaign_tracker_id);
+
+                tries--;
+
+                // TODO: remove hardcoded value: 5 seconds
+                std::this_thread::sleep_for(std::chrono::seconds(5));
+            }
+        }
+
+        spdlog::get("actions_logger")->error("Incorrect response from tracker: " + campaign_info);
 
         return {};
     }

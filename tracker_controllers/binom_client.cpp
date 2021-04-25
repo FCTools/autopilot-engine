@@ -17,34 +17,35 @@
 
 #include "tracker_controllers/binom_client.h"
 #include "helpers/http.h"
+#include "helpers/utils.h"
 
 namespace binom
 {
-    std::vector<std::string> get_field_values(const std::string field_name, const std::string &data)
-    {
-        std::vector<std::string> result;
+    // std::vector<std::string> get_field_values(const std::string field_name, const std::string &data)
+    // {
+    //     std::vector<std::string> result;
 
-        std::string search_pattern = "\"" + field_name + "\":\"";
-        size_t pattern_len = search_pattern.length();
+    //     std::string search_pattern = "\"" + field_name + "\":\"";
+    //     size_t pattern_len = search_pattern.length();
 
-        if (data.find(search_pattern) == std::string::npos)
-        {
-            throw http::IncorrectResponse();
-        }
+    //     if (data.find(search_pattern) == std::string::npos)
+    //     {
+    //         throw http::IncorrectResponse();
+    //     }
 
-        size_t start_pos = 0, end_pos;
+    //     size_t start_pos = 0, end_pos;
 
-        while (data.find(search_pattern, start_pos) != std::string::npos)
-        {
-            start_pos = data.find(search_pattern, start_pos) + pattern_len;
-            end_pos = data.find("\"", start_pos);
-            auto target_str = data.substr(start_pos, end_pos - start_pos);
+    //     while (data.find(search_pattern, start_pos) != std::string::npos)
+    //     {
+    //         start_pos = data.find(search_pattern, start_pos) + pattern_len;
+    //         end_pos = data.find("\"", start_pos);
+    //         auto target_str = data.substr(start_pos, end_pos - start_pos);
 
-            result.emplace_back(target_str);
-        }
+    //         result.emplace_back(target_str);
+    //     }
 
-        return result;
-    }
+    //     return result;
+    // }
 
     zones_data extract_zones_info(std::string &zones_info, const std::set<std::string> &ignored_zones)
     {
@@ -72,37 +73,18 @@ namespace binom
             auto end = zones_info.find("}");
             auto zone_info = zones_info.substr(end_pos, end - end_pos);
 
-            double cost = stod((*(binom::get_field_values("cost", zone_info).begin())));
-            double revenue = stod((*(binom::get_field_values("revenue", zone_info).begin())));
-            double clicks = stod((*(binom::get_field_values("clicks", zone_info).begin())));
-            int leads = stoi((*(binom::get_field_values("leads", zone_info).begin())));
+            double cost = stod((*(get_field_values("cost", zone_info).begin())));
+            double revenue = stod((*(get_field_values("revenue", zone_info).begin())));
+            double clicks = stod((*(get_field_values("clicks", zone_info).begin())));
+            int leads = stoi((*(get_field_values("leads", zone_info).begin())));
 
-            auto statistics = binom::calculate_statistics(cost, revenue, clicks, leads);
+            auto statistics = calculate_statistics(cost, revenue, clicks, leads);
 
             result.push_back({name, statistics});
         }
 
         return result;
     }
-
-    // private namespace
-    namespace
-    {
-        std::unordered_map<std::string, double> calculate_statistics(const double cost, const double revenue,
-                                                                     const int clicks, const int leads)
-        {
-            return {{"cost", cost},
-                    {"revenue", revenue},
-                    {"clicks", clicks},
-                    {"leads", leads},
-                    {"profit", PROFIT(revenue, cost)},
-                    {"ROI", ROI(revenue, cost)},
-                    {"CR", CR(leads, clicks)},
-                    {"EPC", EPC(revenue, clicks)},
-                    {"CPC", CPC(cost, clicks)},
-                    {"CPA", CPA(cost, leads)}};
-        }
-    } // namespace
 
     std::unordered_map<std::string, double> get_campaign_info(
                                                             const std::string campaign_tracker_id,
@@ -121,7 +103,6 @@ namespace binom
 
         auto request_url = http::build_url(tracker_requests_url, params);
                     
-
         // TODO: remove hardcoded value: 5 tries
         const size_t default_tries = 5;
         size_t tries = default_tries;
@@ -150,15 +131,15 @@ namespace binom
             // empty campaign info - returning default
             if (campaign_info == NO_CLICKS)
             {
-                return binom::calculate_statistics(0., 0., 0, 0);
+                return calculate_statistics(0., 0., 0, 0);
             }
 
             try
             {
-                auto costs_by_paths = binom::get_field_values("cost", campaign_info);
-                auto revenues_by_paths = binom::get_field_values("revenue", campaign_info);
-                auto clicks_by_paths = binom::get_field_values("clicks", campaign_info);
-                auto leads_by_paths = binom::get_field_values("leads", campaign_info);
+                auto costs_by_paths = get_field_values("cost", campaign_info);
+                auto revenues_by_paths = get_field_values("revenue", campaign_info);
+                auto clicks_by_paths = get_field_values("clicks", campaign_info);
+                auto leads_by_paths = get_field_values("leads", campaign_info);
 
                 for (auto cost_path : costs_by_paths)
                 {
@@ -180,7 +161,7 @@ namespace binom
                     leads += stoi(leads_path);
                 }
 
-                return binom::calculate_statistics(cost, revenue, clicks, leads);
+                return calculate_statistics(cost, revenue, clicks, leads);
             }
             catch (const std::invalid_argument &exc)
             {
