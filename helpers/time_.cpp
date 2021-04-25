@@ -8,15 +8,14 @@
 
 #include <string>
 #include <ctime>
+#include <cstdint>
 
 #include "helpers/time_.h"
-
-using namespace std;
 
 std::string get_day(std::size_t seconds)
 {
     std::time_t rawtime;
-    tm* timeinfo;
+    std::tm* timeinfo;
     char buffer[256];
 
     time(&rawtime);
@@ -34,7 +33,7 @@ std::string get_day(std::size_t seconds)
 std::string get_month(std::size_t seconds)
 {
     std::time_t rawtime;
-    tm* timeinfo;
+    std::tm* timeinfo;
     char buffer[256];
 
     time(&rawtime);
@@ -57,7 +56,7 @@ std::string get_now()
 std::string get_past_time(const std::size_t seconds)
 {
     std::time_t rawtime;
-    tm* timeinfo;
+    std::tm* timeinfo;
     char buffer[256];
 
     time(&rawtime);
@@ -113,7 +112,34 @@ std::pair<std::string, std::string> get_range_this_year()
     return {first_day, get_now()};
 }
 
+short get_weekday()
+{
+    std::time_t rawtime;
+    std::tm* timeinfo;
+    char buffer[256];
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    std::time_t epoch = mktime(timeinfo);
+    epoch -= (7 * 60 * 60);  // make time utc and substract seconds value
+
+    timeinfo = localtime(&epoch);
+    return timeinfo->tm_wday;
+}
+
+
+// tested
 std::pair<std::string, std::string> get_range_this_week()
 {
-    return {"", ""};
+    short current_weekday = get_weekday();
+    short days_to_substract = current_weekday;
+
+    if (current_weekday == 0)
+    {
+        days_to_substract = 7;
+    }
+
+    days_to_substract--;
+    
+    return {get_past_time(days_to_substract * 24 * 60 * 60), get_now()};
 }

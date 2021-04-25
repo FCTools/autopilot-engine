@@ -27,3 +27,5 @@ std::pair<std::string, std::string> get_range_last_n_days(std::size_t days_numbe
 std::pair<std::string, std::string> get_range_last_month();
 
 std::pair<std::string, std::string> get_range_this_month();
+
+short get_weekday();

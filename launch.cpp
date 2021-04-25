@@ -16,7 +16,7 @@
 
 #include "main_loop.h"
 #include "data_services/redis_client.h"
-#include "tracker_controllers/keitaro_client.h"
+#include "helpers/time_.h"
 
 bool env_is_correct()
 {
@@ -88,9 +88,9 @@ int main(int argc, char** argv)
     env_logger->info("Kernel launched.");
     env_logger->info("Workers number: " + std::to_string(workers_number));
 
-    // auto this_month = keitaro::get_range_this_year();
+    auto tmp = get_range_this_week();
 
-    // std::cout << this_month.first << " " << this_month.second << std::endl;
+    std::cout << tmp.first << " " << tmp.second << std::endl;
 
     // start(workers_number);
 
