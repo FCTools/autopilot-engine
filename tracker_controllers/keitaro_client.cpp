@@ -16,8 +16,7 @@
 #include "spdlog/spdlog.h"
 
 #include "tracker_controllers/keitaro_client.h"
-#include "helpers/http.h"
-#include "helpers/time_.h"
+#include "helpers/helpers.h"
 
 namespace keitaro
 {
@@ -129,17 +128,11 @@ namespace keitaro
 
         data["range"] = keitaro::calculate_range(period);
 
-        // TODO: add range here depending on period (like in binom)
-        // auto request_url = http::build_url(tracker_requests_url, params);
-
         std::string data_encoded = keitaro::dump_to_string(data);
 
         // TODO: remove hardcoded value: 5 tries
         const size_t default_tries = 5;
         size_t tries = default_tries;
-
-        float cost = 0., revenue = 0., clicks = 0.;
-        int leads = 0;
         std::string campaign_info;
 
         std::string request_url = tracker_requests_url + "/report/build";

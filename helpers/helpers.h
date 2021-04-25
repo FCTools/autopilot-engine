@@ -10,9 +10,22 @@
 
 #include <set>
 #include <string>
+#include <vector>
+#include <string>
+#include <unordered_map>
 
 #include "helpers/conditions_parser.h"
 #include "helpers/http.h"
 #include "helpers/uuid.h"
+#include "helpers/time_.h"
+
 
 std::set<std::string> split(std::string source, char delimiter);
+
+std::vector<std::string> get_field_values(const std::string field_name, const std::string& data);
+
+std::unordered_map<std::string, double> calculate_statistics(
+                                                       const double cost,
+                                                       const double revenue,
+                                                       const int clicks,
+                                                       const int leads);

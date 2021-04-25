@@ -10,7 +10,6 @@
 #include <string>
 
 #include "helpers/http.h"
-#include "helpers/utils.h"
 #include "tracker_controllers/consts.h"
 
 std::vector<std::string> get_field_values(const std::string field_name, const std::string &data)

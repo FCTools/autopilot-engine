@@ -16,37 +16,10 @@
 #include "spdlog/spdlog.h"
 
 #include "tracker_controllers/binom_client.h"
-#include "helpers/http.h"
-#include "helpers/utils.h"
+#include "helpers/helpers.h"
 
 namespace binom
 {
-    // std::vector<std::string> get_field_values(const std::string field_name, const std::string &data)
-    // {
-    //     std::vector<std::string> result;
-
-    //     std::string search_pattern = "\"" + field_name + "\":\"";
-    //     size_t pattern_len = search_pattern.length();
-
-    //     if (data.find(search_pattern) == std::string::npos)
-    //     {
-    //         throw http::IncorrectResponse();
-    //     }
-
-    //     size_t start_pos = 0, end_pos;
-
-    //     while (data.find(search_pattern, start_pos) != std::string::npos)
-    //     {
-    //         start_pos = data.find(search_pattern, start_pos) + pattern_len;
-    //         end_pos = data.find("\"", start_pos);
-    //         auto target_str = data.substr(start_pos, end_pos - start_pos);
-
-    //         result.emplace_back(target_str);
-    //     }
-
-    //     return result;
-    // }
-
     zones_data extract_zones_info(std::string &zones_info, const std::set<std::string> &ignored_zones)
     {
         zones_data result;
