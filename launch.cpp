@@ -88,10 +88,6 @@ int main(int argc, char** argv)
     env_logger->info("Kernel launched.");
     env_logger->info("Workers number: " + std::to_string(workers_number));
 
-    auto tmp = get_range_this_week();
-
-    std::cout << tmp.first << " " << tmp.second << std::endl;
-
     // start(workers_number);
 
     return EXIT_SUCCESS;

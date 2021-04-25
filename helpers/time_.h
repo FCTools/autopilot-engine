@@ -9,23 +9,29 @@
 #include <string>
 #include <utility>
 
-std::string get_now();
+namespace time_
+{
+    namespace
+    {
+        short get_weekday();
+    }  // namespace
 
-// return day that was "seconds" seconds ago
-std::string get_day(std::size_t seconds);
+    std::string get_now();
 
-std::string get_month(std::size_t seconds);
+    // return day that was "seconds" seconds ago
+    std::string get_day(std::size_t seconds);
 
-std::string get_past_time(const std::size_t seconds);
+    std::string get_month(std::size_t seconds);
 
-std::pair<std::string, std::string> get_range_this_week();
+    std::string get_past_time(const std::size_t seconds);
 
-std::pair<std::string, std::string> get_range_this_year();
+    std::pair<std::string, std::string> get_range_this_week();
 
-std::pair<std::string, std::string> get_range_last_n_days(std::size_t days_number);
+    std::pair<std::string, std::string> get_range_this_year();
 
-std::pair<std::string, std::string> get_range_last_month();
+    std::pair<std::string, std::string> get_range_last_n_days(std::size_t days_number);
 
-std::pair<std::string, std::string> get_range_this_month();
+    std::pair<std::string, std::string> get_range_last_month();
 
-short get_weekday();
+    std::pair<std::string, std::string> get_range_this_month();
+}  // namespace time
