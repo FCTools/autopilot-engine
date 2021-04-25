@@ -54,9 +54,62 @@ namespace keitaro
 
         std::string calculate_range(std::size_t period)
         {
-            std::unordered_map<std::string, std::string> result;
+            std::unordered_map<std::string, std::string> result = {{"timezone", "Europe/Madrid"}};
 
-            return dump_to_string(result); 
+            if (period == ALL_TIME)
+            {
+                result["interval"] = "all_time";
+                return dump_to_string(result);
+            }
+
+            std::pair<std::string, std::string> range;
+
+            switch (period)
+            {
+                case TODAY:
+                    {
+                        std::string today_ = time_::get_now();
+                        range = {today_, today_};
+                    }
+                    break;
+                case YESTERDAY:
+                    {
+                        std::string yesterday_ = time_::get_past_time(24 * 60 * 60);
+                        range = {yesterday_, yesterday_};
+                    }
+                    break;
+                case LAST_7_DAYS:
+                    range = time_::get_range_last_n_days(7);
+                    break;
+                case LAST_14_DAYS:
+                    range = time_::get_range_last_n_days(14);
+                    break;
+                case THIS_MONTH:
+                    range = time_::get_range_this_month();
+                    break;
+                case LAST_MONTH:
+                    range = time_::get_range_last_month();
+                    break;
+                case THIS_YEAR:
+                    range = time_::get_range_this_year();
+                    break;
+                case THIS_WEEK:
+                    range = time_::get_range_this_week();
+                    break;
+                case LAST_2_DAYS:
+                    range = time_::get_range_last_n_days(2);
+                    break;
+                case LAST_3_DAYS:
+                    range = time_::get_range_last_n_days(3);
+                    break;
+                default:
+                    break;
+            }
+
+            result["from"] = range.first;
+            result["to"] = range.second;
+
+            return dump_to_string(result);
         }
     } // namespace
 
@@ -74,10 +127,14 @@ namespace keitaro
                             {"filters", "[{\"name\": \"campaign_id\", \"operator\": \"EQUALS\", \"expression\":"
                             + campaign_tracker_id + "}]"}};
 
+        data["range"] = keitaro::calculate_range(period);
+
         // TODO: add range here depending on period (like in binom)
         // auto request_url = http::build_url(tracker_requests_url, params);
 
         std::string data_encoded = keitaro::dump_to_string(data);
+
+        
 
         return {};
     }

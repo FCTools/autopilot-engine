@@ -34,4 +34,4 @@ namespace time_
     std::pair<std::string, std::string> get_range_last_month();
 
     std::pair<std::string, std::string> get_range_this_month();
-}  // namespace time
+}  // namespace time_
