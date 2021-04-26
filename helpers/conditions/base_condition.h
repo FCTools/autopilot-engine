@@ -28,9 +28,7 @@ class BaseCondition {
  public:
     BaseCondition();
 
-    virtual bool is_true(
-                const std::unordered_map<std::string, double>& campaign_info)
-                                                                     const = 0;
+    virtual bool is_true(const std::unordered_map<std::string, double>& campaign_info) const = 0;
 
     virtual ~BaseCondition();
 };

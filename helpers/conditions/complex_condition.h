@@ -21,8 +21,7 @@ class ComplexCondition: public BaseCondition {
  public:
     ComplexCondition(BaseCondition* l, BaseCondition* r, const char operation);
 
-    virtual bool is_true(
-            const std::unordered_map<std::string, double>& campaign_info) const;
+    virtual bool is_true(const std::unordered_map<std::string, double>& campaign_info) const;
 
     virtual ~ComplexCondition();
 };

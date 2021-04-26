@@ -20,11 +20,13 @@ namespace time_
         {
             std::time_t rawtime;
             std::tm* timeinfo;
-            char buffer[256];
+            char buffer[BUFFER_SIZE];
 
             time(&rawtime);
             timeinfo = localtime(&rawtime);
             std::time_t epoch = mktime(timeinfo);
+
+            // FIXME: remove 7 here, server time is already UTC
             epoch -= (7 * 60 * 60);  // make time utc and substract seconds value
 
             timeinfo = localtime(&epoch);
@@ -36,16 +38,18 @@ namespace time_
     {
         std::time_t rawtime;
         std::tm* timeinfo;
-        char buffer[256];
+        char buffer[BUFFER_SIZE];
 
         time(&rawtime);
         timeinfo = localtime(&rawtime);
         std::time_t epoch = mktime(timeinfo);
-        epoch -= (7 * 60 * 60 + (long)seconds);  // make time
+
+        // FIXME: remove 7 here, server time is already UTC
+        epoch -= (7 * 60 * 60 + (long)seconds);  // make time utc and substract seconds
 
         timeinfo = localtime(&epoch);
 
-        std::strftime(buffer, 256, "%d", timeinfo);
+        std::strftime(buffer, BUFFER_SIZE, "%d", timeinfo);
 
         return std::string(buffer);
     }
@@ -54,16 +58,18 @@ namespace time_
     {
         std::time_t rawtime;
         std::tm* timeinfo;
-        char buffer[256];
+        char buffer[BUFFER_SIZE];
 
         time(&rawtime);
         timeinfo = localtime(&rawtime);
         std::time_t epoch = mktime(timeinfo);
-        epoch -= (7 * 60 * 60 + (long)seconds);  // make time
+
+        // FIXME: remove 7 here, server time is already UTC
+        epoch -= (7 * 60 * 60 + (long)seconds);  // make time utc and substract seconds
 
         timeinfo = localtime(&epoch);
 
-        std::strftime(buffer, 256, "%m", timeinfo);
+        std::strftime(buffer, BUFFER_SIZE, "%m", timeinfo);
 
         return std::string(buffer);
     }
@@ -77,16 +83,18 @@ namespace time_
     {
         std::time_t rawtime;
         std::tm* timeinfo;
-        char buffer[256];
+        char buffer[BUFFER_SIZE];
 
         time(&rawtime);
         timeinfo = localtime(&rawtime);
         std::time_t epoch = mktime(timeinfo);
-        epoch -= (7 * 60 * 60 + (long)seconds);  // make time utc and substract seconds value
+
+        // FIXME: remove 7 here, server time is already UTC
+        epoch -= (7 * 60 * 60 + (long)seconds);  // make time utc and substract seconds
 
         timeinfo = localtime(&epoch);
 
-        std::strftime(buffer, 256, "%Y-%m-%d %T", timeinfo);
+        std::strftime(buffer, BUFFER_SIZE, "%Y-%m-%d %T", timeinfo);
 
         return std::string(buffer);
     }
@@ -94,24 +102,24 @@ namespace time_
     // tested
     std::pair<std::string, std::string> get_range_this_month()
     {
-        return {get_past_time((stoi(get_day(0)) - 1) * 24 * 60 * 60), get_now()};
+        return {get_past_time((stoi(get_day(0)) - 1) * time_::seconds_in_day), get_now()};
     }
 
     // tested
     std::pair<std::string, std::string> get_range_last_month()
     {
-        std::string last_month_last_day = get_past_time(stoi(get_day(0)) * 24 * 60 * 60);
-        auto last_month_last_day_int = stoi(get_day(stoi(get_day(0)) * 24 * 60 * 60));
+        std::string last_month_last_day = get_past_time(stoi(get_day(0)) * time_::seconds_in_day);
+        auto last_month_last_day_int = stoi(get_day(stoi(get_day(0)) * time_::seconds_in_day));
         
-        std::string last_month_first_day = get_past_time((stoi(get_day(0)) - 1) * 24 * 60 * 60 +
-                                                        last_month_last_day_int * 24 * 60 * 60);
+        std::string last_month_first_day = get_past_time((stoi(get_day(0)) - 1) * time_::seconds_in_day +
+                                                        last_month_last_day_int * time_::seconds_in_day);
         return {last_month_first_day, last_month_last_day};
     }
 
     // tested
     std::pair<std::string, std::string> get_range_last_n_days(std::size_t days_number)
     {
-        return {get_past_time(days_number * 24 * 60 * 60), get_now()};
+        return {get_past_time(days_number * time_::seconds_in_day), get_now()};
     }
 
     // tested
@@ -119,15 +127,15 @@ namespace time_
     {
         int days = 0;
 
-        while (stoi(get_month((stoi(get_day(0)) + days) * 24 * 60 * 60)) != 12)
+        while (stoi(get_month((stoi(get_day(0)) + days) * time_::seconds_in_day)) != 12)
         {
-            auto last_month_last_day_int = stoi(get_day((stoi(get_day(0)) + days) * 24 * 60 * 60));
+            auto last_month_last_day_int = stoi(get_day((stoi(get_day(0)) + days) * time_::seconds_in_day));
             days += last_month_last_day_int;
         }
 
         days += stoi(get_day(0)) - 1;
 
-        auto first_day = get_past_time(days * 24 * 60 * 60);
+        auto first_day = get_past_time(days * time_::seconds_in_day);
 
         return {first_day, get_now()};
     }
@@ -145,6 +153,6 @@ namespace time_
 
         days_to_substract--;
         
-        return {get_past_time(days_to_substract * 24 * 60 * 60), get_now()};
+        return {get_past_time(days_to_substract * time_::seconds_in_day), get_now()};
     }
 }  // namespace time_

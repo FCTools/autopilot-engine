@@ -12,7 +12,8 @@
 #include <set>
 #include <string>
 
-#include "ts_controllers//base_controller.h"
+#include "ts_controllers/base_controller.h"
+#include "ts_controllers/ts_controllers.h"
 
 // controller for Evadav
 class EvadavController: public BaseController {

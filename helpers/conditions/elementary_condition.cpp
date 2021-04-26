@@ -43,21 +43,21 @@ ElementaryCondition::ElementaryCondition(std::string source): BaseCondition() {
 }
 
 
-bool ElementaryCondition::is_true(
-        const std::unordered_map<std::string, double>& campaign_info) const {
-    double fact_value = campaign_info.find(this->param)->second;
+bool ElementaryCondition::is_true(const std::unordered_map<std::string, double>& campaign_info) const
+{
+    double actual_value = campaign_info.find(this->param)->second;
 
     if (this->operation == LESS) {
-        return fact_value < this->value;
+        return actual_value < this->value;
     }
     else if (this->operation == LESS_OR_EQUAL) {
-        return fact_value <= this->value;
+        return actual_value <= this->value;
     }
     else if (this->operation == GREATER) {
-        return fact_value > this->value;
+        return actual_value > this->value;
     }
     else if (this->operation == GREATER_OR_EQUAL) {
-        return fact_value >= this->value;
+        return actual_value >= this->value;
     }
 
     throw;

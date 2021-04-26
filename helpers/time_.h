@@ -9,8 +9,11 @@
 #include <string>
 #include <utility>
 
+#define BUFFER_SIZE 128
+
 namespace time_
 {
+    const int seconds_in_day = 24 * 60 * 60;
     namespace
     {
         short get_weekday();

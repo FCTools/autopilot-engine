@@ -13,8 +13,10 @@
 #include "conditions/base_condition.h"
 
 
-namespace conditions_parser {
-namespace {
+namespace conditions_parser
+{
+namespace
+{
     BaseCondition* build(std::string source);
 } // namespace
     BaseCondition* parse_spa_condition(std::string source);
