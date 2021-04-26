@@ -14,10 +14,10 @@
 #include <string>
 #include <unordered_map>
 
-#include "helpers/conditions_parser.h"
-#include "helpers/http.h"
-#include "helpers/uuid.h"
-#include "helpers/time_.h"
+#include "utils/conditions_parser.h"
+#include "utils/http.h"
+#include "utils/uuid.h"
+#include "utils/time_.h"
 
 
 std::set<std::string> split(std::string source, char delimiter);

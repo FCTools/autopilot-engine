@@ -14,7 +14,7 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 
-#include "helpers/http.h"
+#include "utils/http.h"
 
 #define DEFAULT_TIMEOUT 30
 

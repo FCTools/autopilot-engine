@@ -11,9 +11,8 @@
 #include <vector>
 
 #include "conditions/base_condition.h"
-#include "helpers/conditions_parser.h"
 #include "conditions/conditions.h"
-#include "helpers/helpers.h"
+#include "utils/utils.h"
 
 namespace conditions_parser{
 // private namespace
