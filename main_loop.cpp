@@ -19,7 +19,7 @@
 
 #include "data_services/data_services.h"
 #include "conditions/conditions.h"
-#include "helpers/helpers.h"
+#include "utils/utils.h"
 #include "tracker_controllers/tracker_controllers.h"
 #include "ts_controllers/ts_controllers.h"
 #include "main_loop.h"
@@ -32,7 +32,7 @@ std::set<std::string> split(std::string source, char delimiter)
 {
     if (source.find(delimiter) == std::string::npos)
     {
-        return {source};
+        return { source };
     }
 
     std::size_t current = 0, next;
@@ -101,8 +101,7 @@ BaseController *_get_controller(std::string ts)
     }
     else
     {
-        spdlog::get("env_logger")->error("Can't choose controller for"
-                                         " traffic source " + ts);
+        spdlog::get("env_logger")->error("Can't choose controller for traffic source " + ts);
         return nullptr;
     }
 }
@@ -115,7 +114,6 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     auto ts = bot_info["ts"];
     auto action = bot_info["action"];
     auto client_id = bot_info["client_id"];
-
     auto tracker = bot_info["tracker"];
     auto tracker_requests_url = bot_info["tracker_url"];
     auto tracker_api_key = bot_info["tracker_api_key"];
@@ -216,9 +214,6 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
     auto action = bot_info["action"];
     auto list_to_add = bot_info["list_to_add"];
     auto client_id = bot_info["client_id"];
-
-    std::cout << api_key << std::endl;
-
     auto tracker = bot_info["tracker"];
     auto tracker_requests_url = bot_info["tracker_url"];
     auto tracker_api_key = bot_info["tracker_api_key"];

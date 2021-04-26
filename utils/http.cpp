@@ -14,23 +14,27 @@
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 
-#include "helpers/http.h"
+#include "utils/http.h"
 
 #define DEFAULT_TIMEOUT 30
 
-namespace http {
-    const char* IncorrectResponse::what() const throw() {
+namespace http
+{
+    const char* IncorrectResponse::what() const throw()
+    {
         return "Can't find required parameter in http-response.";
     }
 
-    const char* RequestError::what() const throw() {
+    const char* RequestError::what() const throw()
+    {
         return "Can't find required parameter in http-response.";
     }
 
     std::string make_request(const std::list<std::string> headers,
                              const std::string body,
                              const std::string url,
-                             const std::string type) {
+                             const std::string type)
+    {
         cURLpp::Cleanup cleanup;
 
         cURLpp::Easy request;
@@ -44,14 +48,17 @@ namespace http {
         request.setOpt<cURLpp::options::Verbose>(true);
         request.setOpt<cURLpp::options::Timeout>(DEFAULT_TIMEOUT);
 
-        if (type != http::POST) {
+        if (type != http::POST)
+        {
             request.setOpt<cURLpp::options::CustomRequest>(type);
         }
 
-        try {
+        try
+        {
             request.perform();
         }
-        catch(...) {
+        catch(...)
+        {
             throw RequestError();
         }
 

@@ -19,3 +19,18 @@
 // empty campaign info
 #define NO_CLICKS "\"no_clicks\""
 #define ZONES_PER_PAGE 500
+
+// periods
+#define TODAY 1
+#define YESTERDAY 2
+#define LAST_7_DAYS 3
+#define LAST_14_DAYS 4
+#define THIS_MONTH 5
+#define LAST_MONTH 6
+#define THIS_YEAR 7
+#define ALL_TIME 9
+#define THIS_WEEK 11
+#define LAST_2_DAYS 13
+#define LAST_3_DAYS 14
+
+

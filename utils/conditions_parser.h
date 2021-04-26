@@ -8,11 +8,17 @@
 
 #pragma once
 
-#include <set>
 #include <string>
 
-#include "helpers/conditions_parser.h"
-#include "helpers/http.h"
-#include "helpers/uuid.h"
+#include "conditions/base_condition.h"
 
-std::set<std::string> split(std::string source, char delimiter);
+
+namespace conditions_parser
+{
+namespace
+{
+    BaseCondition* build(std::string source);
+} // namespace
+    BaseCondition* parse_spa_condition(std::string source);
+} // namespace conditions_parser
+

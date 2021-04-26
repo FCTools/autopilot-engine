@@ -10,12 +10,13 @@
 
 #include <string>
 
-#include "ts_controllers//base_controller.h"
+#include "ts_controllers/base_controller.h"
 
 
 class VimmyController: public BaseController {
     std::string zones_param_number;
     const std::string name = "Vimmy";
+
  public:
      VimmyController();
 

@@ -10,5 +10,7 @@
 
 // trackers' names
 #define BINOM "Binom"
+#define KEITARO "Keitaro"
 
 #include "tracker_controllers/binom_client.h"
+#include "tracker_controllers/keitaro_client.h"

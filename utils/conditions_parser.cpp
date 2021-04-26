@@ -11,17 +11,17 @@
 #include <vector>
 
 #include "conditions/base_condition.h"
-#include "helpers/conditions_parser.h"
 #include "conditions/conditions.h"
-#include "helpers/helpers.h"
+#include "utils/utils.h"
 
 namespace conditions_parser{
 // private namespace
 namespace{
-    BaseCondition* build(std::string source) {
+    BaseCondition* build(std::string source)
+    {
     // elementary condition building
-        if (source.find(AND) == std::string::npos
-                && source.find(OR) == std::string::npos) {
+        if (source.find(AND) == std::string::npos && source.find(OR) == std::string::npos)
+        {
             return new ElementaryCondition(source);
         }
 
@@ -30,16 +30,21 @@ namespace{
         int counter = 0;
         size_t index = 0;
 
-        for (char c : source) {
+        for (char c : source)
+        {
             if (c == '(') {
                 counter++;
-            } else if (c == ')') {
+            }
+            else if (c == ')')
+            {
                 counter--;
             }
 
-            if (counter < 0) {
+            if (counter < 0)
+            {
                 throw;
-            } else if (counter == 0) {
+            } else if (counter == 0)
+            {
                 break;
             }
             index++;
@@ -56,7 +61,6 @@ namespace{
     }
 } // namespace
 
-    // FIXME: this function
     BaseCondition* parse_spa_condition(std::string source) {
         if (source.find(AND) == std::string::npos && source.find(OR) == std::string::npos)
         {
