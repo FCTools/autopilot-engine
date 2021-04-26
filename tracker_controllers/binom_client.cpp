@@ -76,9 +76,7 @@ namespace binom
 
         auto request_url = http::build_url(tracker_requests_url, params);
                     
-        // TODO: remove hardcoded value: 5 tries
-        const size_t default_tries = 5;
-        size_t tries = default_tries;
+        size_t tries = DEFAULT_REQUEST_TRIES;
 
         float cost = 0., revenue = 0., clicks = 0.;
         int leads = 0;
@@ -196,9 +194,7 @@ namespace binom
 
         size_t page_number = 1;
 
-        // TODO: remove hardcoded value: 5 tries
-        const size_t default_tries = 5;
-        size_t tries = default_tries;
+        size_t tries = DEFAULT_REQUEST_TRIES;
 
         while (tries != 0)
         {

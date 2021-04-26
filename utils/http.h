@@ -12,6 +12,8 @@
 #include <list>
 #include <unordered_map>
 
+#define DEFAULT_REQUEST_TRIES 5
+
 namespace http
 {
 const std::string POST = "POST";

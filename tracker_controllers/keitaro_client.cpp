@@ -130,9 +130,7 @@ namespace keitaro
 
         std::string data_encoded = keitaro::dump_to_string(data);
 
-        // TODO: remove hardcoded value: 5 tries
-        const size_t default_tries = 5;
-        size_t tries = default_tries;
+        size_t tries = DEFAULT_REQUEST_TRIES;
         std::string campaign_info;
 
         std::string request_url = tracker_requests_url + "/report/build";
