@@ -16,7 +16,6 @@
 
 #include "main_loop.h"
 #include "data_services/redis_client.h"
-#include "utils/time_.h"
 
 bool env_is_correct()
 {
@@ -74,10 +73,10 @@ int main(int argc, char** argv)
     env_logger->info("Start new kernel session.");
     env_logger->info("Start environment checking...");
 
-    // if (!env_is_correct()) {
-        // env_logger->critical("Incorrect environment. Quit.");
-        // return EXIT_FAILURE;
-    // }
+    if (!env_is_correct()) {
+        env_logger->critical("Incorrect environment. Quit.");
+        return EXIT_FAILURE;
+    }
     
     env_logger->info("Environment is correct.");
 
@@ -88,7 +87,7 @@ int main(int argc, char** argv)
     env_logger->info("Kernel launched.");
     env_logger->info("Workers number: " + std::to_string(workers_number));
 
-    // start(workers_number);
+    start(workers_number);
 
     return EXIT_SUCCESS;
 }
