@@ -96,6 +96,9 @@ BaseController *_get_controller(std::string ts)
     else if (ts == KADAM) {
         return new KadamController();
     }
+    else if (ts == VIMMY) {
+        return new VimmyController();
+    }
     else
     {
         spdlog::get("env_logger")->error("Can't choose controller for traffic source " + ts);
@@ -180,7 +183,10 @@ std::string _check_condition_for_zones(zones_data& zones_info, BaseCondition *pa
     {
         if (parsed_condition->is_true(zone.second))
         {
-            zones_to_act.push_back(zone.first);
+            if (find(zones_to_act.begin(), zones_to_act.end(), zone.first) == zones_to_act.end())
+            {
+                zones_to_act.push_back(zone.first);
+            }
         }
     }
 
