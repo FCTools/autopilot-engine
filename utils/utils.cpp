@@ -52,3 +52,8 @@ std::unordered_map<std::string, double> calculate_statistics(const double cost, 
             {"CPC", CPC(cost, clicks)},
             {"CPA", CPA(cost, leads)}};
 }
+
+std::string format_log_message(std::string bot_id, std::string task_id)
+{
+    return "[" + bot_id + "] " + "[" + task_id + "] ";
+}
