@@ -74,10 +74,10 @@ void queue_updating_process(std::vector<std::string> &tasks)
     }
 }
 
-void _put_action(const std::string data)
+void _put_action(const std::string data, const std::string key)
 {
     std::lock_guard<std::mutex> lock_(actions_mutex);
-    redis::put_action(uuid::generate_uuid_v4(), data);
+    redis::put_action(key, data);
 }
 
 BaseController *select_controller(std::string ts)
@@ -169,7 +169,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
                     spdlog::get("actions_logger")->info(sys_info + "Condition is true for campaign "
                                                         + tracker_id + " | " + source_id);
 
-                    _put_action(data);
+                    _put_action(task_id, data);
                 }
         }
     }
@@ -299,7 +299,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
                 sys_info + "Condition is true for "+ std::to_string(zones_to_act.size())
                 + " zones. Campaign: " + tracker_id + " | " + source_id);
 
-            _put_action(handling_result);
+            _put_action(task_id, handling_result);
         }
     }
 
