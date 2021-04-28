@@ -169,7 +169,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
                     spdlog::get("actions_logger")->info(sys_info + "Condition is true for campaign "
                                                         + tracker_id + " | " + source_id);
 
-                    _put_action(task_id, data);
+                    _put_action(data, task_id);
                 }
         }
     }
@@ -299,7 +299,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
                 sys_info + "Condition is true for "+ std::to_string(zones_to_act.size())
                 + " zones. Campaign: " + tracker_id + " | " + source_id);
 
-            _put_action(task_id, handling_result);
+            _put_action(handling_result, task_id);
         }
     }
 
