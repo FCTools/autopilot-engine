@@ -38,6 +38,20 @@ std::vector<std::string> get_field_values(const std::string field_name, const st
     return result;
 }
 
+std::string dump_to_string(std::unordered_map<std::string, std::string> &data)
+{
+    std::string result = "{";
+
+    for (auto item : data)
+    {
+        result += "\"" + item.first + "\":" + item.second + ",";
+    }
+
+    result = result.substr(0, result.size() - 1) + "}";
+
+    return result;
+}
+
 std::unordered_map<std::string, double> calculate_statistics(const double cost, const double revenue,
                                                                 const int clicks, const int leads)
 {

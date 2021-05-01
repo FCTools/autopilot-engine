@@ -22,35 +22,6 @@ namespace keitaro
 {
     namespace
     {
-        std::unordered_map<std::string, double> calculate_statistics(const double cost, const double revenue,
-                                                                     const int clicks, const int leads)
-        {
-            return {{"cost", cost},
-                    {"revenue", revenue},
-                    {"clicks", clicks},
-                    {"leads", leads},
-                    {"profit", PROFIT(revenue, cost)},
-                    {"ROI", ROI(revenue, cost)},
-                    {"CR", CR(leads, clicks)},
-                    {"EPC", EPC(revenue, clicks)},
-                    {"CPC", CPC(cost, clicks)},
-                    {"CPA", CPA(cost, leads)}};
-        }
-
-        std::string dump_to_string(std::unordered_map<std::string, std::string> &data)
-        {
-            std::string result = "{";
-
-            for (auto item : data)
-            {
-                result += "\"" + item.first + "\":" + item.second + ",";
-            }
-
-            result = result.substr(0, result.size() - 1) + "}";
-
-            return result;
-        }
-
         std::string calculate_range(std::size_t period)
         {
             std::unordered_map<std::string, std::string> result = {{"timezone", "Europe/Madrid"}};
@@ -128,7 +99,7 @@ namespace keitaro
 
         data["range"] = keitaro::calculate_range(period);
 
-        std::string data_encoded = keitaro::dump_to_string(data);
+        std::string data_encoded = dump_to_string(data);
 
         size_t tries = DEFAULT_REQUEST_TRIES;
         std::string campaign_info;

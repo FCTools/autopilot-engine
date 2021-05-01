@@ -22,6 +22,8 @@
 
 std::set<std::string> split(std::string source, char delimiter);
 
+std::string dump_to_string(std::unordered_map<std::string, std::string> &data);
+
 std::vector<std::string> get_field_values(const std::string field_name, const std::string& data);
 
 std::unordered_map<std::string, double> calculate_statistics(
