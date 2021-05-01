@@ -17,7 +17,14 @@
 typedef std::vector<std::pair<std::string,
                         std::unordered_map<std::string, double>>> zones_data;
 
-namespace keitaro {
+namespace keitaro
+{
+namespace
+{
+    std::string calculate_range(std::size_t period);
+
+    zones_data extract_zones_info(std::string &zones_info, const std::set<std::string> &ignored_zones);
+} 
     // statistics for whole campaign
     std::unordered_map<std::string, double> get_campaign_info(
                                             const std::string campaign_tracker_id,

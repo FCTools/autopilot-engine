@@ -81,6 +81,13 @@ namespace keitaro
 
             return dump_to_string(result);
         }
+
+        zones_data extract_zones_info(std::string &zones_info, const std::set<std::string> &ignored_zones)
+        {
+            // TODO: implement this method
+            return {};
+        }
+
     } // namespace
 
     std::unordered_map<std::string, double> get_campaign_info(
@@ -104,7 +111,7 @@ namespace keitaro
         size_t tries = DEFAULT_REQUEST_TRIES;
         std::string campaign_info;
 
-        std::string request_url = tracker_requests_url + "/report/build";
+        std::string request_url = tracker_requests_url + "admin_api/v1/report/build";
 
         while (tries != 0)
         {
@@ -175,7 +182,78 @@ namespace keitaro
                               const std::set<std::string>& ignored_zones)
     {
         // TODO: impement this method
-        return {};
+
+        std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json",
+                                          "Api-Key: " + tracker_api_key};
+
+        // auto request_url = http::build_url(tracker_requests_url, params);
+        std::string requests_url = tracker_requests_url + "admin_api/v1/report/build";
+        
+        std::string tmp_zones_info;
+        zones_data zones_info, zones_page;
+
+        std::size_t offset = 0;
+        std::size_t tries = DEFAULT_REQUEST_TRIES;
+
+        std::unordered_map<std::string, std::string> data = {
+                                    {"metrics", "[\"leads\", \"cost\", \"revenue\", \"clicks\"]"},
+                                    {"filters", "[{\"name\": \"campaign_id\", \"operator\": \"EQUALS\", \"expression\":"
+                                        + campaign_tracker_id + "}]"},
+                                    {"grouping", "[\"source\"]"},
+                                    {"range", keitaro::calculate_range(period)},
+                                    {"limit", std::to_string(ZONES_PER_PAGE)},
+                                    {"offset", std::to_string(offset)}};
+
+        while (tries != 0)
+        {
+            try
+            {
+                while (true)
+                {
+                    data["offset"] = offset;
+                    std::string data_encoded = dump_to_string(data);
+
+                    tmp_zones_info = http::make_request(headers, data_encoded, requests_url, http::POST);
+                    
+                    if (tmp_zones_info == "null") {
+                        break;
+                    }
+
+                    spdlog::get("actions_logger")->info("Perform request: " + requests_url);
+
+                    zones_page = keitaro::extract_zones_info(tmp_zones_info, ignored_zones);
+                    zones_info.insert(zones_info.end(), zones_page.begin(), zones_page.end());
+
+                    if (zones_page.size() < ZONES_PER_PAGE)
+                    {
+                        break;
+                    }
+                    zones_page.clear();
+                    offset += ZONES_PER_PAGE;
+                }
+
+                return zones_info;
+            } 
+            catch (http::RequestError)
+            {
+                spdlog::get("actions_logger")->error("RequestError while trying to get zones info from keitaro."
+                                                     " Campaign id: " +
+                                                     campaign_tracker_id);
+            }
+
+            tries--;
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+        }
+
+        if (tmp_zones_info.size() == 0)
+        {
+            spdlog::get("actions_logger")->error("Error or empty result while trying to get zones info "
+                                                 "from keitaro. Campaign id: " +
+                                                 campaign_tracker_id);
+            return {};
+        }
+
+        return zones_info;
     }
 
 }  // namespace keitaro
