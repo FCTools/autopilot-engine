@@ -84,8 +84,44 @@ namespace keitaro
 
         zones_data extract_zones_info(std::string &zones_info, const std::set<std::string> &ignored_zones)
         {
-            // TODO: implement this method
-            return {};
+            zones_data result;
+
+            std::string search_pattern = "\"source\":\"";
+            size_t start_pos = 0, end_pos, pattern_len = search_pattern.length();
+
+            if (zones_info.find(search_pattern) == std::string::npos)
+            {
+                throw http::RequestError();
+            }
+
+            while (zones_info.find(search_pattern, start_pos) != std::string::npos)
+            {
+                start_pos = zones_info.find(search_pattern, start_pos) + pattern_len;
+                end_pos = zones_info.find("\"", start_pos);
+                auto name = zones_info.substr(start_pos, end_pos - start_pos);
+
+                if (ignored_zones.find(name) != ignored_zones.end())
+                {
+                    continue;
+                }
+
+                auto end = zones_info.find("}");
+                auto zone_info = zones_info.substr(end_pos, end - end_pos);
+
+                double cost = stod((*(get_field_values("cost", zone_info).begin())));
+                double revenue = stod((*(get_field_values("revenue", zone_info).begin())));
+                double clicks = stod((*(get_field_values("clicks", zone_info).begin())));
+                int leads = stoi((*(get_field_values("leads", zone_info).begin())));
+
+                auto statistics = calculate_statistics(cost, revenue, clicks, leads);
+
+                if (!name.empty())
+                {
+                    result.push_back({name, statistics});
+                }
+            }
+
+            return result;
         }
 
     } // namespace
