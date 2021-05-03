@@ -27,16 +27,8 @@ typedef std::vector<std::pair<std::string,
                     std::unordered_map<std::string, double>>> zones_data;
 
 // base class for traffic source controller
-class BaseController {
- protected:
-    // calculate campaign (zone) statistics using base data:
-    // cost, revenue, clicks and leads
-    std::unordered_map<std::string, double> calculate_statistics(
-                                                    const double cost,
-                                                    const double revenue,
-                                                    const int clicks,
-                                                    const int leads) const;
-
+class BaseController
+{
  public:
     BaseController();
 

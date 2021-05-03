@@ -42,8 +42,7 @@ class EvadavController: public BaseController {
                                 const std::string tracker,
                                 const std::string tracker_requests_url,
                                 const std::string tracker_api_key,
-                                const std::set<std::string>& ignored_zones)
-                                    const;
+                                const std::set<std::string>& ignored_zones) const;
 
     virtual ~EvadavController();
 };

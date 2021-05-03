@@ -2,7 +2,7 @@
 
 <p align="center">
 <a href="https://t.me/alcatraz_rm"><img src="https://img.shields.io/badge/Telegram Chat-@alcatraz_rm-2CA5E0.svg?logo=telegram&style=for-the-badge" alt="Chat on Telegram"/></a>
-<img src="https://img.shields.io/badge/version-v.1.0.0_alpha.133-green?style=for-the-badge" alt="Last Release"/>
+<img src="https://img.shields.io/badge/version-v.1.0.0_alpha.226-green?style=for-the-badge" alt="Last Release"/>
 </p>
 
 ## Autopilot engine (C++ based conditions checking module)
@@ -19,6 +19,13 @@ Supported functions (optimization options):
 Supported traffic sources:
 * Propeller Ads ([api documentation](https://ssp-api.propellerads.com/v5/docs/#/))
 * Evadav ([api documentation](https://evadav.com/docs/api#/))
+* MGID ([api documentation](https://help.mgid.com/ru/rest-api-mgid-advertisers))
+* Kadam ([api documentation](https://wiki.kadam.net/index.php?title=API))
+* Vimmy ([api documentation](https://vimmy.com/api/))
+
+Supported trackers:
+* Binom ([api documentation](https://docs.binom.org/api.php))
+* Keitaro ([api documentation](https://admin-api.docs.keitaro.io))
 
 Stack:
 * [PostgreSQL](https://www.postgresql.org/) as main database (version: >= 12.5)

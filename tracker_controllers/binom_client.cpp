@@ -59,11 +59,10 @@ namespace binom
         return result;
     }
 
-    std::unordered_map<std::string, double> get_campaign_info(
-                                                            const std::string campaign_tracker_id,
-                                                            const std::string tracker_requests_url,
-                                                            const std::string tracker_api_key,
-                                                            const size_t period)
+    std::unordered_map<std::string, double> get_campaign_info(const std::string campaign_tracker_id,
+                                                              const std::string tracker_requests_url,
+                                                              const std::string tracker_api_key,
+                                                              const size_t period)
     {
         std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json"};
         std::unordered_map<std::string, std::string> params = {{"page", "Stats"},
@@ -170,12 +169,9 @@ namespace binom
         return {};
     }
 
-    zones_data get_zones_info(const std::string campaign_tracker_id,
-                              const std::string tracker_requests_url,
-                              const std::string tracker_api_key,
-                              const size_t period,
-                              const std::string zones_param_number,
-                              const std::set<std::string> &ignored_zones)
+    zones_data get_zones_info(const std::string campaign_tracker_id, const std::string tracker_requests_url,
+                              const std::string tracker_api_key, const size_t period,
+                              const std::string zones_param_number, const std::set<std::string> &ignored_zones)
     {
         std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json"};
         std::unordered_map<std::string, std::string> params = {{"page", "Stats"},
@@ -205,7 +201,8 @@ namespace binom
                     tmp_zones_info = http::make_request(headers, std::string(),
                         request_url + "&num_page=" + std::to_string(page_number), http::GET);
                     
-                    if (tmp_zones_info == "null") {
+                    if (tmp_zones_info == "null")
+                    {
                         break;
                     }
 

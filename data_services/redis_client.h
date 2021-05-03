@@ -15,10 +15,12 @@
 
 // there are 2 redis servers: storage redis and actions redis
 // Storage redis is used for new bots tasks
-// Actions redis is used for campaigns/zones managment - tasks for autopilot-ts 
+// Actions redis is used for campaigns/zones managment - tasks for autopilot-ts
+// namespace that implements redis interface
 namespace redis
 {
-namespace {
+namespace
+{
     std::size_t storage_port = (std::size_t)std::stoi(getenv("REDIS_STORAGE_PORT"));
     std::size_t actions_port = (std::size_t)std::stoi(getenv("REDIS_ACTIONS_PORT"));
     std::string storage_host = std::string(getenv("REDIS_STORAGE_HOST"));
@@ -35,6 +37,6 @@ namespace {
     // put new entry into actions redis
     void put_action(std::string key, std::string value);
 
-    // get all new entries from storage redisa
+    // get all new entries from storage redis
     std::vector<std::string> get_updates();
 } //namespace redis
