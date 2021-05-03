@@ -12,7 +12,7 @@
 
 
 KadamController::KadamController() : BaseController() {
-    this->zones_param_number = database::get_zones_param_number(this->name);
+    this->zones_param_number = database::get_zones_param_number_in_binom(this->name);
 }
 
 // get campaign info from tracker

@@ -14,9 +14,11 @@
 #include "conditions/conditions.h"
 #include "utils/utils.h"
 
-namespace conditions_parser{
+namespace conditions_parser
+{
 // private namespace
-namespace{
+namespace
+{
     BaseCondition* build(std::string source)
     {
     // elementary condition building
@@ -32,7 +34,8 @@ namespace{
 
         for (char c : source)
         {
-            if (c == '(') {
+            if (c == '(')
+            {
                 counter++;
             }
             else if (c == ')')
@@ -43,7 +46,8 @@ namespace{
             if (counter < 0)
             {
                 throw;
-            } else if (counter == 0)
+            }
+            else if (counter == 0)
             {
                 break;
             }
@@ -61,7 +65,8 @@ namespace{
     }
 } // namespace
 
-    BaseCondition* parse_spa_condition(std::string source) {
+    BaseCondition* parse_spa_condition(std::string source)
+    {
         if (source.find(AND) == std::string::npos && source.find(OR) == std::string::npos)
         {
             return new ElementaryCondition(source);

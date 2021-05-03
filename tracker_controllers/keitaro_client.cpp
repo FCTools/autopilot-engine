@@ -126,11 +126,10 @@ namespace keitaro
 
     } // namespace
 
-    std::unordered_map<std::string, double> get_campaign_info(
-                                                            const std::string campaign_tracker_id,
-                                                            const std::string tracker_requests_url,
-                                                            const std::string tracker_api_key,
-                                                            const size_t period)
+    std::unordered_map<std::string, double> get_campaign_info(const std::string campaign_tracker_id,
+                                                              const std::string tracker_requests_url,
+                                                              const std::string tracker_api_key,
+                                                              const size_t period)
     {
         std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json",
                                           "Api-Key: " + tracker_api_key};
@@ -210,15 +209,10 @@ namespace keitaro
         return {};
     }
 
-    zones_data get_zones_info(const std::string campaign_tracker_id,
-                              const std::string tracker_requests_url,
-                              const std::string tracker_api_key,
-                              const size_t period,
-                              const std::string zones_param_number,
-                              const std::set<std::string>& ignored_zones)
+    zones_data get_zones_info(const std::string campaign_tracker_id, const std::string tracker_requests_url,
+                              const std::string tracker_api_key, const size_t period,
+                              const std::string zones_param_number, const std::set<std::string>& ignored_zones)
     {
-        // TODO: impement this method
-
         std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json",
                                           "Api-Key: " + tracker_api_key};
 
@@ -251,7 +245,8 @@ namespace keitaro
 
                     tmp_zones_info = http::make_request(headers, data_encoded, requests_url, http::POST);
                     
-                    if (tmp_zones_info == "null") {
+                    if (tmp_zones_info == "null")
+                    {
                         break;
                     }
 
@@ -273,8 +268,7 @@ namespace keitaro
             catch (http::RequestError)
             {
                 spdlog::get("actions_logger")->error("RequestError while trying to get zones info from keitaro."
-                                                     " Campaign id: " +
-                                                     campaign_tracker_id);
+                                                     " Campaign id: " + campaign_tracker_id);
             }
 
             tries--;
@@ -284,8 +278,7 @@ namespace keitaro
         if (tmp_zones_info.size() == 0)
         {
             spdlog::get("actions_logger")->error("Error or empty result while trying to get zones info "
-                                                 "from keitaro. Campaign id: " +
-                                                 campaign_tracker_id);
+                                                 "from keitaro. Campaign id: " + campaign_tracker_id);
             return {};
         }
 

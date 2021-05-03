@@ -13,17 +13,4 @@
 
 BaseController::BaseController() {}
 
-std::unordered_map<std::string, double> BaseController::calculate_statistics(
-                                                        const double cost,
-                                                        const double revenue,
-                                                        const int clicks,
-                                                        const int leads) const {
-    return {{"cost", cost}, {"revenue", revenue},
-            {"clicks", clicks}, {"leads", leads},
-            {"profit", PROFIT(revenue, cost)},
-            {"ROI", ROI(revenue, cost)}, {"CR", CR(leads, clicks)},
-            {"EPC", EPC(revenue, clicks)}, {"CPC", CPC(cost, clicks)},
-            {"CPA", CPA(cost, leads)}};
-}
-
 BaseController::~BaseController() {}

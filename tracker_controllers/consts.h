@@ -20,6 +20,8 @@
 #define NO_CLICKS "\"no_clicks\""
 #define ZONES_PER_PAGE 500
 
+typedef std::vector<std::pair<std::string, std::unordered_map<std::string, double>>> zones_data;
+
 // periods
 #define TODAY 1
 #define YESTERDAY 2

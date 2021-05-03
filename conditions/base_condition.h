@@ -23,7 +23,7 @@
 #define LESS_OR_EQUAL "<="
 #define GREATER_OR_EQUAL ">="
 
-// base abstract class for all conditions hierarchy
+// base abstract class for conditions' hierarchy
 class BaseCondition
 {
  public:

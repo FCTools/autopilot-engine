@@ -13,9 +13,11 @@
 #include "ts_controllers//base_controller.h"
 
 
-class MgidController: public BaseController {
+class MgidController: public BaseController
+{
     std::string zones_param_number;
     const std::string name = "MGID";
+    
  public:
      MgidController();
 
