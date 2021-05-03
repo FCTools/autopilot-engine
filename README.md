@@ -23,6 +23,10 @@ Supported traffic sources:
 * Kadam ([api documentation](https://wiki.kadam.net/index.php?title=API))
 * Vimmy ([api documentation](https://vimmy.com/api/))
 
+Supported trackers:
+* Binom ([api documentation](https://docs.binom.org/api.php))
+* Keitaro ([api documentation](https://admin-api.docs.keitaro.io))
+
 Stack:
 * [PostgreSQL](https://www.postgresql.org/) as main database (version: >= 12.5)
 * [pqxx](http://pqxx.org/development/libpqxx/) library for PostgreSQL (version: >= 6.4.5-2build1)
