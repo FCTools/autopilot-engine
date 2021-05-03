@@ -13,7 +13,7 @@
 
 #include "conditions/base_condition.h"
 
-// complex condition means conditions like: (cond_1 & cond_2); (cond_1 | cond_2)
+// complex condition are conditions like: (cond_1 & cond_2); (cond_1 | cond_2)
 class ComplexCondition: public BaseCondition {
     const char operation;
     BaseCondition* left, *right;
@@ -21,6 +21,7 @@ class ComplexCondition: public BaseCondition {
  public:
     ComplexCondition(BaseCondition* l, BaseCondition* r, const char operation);
 
+    // check that condition is true (more details about conditions in docs)
     virtual bool is_true(const std::unordered_map<std::string, double>& campaign_info) const;
 
     virtual ~ComplexCondition();

@@ -12,10 +12,12 @@
 
 #include "ts_controllers/base_controller.h"
 
-
-class KadamController: public BaseController {
+// controller for Kadam
+class KadamController: public BaseController
+{
     std::string zones_param_number;
     const std::string name = "Kadam";
+    
  public:
      KadamController();
 

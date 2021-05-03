@@ -10,8 +10,9 @@
 #include "data_services/database_client.h"
 #include "tracker_controllers/tracker_controllers.h"
 
-EvadavController::EvadavController() : BaseController() {
-    this->zones_param_number = database::get_zones_param_number(this->name);
+EvadavController::EvadavController() : BaseController()
+{
+    this->zones_param_number = database::get_zones_param_number_in_binom(this->name);
 }
 
 // get campaign info from tracker

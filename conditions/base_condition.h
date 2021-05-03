@@ -23,11 +23,13 @@
 #define LESS_OR_EQUAL "<="
 #define GREATER_OR_EQUAL ">="
 
-// base abstract class for all conditions hierarchy
-class BaseCondition {
+// base abstract class for conditions' hierarchy
+class BaseCondition
+{
  public:
     BaseCondition();
 
+    // check that condition is true (more details about conditions in docs)
     virtual bool is_true(const std::unordered_map<std::string, double>& campaign_info) const = 0;
 
     virtual ~BaseCondition();

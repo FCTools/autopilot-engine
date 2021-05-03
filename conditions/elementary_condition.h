@@ -13,9 +13,10 @@
 
 #include "conditions/base_condition.h"
 
-// elementary condition means conditions like: (clicks > 1000);
+// elementary conditions are conditions like: (clicks > 1000);
 // (revenue < 100) and etc.
-class ElementaryCondition: public BaseCondition {
+class ElementaryCondition: public BaseCondition
+{
     std::string param, operation;
     double value;
 
@@ -23,9 +24,9 @@ class ElementaryCondition: public BaseCondition {
     ElementaryCondition();
 
     explicit ElementaryCondition(const std::string source);
-
-    virtual bool is_true(
-        const std::unordered_map<std::string, double>& campaign_info) const;
+    
+    // check that condition is true (more details about conditions in docs)
+    virtual bool is_true(const std::unordered_map<std::string, double>& campaign_info) const;
 
     virtual ~ElementaryCondition();
 };

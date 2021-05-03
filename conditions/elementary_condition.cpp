@@ -14,31 +14,32 @@
 
 ElementaryCondition::ElementaryCondition(): BaseCondition() {}
 
-ElementaryCondition::ElementaryCondition(std::string source): BaseCondition() {
+ElementaryCondition::ElementaryCondition(std::string source): BaseCondition()
+{
     // removing external brackets
     source = source.substr(1, source.length() - 2);
     
-    if (source.find(EQUAL) != std::string::npos
-         && (source.find(LESS) != std::string::npos
-         || source.find(GREATER) != std::string::npos)) {
+    if (source.find(EQUAL) != std::string::npos && (source.find(LESS) != std::string::npos
+         || source.find(GREATER) != std::string::npos))
+    {
         size_t relation_index = source.find(EQUAL);
 
         this->operation = source.substr(relation_index - 1, 2);
         this->param = source.substr(0, relation_index - 1);
-        this->value = stod(source.substr(relation_index + 1,
-                                         source.length() - relation_index - 1));
+        this->value = stod(source.substr(relation_index + 1, source.length() - relation_index - 1));
     }
-    else {
+    else
+    {
         size_t relation_index = source.find(LESS);
         
-        if (relation_index == std::string::npos) {
+        if (relation_index == std::string::npos)
+        {
             relation_index = source.find(GREATER);
         }
 
         this->operation = source.substr(relation_index, 1);
         this->param = source.substr(0, relation_index);
-        this->value = stod(source.substr(relation_index + 1,
-                                        source.length() - relation_index - 1));
+        this->value = stod(source.substr(relation_index + 1, source.length() - relation_index - 1));
     }
 }
 
@@ -47,16 +48,20 @@ bool ElementaryCondition::is_true(const std::unordered_map<std::string, double>&
 {
     double actual_value = campaign_info.find(this->param)->second;
 
-    if (this->operation == LESS) {
+    if (this->operation == LESS)
+    {
         return actual_value < this->value;
     }
-    else if (this->operation == LESS_OR_EQUAL) {
+    else if (this->operation == LESS_OR_EQUAL)
+    {
         return actual_value <= this->value;
     }
-    else if (this->operation == GREATER) {
+    else if (this->operation == GREATER)
+    {
         return actual_value > this->value;
     }
-    else if (this->operation == GREATER_OR_EQUAL) {
+    else if (this->operation == GREATER_OR_EQUAL)
+    {
         return actual_value >= this->value;
     }
 

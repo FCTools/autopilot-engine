@@ -49,8 +49,7 @@ std::set<std::string> split(std::string source, char delimiter)
     return tokens;
 }
 
-void _extend_storage(std::vector<std::string> &storage,
-                     std::vector<std::string> &new_tasks)
+void _extend_storage(std::vector<std::string> &storage, std::vector<std::string> &new_tasks)
 {
     std::lock_guard<std::mutex> lock_(storage_mutex);
     storage.reserve(storage.size() + distance(new_tasks.begin(), new_tasks.end()));
@@ -175,6 +174,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
     }
 
     delete controller;
+    delete parsed_condition;
 }
 
 std::string _check_condition_for_zones(zones_data& zones_info, BaseCondition *parsed_condition,
@@ -304,6 +304,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
     }
 
     delete controller;
+    delete parsed_condition;
 }
 
 // processing bot

@@ -30,10 +30,8 @@ namespace http
         return "Can't find required parameter in http-response.";
     }
 
-    std::string make_request(const std::list<std::string> headers,
-                             const std::string body,
-                             const std::string url,
-                             const std::string type)
+    std::string make_request(const std::list<std::string> headers, const std::string body,
+                             const std::string url, const std::string type)
     {
         cURLpp::Cleanup cleanup;
 
