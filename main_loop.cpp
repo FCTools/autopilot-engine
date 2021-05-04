@@ -28,27 +28,6 @@ const std::size_t checking_timeout = (size_t)std::stoi(std::string(getenv("CHECK
 std::mutex storage_mutex, actions_mutex;
 std::condition_variable cond_var;
 
-std::set<std::string> split(std::string source, char delimiter)
-{
-    if (source.find(delimiter) == std::string::npos)
-    {
-        return { source };
-    }
-
-    std::size_t current = 0, next;
-    std::set<std::string> tokens;
-
-    while (source.find(delimiter, current) != std::string::npos)
-    {
-        next = source.find(delimiter, current);
-        tokens.insert(source.substr(current, next - current));
-        current = next + 1;
-    }
-    tokens.insert(source.substr(current, source.length() - current));
-
-    return tokens;
-}
-
 void _extend_storage(std::vector<std::string> &storage, std::vector<std::string> &new_tasks)
 {
     std::lock_guard<std::mutex> lock_(storage_mutex);

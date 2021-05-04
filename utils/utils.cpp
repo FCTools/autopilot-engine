@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <string>
+#include <set>
 
 #include "utils/http.h"
 #include "tracker_controllers/consts.h"
@@ -36,6 +37,27 @@ std::vector<std::string> get_field_values(const std::string field_name, const st
     }
 
     return result;
+}
+
+std::set<std::string> split(std::string source, char delimiter)
+{
+    if (source.find(delimiter) == std::string::npos)
+    {
+        return { source };
+    }
+
+    std::size_t current = 0, next;
+    std::set<std::string> tokens;
+
+    while (source.find(delimiter, current) != std::string::npos)
+    {
+        next = source.find(delimiter, current);
+        tokens.insert(source.substr(current, next - current));
+        current = next + 1;
+    }
+    tokens.insert(source.substr(current, source.length() - current));
+
+    return tokens;
 }
 
 std::string dump_to_string(std::unordered_map<std::string, std::string> &data)
