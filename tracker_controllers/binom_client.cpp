@@ -59,6 +59,7 @@ namespace binom
         return result;
     }
 
+    // TODO: add task_id to the arguments
     std::unordered_map<std::string, double> get_campaign_info(const std::string campaign_tracker_id,
                                                               const std::string tracker_requests_url,
                                                               const std::string tracker_api_key,
@@ -86,6 +87,7 @@ namespace binom
             spdlog::get("actions_logger")->info("Perform request: " + request_url);
 
             campaign_info = http::make_request(headers, std::string(), request_url, "GET");
+            // TODO: log response to database with task_id, requests_url, headers, body and type (POST, GET, etc.)
 
             if (campaign_info.size() == 0)
             {
@@ -169,6 +171,7 @@ namespace binom
         return {};
     }
 
+    // TODO: add task_id to the arguments
     zones_data get_zones_info(const std::string campaign_tracker_id, const std::string tracker_requests_url,
                               const std::string tracker_api_key, const size_t period,
                               const std::string zones_param_number, const std::set<std::string> &ignored_zones)
@@ -200,6 +203,8 @@ namespace binom
                 {
                     tmp_zones_info = http::make_request(headers, std::string(),
                         request_url + "&num_page=" + std::to_string(page_number), http::GET);
+                    // TODO: log response to database with task_id, requests_url, headers, body and type (POST, GET, etc.)
+                    // and maybe add field "description" to each entry
                     
                     if (tmp_zones_info == "null")
                     {

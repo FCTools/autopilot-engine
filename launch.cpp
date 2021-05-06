@@ -54,6 +54,7 @@ void signal_callback_handler(int signum)
     exit(EXIT_SUCCESS);
 }
 
+// TODO: add http-requests logging to one table, database queries logging - to another table
 int main(int argc, char** argv)
 {
     spdlog::set_pattern("[%t] %+");

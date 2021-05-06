@@ -126,6 +126,7 @@ namespace keitaro
 
     } // namespace
 
+    // TODO: add task_id to the arguments
     std::unordered_map<std::string, double> get_campaign_info(const std::string campaign_tracker_id,
                                                               const std::string tracker_requests_url,
                                                               const std::string tracker_api_key,
@@ -153,6 +154,7 @@ namespace keitaro
             spdlog::get("actions_logger")->info("Perform request: " + request_url);
 
             campaign_info = http::make_request(headers, data_encoded, request_url, "POST");
+            // TODO: log response to database with task_id, requests_url, headers, body and type (POST, GET, etc.)
 
             if (campaign_info.size() == 0)
             {
@@ -209,6 +211,7 @@ namespace keitaro
         return {};
     }
 
+    // TODO: add task_id to the arguments
     zones_data get_zones_info(const std::string campaign_tracker_id, const std::string tracker_requests_url,
                               const std::string tracker_api_key, const size_t period,
                               const std::string zones_param_number, const std::set<std::string>& ignored_zones)
@@ -216,7 +219,6 @@ namespace keitaro
         std::list<std::string> headers = {"Content-Type: application/json", "Accept: application/json",
                                           "Api-Key: " + tracker_api_key};
 
-        // auto request_url = http::build_url(tracker_requests_url, params);
         std::string requests_url = tracker_requests_url + "admin_api/v1/report/build";
         
         std::string tmp_zones_info;
@@ -244,6 +246,8 @@ namespace keitaro
                     std::string data_encoded = dump_to_string(data);
 
                     tmp_zones_info = http::make_request(headers, data_encoded, requests_url, http::POST);
+                    // TODO: log response to database with task_id, requests_url, headers, body and type (POST, GET, etc.)
+                    // and maybe add field "description" to each entry
                     
                     if (tmp_zones_info == "null")
                     {
