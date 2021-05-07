@@ -125,7 +125,7 @@ void _check_campaign(const std::size_t bot_id, std::unordered_map<std::string, s
         std::unordered_map<std::string, double> campaign_info;
 
         {  //  getting campaign statistics from tracker
-            campaign_info = controller->get_campaign_info(tracker_id, source_id, period, ts_api_key,
+            campaign_info = controller->get_campaign_info(task_id, tracker_id, source_id, period, ts_api_key,
                                                           tracker, tracker_requests_url, tracker_api_key);
 
             if (campaign_info.size() == 0)
@@ -230,7 +230,7 @@ void _check_zones(const std::size_t bot_id, std::unordered_map<std::string, std:
             spdlog::get("env_logger")->debug(sys_info + "Bot id: " + std::to_string(bot_id)
                                             + ". Start parsing json object with zones info.");
 
-            zones_info = controller->get_zones_info(tracker_id, source_id, period, api_key, tracker,
+            zones_info = controller->get_zones_info(task_id, tracker_id, source_id, period, api_key, tracker,
                                                     tracker_requests_url, tracker_api_key, ref(ignored_zones));
 
             spdlog::get("env_logger")->debug(sys_info + "Bot id: " + std::to_string(bot_id)

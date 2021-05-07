@@ -18,6 +18,7 @@ MgidController::MgidController() : BaseController()
 
 // get campaign info from tracker
 std::unordered_map<std::string, double> MgidController::get_campaign_info(
+                                        const std::string task_id,
                                         const std::string campaign_tracker_id,
                                         const std::string campaign_source_id,
                                         const size_t period,
@@ -39,6 +40,7 @@ std::unordered_map<std::string, double> MgidController::get_campaign_info(
 }
 
 zones_data MgidController::get_zones_info(
+                                    const std::string task_id,
                                     const std::string campaign_tracker_id,
                                     const std::string campaign_source_id,
                                     const size_t period,

@@ -17,6 +17,7 @@ EvadavController::EvadavController() : BaseController()
 
 // get campaign info from tracker
 std::unordered_map<std::string, double> EvadavController::get_campaign_info(
+                                        const std::string task_id,
                                         const std::string campaign_tracker_id,
                                         const std::string campaign_source_id,
                                         const size_t period,
@@ -39,6 +40,7 @@ std::unordered_map<std::string, double> EvadavController::get_campaign_info(
 }
 
 zones_data EvadavController::get_zones_info(
+                                    const std::string task_id,
                                     const std::string campaign_tracker_id,
                                     const std::string campaign_source_id,
                                     const size_t period,
