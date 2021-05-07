@@ -29,11 +29,11 @@ std::unordered_map<std::string, double> EvadavController::get_campaign_info(
 
     if (tracker == BINOM)
     {
-        return binom::get_campaign_info(campaign_tracker_id, tracker_requests_url, tracker_api_key, period);
+        return binom::get_campaign_info(task_id, campaign_tracker_id, tracker_requests_url, tracker_api_key, period);
     }
     else if (tracker == KEITARO)
     {
-        return keitaro::get_campaign_info(campaign_tracker_id, tracker_requests_url, tracker_api_key, period);
+        return keitaro::get_campaign_info(task_id, campaign_tracker_id, tracker_requests_url, tracker_api_key, period);
     }
 
     throw;
@@ -53,12 +53,12 @@ zones_data EvadavController::get_zones_info(
     
     if (tracker == BINOM)
     {
-        return binom::get_zones_info(campaign_tracker_id, tracker_requests_url, tracker_api_key, period,
-                                    this->zones_param_number, ignored_zones);
+        return binom::get_zones_info(task_id, campaign_tracker_id, tracker_requests_url, tracker_api_key, period,
+                                     this->zones_param_number, ignored_zones);
     }
     else if (tracker == KEITARO)
     {
-        return keitaro::get_zones_info(campaign_tracker_id, tracker_requests_url, tracker_api_key, period,
+        return keitaro::get_zones_info(task_id, campaign_tracker_id, tracker_requests_url, tracker_api_key, period,
                                        this->zones_param_number, ignored_zones);
     }
 
